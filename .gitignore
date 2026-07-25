@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+# ビルド出力のみを対象にする。`dist` と書くと public/dist/（Muse インストーラーの
+# 配布先）まで無視されてしまうため、必ず先頭スラッシュ付きで指定すること。
+/dist
+/dist-ssr
+*.local
+.env
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+todos.json

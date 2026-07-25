@@ -1,0 +1,18 @@
+# 旧 src/app/robots.ts の移植。サイト全体を検索エンジンから除外している。
+# インデックスさせたくなったら、この Disallow 行を外し、
+# src/config/site.ts の NOINDEX も false にすること。
+
+User-agent: *
+Disallow: /
+
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: Google-Extended
+User-agent: CCBot
+User-agent: Omgilibot
+User-agent: FacebookBot
+User-agent: anthropic-ai
+User-agent: Claude-Web
+User-agent: ClaudeBot
+User-agent: cohere-ai
+Disallow: /

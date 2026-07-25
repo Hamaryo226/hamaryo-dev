@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hamaryo-dev",
+  "compatibility_date": "2026-07-07",
+  "compatibility_flags": ["nodejs_compat"],
+  // @cloudflare/vite-plugin がビルド出力（Worker + 静的アセット）を組み立てる。
+  // 全ルートは prerender 済みなので、実際のリクエストはほぼ静的アセットで返り、
+  // Worker はフォールバックとしてのみ動く。
+  "main": "@tanstack/react-start/server-entry",
+  "assets": {
+    // 既存サイトの URL は /Project や /Blog/01 のように末尾スラッシュなし。
+    // 既定の auto-trailing-slash だとこれらが /Project/ へ 307 されてしまうため、
+    // 末尾スラッシュを落とす挙動に固定して現行 URL をそのまま維持する。
+    // （assets.directory は vite プラグインが注入する）
+    "html_handling": "drop-trailing-slash",
+  },
+  "observability": {
+    "enabled": true,
+  },
+}
