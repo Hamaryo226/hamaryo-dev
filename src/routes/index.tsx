@@ -28,7 +28,7 @@ function Home() {
             to="/"
             className="text-sm font-mono text-muted-foreground hover:text-foreground transition-colors"
           >
-            ryota-space
+            {SITE_NAME}
           </Link>
           <div className="flex items-center gap-3">
             <ModeToggle />
@@ -213,7 +213,9 @@ function Home() {
       {/* ===== フッター ===== */}
       <footer className="border-t py-6">
         <div className="mx-auto w-full max-w-screen-lg px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Hamaryo</p>
+          <p>
+            &copy; {new Date().getFullYear()} {SITE_NAME}
+          </p>
           <div className="flex items-center gap-4">
             <Link
               to="/Project"

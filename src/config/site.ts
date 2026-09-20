@@ -7,8 +7,9 @@
  */
 
 export const SITE_URL = "https://hamaryo.dev";
-export const SITE_NAME = "ryota-space";
-export const SITE_DESCRIPTION = "Ryota's personal space";
+export const SITE_NAME = "hamaryo.dev";
+export const SITE_DESCRIPTION =
+  "システムエンジニア Hamaryo のポートフォリオ。開発したプロジェクトと技術記録をまとめています。";
 export const SITE_OG_IMAGE = "/icon/og.webp";
 
 /**
