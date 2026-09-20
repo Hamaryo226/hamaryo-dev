@@ -25,6 +25,18 @@ export type Article = {
     想定クライアント?: string;
     目的?: string;
     目標?: string;
+    /** 解決したかった課題 */
+    背景?: string;
+    /** 自分が担当した範囲 */
+    役割?: string;
+    /** 技術選定と設計上の判断 */
+    設計判断?: Array<{ 選択: string; 理由: string }>;
+    /** 苦労した点・改善した点 */
+    振り返り?: string;
+    /** 受賞・利用者・処理時間・運用の変化など */
+    成果?: string[];
+    /** wip の記事で「作成途中」バナーに出す */
+    次の実装?: string[];
   };
   links?: Record<string, string>;
   references?: Record<string, string>;

@@ -157,7 +157,7 @@ function ProjectDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 lg:gap-12">
           {/* ===== メインコンテンツ ===== */}
           <div className="min-w-0">
-            {article.wip && <WipBanner />}
+            {article.wip && <WipBanner nextSteps={article.content?.次の実装} />}
 
             {/* 説明 */}
             {article.description && (
@@ -204,6 +204,32 @@ function ProjectDetailPage() {
                     </h2>
                     <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
                       {article.content.概要}
+                    </p>
+                  </section>
+                )}
+
+                {/* 背景と課題 */}
+                {article.content.背景 && (
+                  <section>
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      <span className="w-1 h-6 bg-primary rounded-full" />
+                      背景と課題
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                      {article.content.背景}
+                    </p>
+                  </section>
+                )}
+
+                {/* 担当した範囲 */}
+                {article.content.役割 && (
+                  <section>
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      <span className="w-1 h-6 bg-primary rounded-full" />
+                      担当した範囲
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                      {article.content.役割}
                     </p>
                   </section>
                 )}
@@ -301,6 +327,64 @@ function ProjectDetailPage() {
                         </div>
                       ))}
                     </div>
+                  </section>
+                )}
+
+                {/* 技術選定と設計判断 */}
+                {article.content.設計判断 &&
+                  article.content.設計判断.length > 0 && (
+                    <section>
+                      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                        <span className="w-1 h-6 bg-primary rounded-full" />
+                        技術選定と設計判断
+                      </h2>
+                      <div className="space-y-4">
+                        {article.content.設計判断.map((item, i) => (
+                          <div
+                            key={i}
+                            className="rounded-xl border bg-card p-5"
+                          >
+                            <h3 className="font-semibold mb-1">{item.選択}</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+                              {item.理由}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
+                {/* 振り返り */}
+                {article.content.振り返り && (
+                  <section>
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      <span className="w-1 h-6 bg-primary rounded-full" />
+                      振り返り
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                      {article.content.振り返り}
+                    </p>
+                  </section>
+                )}
+
+                {/* 成果 */}
+                {article.content.成果 && article.content.成果.length > 0 && (
+                  <section>
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      <span className="w-1 h-6 bg-primary rounded-full" />
+                      成果
+                    </h2>
+                    <ul className="space-y-2 rounded-xl border border-primary/40 bg-card p-5">
+                      {article.content.成果.map((item, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-2.5 text-sm leading-relaxed"
+                        >
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </section>
                 )}
 
