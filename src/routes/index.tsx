@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ProjectCard } from "@/components/project-card";
 import { BlogCard } from "@/components/blog-card";
-import { getAllArticles } from "@/lib/articles";
+import { getFeaturedArticles } from "@/lib/articles";
 import { getAllBlogs } from "@/lib/blogs";
 import { SITE_DESCRIPTION, SITE_NAME, seo } from "@/config/site";
 
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const projects = getAllArticles().slice(0, 3);
+  const projects = getFeaturedArticles();
   // blogs 配列は新しい順に手で並べてあるので、先頭 3 件がそのまま最新 3 件になる
   const posts = getAllBlogs().slice(0, 3);
 

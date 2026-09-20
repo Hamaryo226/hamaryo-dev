@@ -10,6 +10,8 @@ import orderManager2Data from "../content/articles/order-manager2.json";
 export type Article = {
   slug: string;
   category: "university" | "personal";
+  /** ホームに代表作として載せるか */
+  featured?: boolean;
   thumbnail?: string;
   title: string;
   systemname: string;
@@ -38,10 +40,10 @@ export type Article = {
 
 // 記事データにslugとcategoryを追加
 export const articles: Article[] = [
-  { ...fcsData, slug: "fcs", category: "university" },
-  { ...sdsData, slug: "sds", category: "university" },
+  { ...fcsData, slug: "fcs", category: "university", featured: true },
+  { ...sdsData, slug: "sds", category: "university", featured: true },
   { ...orderManager2Data, slug: "order-manager2", category: "university" },
-  { ...dwData, slug: "drop-watermark", category: "personal" },
+  { ...dwData, slug: "drop-watermark", category: "personal", featured: true },
   { ...lyraData, slug: "lyra", category: "personal" },
   { ...museData, slug: "muse", category: "personal" },
   { ...health2bpmData, slug: "health2bpm", category: "personal" },
@@ -55,6 +57,12 @@ export function getArticleBySlug(slug: string): Article | undefined {
 // すべての記事を取得
 export function getAllArticles(): Article[] {
   return articles;
+}
+
+// ホームに載せる代表作を取得
+// フォールバックは持たせていない。featured をすべて外すとホームのプロジェクト欄が空になる
+export function getFeaturedArticles(): Article[] {
+  return articles.filter((article) => article.featured);
 }
 
 // カテゴリー別に記事を取得
