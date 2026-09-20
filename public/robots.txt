@@ -1,6 +1,9 @@
-# 旧 src/app/robots.ts の移植。サイト全体を検索エンジンから除外している。
+# サイト全体を検索エンジンから除外している。
+# 検索結果には載せず、URL を知っている人だけに見せる運用を選んでいるため。
 # インデックスさせたくなったら、この Disallow 行を外し、
 # src/config/site.ts の NOINDEX も false にすること。
+#
+# 下段の AI クローラ向け Disallow は、通常クローラを解禁したあとも維持する想定。
 
 User-agent: *
 Disallow: /

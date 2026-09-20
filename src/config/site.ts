@@ -14,12 +14,13 @@ export const SITE_OG_IMAGE = "/icon/og.webp";
 /**
  * サイト全体を検索エンジンから除外するかどうか。
  *
- * 旧実装では layout.tsx の `robots: { index: false, follow: false }` と
- * robots.ts の `disallow: '/'` によりサイト全体が noindex になっていた。
- * その挙動をそのまま引き継いでいる。
+ * 検索結果には載せず、URL を知っている人だけに見せる運用を選んでいる。
+ * 旧実装から引き継いだ設定ではなく、意図して維持している方針。
  *
- * 検索エンジンにインデックスさせたくなったら、この値を false にして
- * public/robots.txt の Disallow 行も併せて外すこと。
+ * 検索エンジンにインデックスさせたくなったら、次の 2 か所を同時に変更する。
+ *   1. この NOINDEX を false にする
+ *   2. public/robots.txt の Disallow 行を外す
+ * 加えて Search Console にサイトを登録する。
  */
 // boolean 注釈は意図的。true リテラルに固定すると、これを切り替えるだけの変更でも
 // 参照側が「常に真」と判定されて lint エラーになるため。
