@@ -3,7 +3,9 @@ import { Github, Info, Instagram } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ProjectCard } from "@/components/project-card";
+import { BlogCard } from "@/components/blog-card";
 import { getAllArticles } from "@/lib/articles";
+import { getAllBlogs } from "@/lib/blogs";
 import { SITE_DESCRIPTION, SITE_NAME, seo } from "@/config/site";
 
 export const Route = createFileRoute("/")({
@@ -19,6 +21,8 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const projects = getAllArticles().slice(0, 3);
+  // blogs 配列は新しい順に手で並べてあるので、先頭 3 件がそのまま最新 3 件になる
+  const posts = getAllBlogs().slice(0, 3);
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-background to-muted/20">
@@ -94,22 +98,34 @@ function Home() {
                 </div>
               </div>
             </Link>
-            {/* }
             <Link
               to="/Blog"
               className="flex-1 group relative overflow-hidden rounded-xl border bg-card p-4 sm:p-6 hover:shadow-md transition-all hover:-translate-y-0.5"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+                  <svg
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-primary"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+                    />
+                  </svg>
                 </div>
                 <div>
                   <h2 className="font-semibold text-sm sm:text-base">ブログ</h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground">技術記事や開発記録、その他の考え</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    技術記事や開発記録、その他の考え
+                  </p>
                 </div>
               </div>
             </Link>
-            */}
             <Link
               to="/Info"
               className="flex-1 group relative overflow-hidden rounded-xl border bg-card p-4 sm:p-6 hover:shadow-md transition-all hover:-translate-y-0.5"
@@ -152,6 +168,27 @@ function Home() {
           </div>
         </section>
 
+        {/* ===== ブログ ===== */}
+        <section className="mb-12 md:mb-20">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+              <span className="w-1 h-5 sm:h-6 bg-primary rounded-full" />
+              ブログ
+            </h2>
+            <Link
+              to="/Blog"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              すべて見る →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {posts.map((blog) => (
+              <BlogCard key={blog.slug} blog={blog} />
+            ))}
+          </div>
+        </section>
+
         {/* ===== ソーシャル ===== */}
         <section className="mb-12">
           <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
@@ -188,7 +225,12 @@ function Home() {
             >
               Project
             </Link>
-            {/* <Link to="/Blog" className="hover:text-foreground transition-colors">Blog</Link> */}
+            <Link
+              to="/Blog"
+              className="hover:text-foreground transition-colors"
+            >
+              Blog
+            </Link>
             <Link
               to="/Info"
               className="hover:text-foreground transition-colors"
