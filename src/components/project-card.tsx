@@ -20,7 +20,7 @@ export function ProjectCard({ article }: { article: Article }) {
         </div>
       )}
       <div className="p-4">
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex flex-wrap items-center gap-2 mb-2">
           <span
             className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
               article.category === "university"
@@ -30,6 +30,11 @@ export function ProjectCard({ article }: { article: Article }) {
           >
             {article.category === "university" ? "大学開発" : "個人開発"}
           </span>
+          {article.wip && (
+            <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+              作成途中
+            </span>
+          )}
           <span className="text-[11px] text-muted-foreground">
             {article.date}
           </span>

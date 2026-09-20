@@ -157,7 +157,7 @@ function ProjectDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 lg:gap-12">
           {/* ===== メインコンテンツ ===== */}
           <div className="min-w-0">
-            <WipBanner />
+            {article.wip && <WipBanner />}
 
             {/* 説明 */}
             {article.description && (

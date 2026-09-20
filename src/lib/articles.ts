@@ -12,6 +12,8 @@ export type Article = {
   category: "university" | "personal";
   /** ホームに代表作として載せるか */
   featured?: boolean;
+  /** 本文が書きかけかどうか。記事に「作成途中」バナーとバッジを出す */
+  wip?: boolean;
   thumbnail?: string;
   title: string;
   systemname: string;
@@ -40,13 +42,36 @@ export type Article = {
 
 // 記事データにslugとcategoryを追加
 export const articles: Article[] = [
-  { ...fcsData, slug: "fcs", category: "university", featured: true },
-  { ...sdsData, slug: "sds", category: "university", featured: true },
-  { ...orderManager2Data, slug: "order-manager2", category: "university" },
-  { ...dwData, slug: "drop-watermark", category: "personal", featured: true },
-  { ...lyraData, slug: "lyra", category: "personal" },
-  { ...museData, slug: "muse", category: "personal" },
-  { ...health2bpmData, slug: "health2bpm", category: "personal" },
+  {
+    ...fcsData,
+    slug: "fcs",
+    category: "university",
+    featured: true,
+    wip: true,
+  },
+  {
+    ...sdsData,
+    slug: "sds",
+    category: "university",
+    featured: true,
+    wip: true,
+  },
+  {
+    ...orderManager2Data,
+    slug: "order-manager2",
+    category: "university",
+    wip: true,
+  },
+  {
+    ...dwData,
+    slug: "drop-watermark",
+    category: "personal",
+    featured: true,
+    wip: true,
+  },
+  { ...lyraData, slug: "lyra", category: "personal", wip: true },
+  { ...museData, slug: "muse", category: "personal", wip: true },
+  { ...health2bpmData, slug: "health2bpm", category: "personal", wip: true },
 ];
 
 // slugから記事を取得
