@@ -116,6 +116,16 @@ src/
 記事はどちらも追加すれば `vite.config.ts` の `pages` が自動で拾い、prerender と sitemap に反映される。
 単独ページを増やすときは `pages` に手で追記する。
 
+## 更新の型
+
+無理なく続けるための目安。
+
+| 頻度 | やること | 触るファイル |
+| --- | --- | --- |
+| 月 1 本 | プロジェクトの改善や技術の振り返りをブログに書く | `src/content/blog/` + `src/lib/blogs.ts` |
+| 随時 | `/Now` に短い更新を足す。`updated` も一緒に直す | `src/content/now.json` |
+| 四半期に 1 本 | 代表プロジェクトのケーススタディを書き足し、`wip` を外せるか見直す | `src/content/articles/` + `src/lib/articles.ts` |
+
 ## ビルドと配信の仕組み
 
 `vite.config.ts` で全ルートを列挙し、ビルド時に静的 HTML へ prerender している
