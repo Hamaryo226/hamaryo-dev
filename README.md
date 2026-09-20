@@ -50,10 +50,16 @@ src/
 │   ├── Blog/
 │   │   ├── index.tsx    /Blog
 │   │   └── $slug.tsx    /Blog/:slug
+│   ├── About/index.tsx  /About
+│   ├── Now/index.tsx    /Now
+│   ├── Uses/index.tsx   /Uses
 │   └── Info/index.tsx   /Info
-├── content/             記事・ブログの実データ（JSON）
+├── content/             記事・ブログ・単独ページの実データ（JSON）
 │   ├── articles/        プロジェクト記事 7 件
-│   └── blog/            ブログ記事 5 件
+│   ├── blog/            ブログ記事 5 件
+│   ├── about.json       /About
+│   ├── now.json         /Now
+│   └── uses.json        /Uses
 ├── components/
 │   └── ui/              shadcn/ui コンポーネント
 ├── lib/                 articles.ts / blogs.ts / utils.ts
@@ -103,7 +109,12 @@ src/
 追加する。本文は `paragraph` / `heading` / `list` / `image` / `code` / `embed` / `link` の
 ブロック配列（型は同ファイルの `BlogContent`）。
 
-どちらも追加すれば `vite.config.ts` の `pages` が自動で拾い、prerender と sitemap に反映される。
+**単独ページ**: `/About`・`/Now`・`/Uses` は `src/content/` 直下の JSON を編集すれば内容が変わる。
+項目はすべて任意で、空のもの（`about.json` の `values`、`uses.json` の `デバイス` など）は
+セクションごと表示されない。`/Now` は更新頻度が高い想定なので、`updated` も一緒に直す。
+
+記事はどちらも追加すれば `vite.config.ts` の `pages` が自動で拾い、prerender と sitemap に反映される。
+単独ページを増やすときは `pages` に手で追記する。
 
 ## ビルドと配信の仕組み
 

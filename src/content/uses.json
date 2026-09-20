@@ -1,0 +1,74 @@
+{
+  "note": "普段の開発と作業に使っているもの。",
+  "groups": [
+    {
+      "name": "デスクトップアプリ",
+      "items": [
+        {
+          "name": "Cider",
+          "description": "Windows で Apple Music を使うための非公式クライアント。公式より操作感と安定性が良い。",
+          "url": "https://cider.sh/"
+        },
+        {
+          "name": "Files",
+          "description": "WinUI で作られたファイル管理アプリ。標準のエクスプローラーの置き換えとしてタブ機能を使っている。",
+          "url": "https://files.community/"
+        },
+        {
+          "name": "PowerToys",
+          "description": "Microsoft 公式のツール集。ウィンドウ配置やショートカット周りを補っている。",
+          "url": "https://learn.microsoft.com/ja-jp/windows/powertoys/install"
+        }
+      ]
+    },
+    {
+      "name": "AI・エディタ",
+      "items": [
+        {
+          "name": "Claude (Pro)",
+          "description": "調べ物、実装の相談、文章の推敲に使っている。",
+          "url": "https://claude.ai/"
+        },
+        {
+          "name": "Claude Code",
+          "description": "リポジトリを読ませて、実装からコミットまで任せるコーディングエージェント。ブログの追加もここから。",
+          "url": "https://claude.com/claude-code"
+        }
+      ]
+    },
+    {
+      "name": "よく使う技術",
+      "items": [
+        {
+          "name": "TypeScript / React",
+          "description": "このサイトは TanStack Start + Tailwind CSS v4 + shadcn/ui。OrderManager2 と Muse は Next.js。"
+        },
+        {
+          "name": "Python",
+          "description": "Drop-Watermark は pillow、Lyra は discord.py、フレイルチェックシステムは Django。"
+        },
+        {
+          "name": "Swift / SwiftUI",
+          "description": "Health2BPM の iOS/watchOS アプリ。HealthKit と WatchConnectivity。"
+        }
+      ]
+    },
+    {
+      "name": "ホスティング",
+      "items": [
+        {
+          "name": "Cloudflare Workers",
+          "description": "このサイトの配信先。ドメインも Cloudflare Registrar。"
+        },
+        {
+          "name": "Vercel / Render / Neon",
+          "description": "過去のプロジェクトで使用。"
+        }
+      ]
+    },
+    {
+      "name": "デバイス",
+      "items": []
+    }
+  ]
+}

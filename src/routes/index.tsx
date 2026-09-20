@@ -62,6 +62,26 @@ function Home() {
             <p className="mt-4 text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed">
               システムエンジニアとして開発したプロジェクトや、個人で取り組んだ成果をまとめています。
             </p>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm md:justify-start">
+              <Link
+                to="/About"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                About →
+              </Link>
+              <Link
+                to="/Now"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Now →
+              </Link>
+              <Link
+                to="/Uses"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Uses →
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -218,7 +238,7 @@ function Home() {
           <p>
             &copy; {new Date().getFullYear()} {SITE_NAME}
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <Link
               to="/Project"
               className="hover:text-foreground transition-colors"
@@ -230,6 +250,21 @@ function Home() {
               className="hover:text-foreground transition-colors"
             >
               Blog
+            </Link>
+            <Link
+              to="/About"
+              className="hover:text-foreground transition-colors"
+            >
+              About
+            </Link>
+            <Link to="/Now" className="hover:text-foreground transition-colors">
+              Now
+            </Link>
+            <Link
+              to="/Uses"
+              className="hover:text-foreground transition-colors"
+            >
+              Uses
             </Link>
             <Link
               to="/Info"

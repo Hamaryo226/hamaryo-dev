@@ -1,5 +1,5 @@
 import type { ElementType } from "react";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   ArrowUpRight,
   Box,
@@ -16,6 +16,7 @@ import {
 
 import { BackButton } from "@/components/back-button";
 import { ModeToggle } from "@/components/mode-toggle";
+import { PageFooterNav } from "@/components/page-footer-nav";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -365,25 +366,7 @@ function InfoPage() {
           </aside>
         </div>
 
-        <footer className="mt-12 border-t pt-6">
-          <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
-            <Link to="/" className="transition-colors hover:text-foreground">
-              ホーム
-            </Link>
-            <Link
-              to="/Project"
-              className="transition-colors hover:text-foreground"
-            >
-              プロジェクト
-            </Link>
-            <Link
-              to="/Blog"
-              className="transition-colors hover:text-foreground"
-            >
-              ブログ
-            </Link>
-          </nav>
-        </footer>
+        <PageFooterNav />
       </main>
     </div>
   );

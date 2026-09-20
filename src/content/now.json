@@ -1,0 +1,52 @@
+{
+  "updated": "2026年9月",
+  "note": "",
+  "sections": [
+    {
+      "heading": "いま作っているもの",
+      "items": [
+        {
+          "title": "Health2BPM",
+          "description": "Apple Watch の心拍数と選んだムードから、BPM の合う Spotify のトラックを提案する iOS/watchOS アプリ。2026年5月から開発中。",
+          "link": { "text": "プロジェクトを見る", "url": "/Project/health2bpm" }
+        },
+        {
+          "title": "Drop-Watermark",
+          "description": "写真の下に Exif データ付きのフッターを合成するツール。2025年5月から断続的に手を入れている。",
+          "link": {
+            "text": "プロジェクトを見る",
+            "url": "/Project/drop-watermark"
+          }
+        },
+        {
+          "title": "hamaryo.dev",
+          "description": "このサイト。TanStack Start へ移したあと、プロジェクト記事を背景・設計判断・成果まで書けるケーススタディの形に作り直している。"
+        }
+      ]
+    },
+    {
+      "heading": "学んでいること",
+      "items": [
+        {
+          "title": "Claude Code を使った開発",
+          "description": "リポジトリを読ませて実装からコミットまで任せる進め方を試している。このサイトの更新やブログの追加もここから行っている。",
+          "link": { "text": "関連するブログ", "url": "/Blog/05" }
+        }
+      ]
+    },
+    {
+      "heading": "最近の更新",
+      "items": [
+        {
+          "title": "サイトを TanStack Start + shadcn/ui で再構築",
+          "description": "Next.js 16 App Router 版から移行し、Cloudflare Workers へ載せ替えた。"
+        },
+        {
+          "title": "hamaryo.dev を取得",
+          "description": "2026年6月。独自ドメインを取得してサイトを再公開した。",
+          "link": { "text": "関連するブログ", "url": "/Blog/02" }
+        }
+      ]
+    }
+  ]
+}

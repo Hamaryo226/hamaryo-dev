@@ -1,0 +1,65 @@
+{
+  "intro": "",
+  "focus": [
+    {
+      "title": "福祉・アクセシビリティ",
+      "description": "高齢者のフレイルチェック支援と、聴覚障碍のある学生へのノートテイク支援を、大学のプロジェクトとして1年ずつ開発した。支援する人手の不足と能力差をシステムで埋めることをテーマにしている。"
+    },
+    {
+      "title": "Web アプリケーション",
+      "description": "Django、Next.js、TanStack Start で、学祭の注文管理システムやこのポートフォリオサイトを作っている。"
+    },
+    {
+      "title": "デスクトップ・モバイル",
+      "description": "写真に Exif のフッターを付ける Drop-Watermark（Python）、楽曲メタデータを管理する Muse、Apple Watch の心拍数から曲を選ぶ Health2BPM（Swift）。"
+    }
+  ],
+  "values": [],
+  "timeline": [
+    {
+      "period": "2023年8月 ~ 2023年12月",
+      "title": "聴覚障碍者に向けたノートテイクシステム",
+      "description": "講義動画から音声とスライドを抽出し、補足資料を作るシステムを開発。PHP と Tesseract-OCR、OpenCV。"
+    },
+    {
+      "period": "2024年1月 ~ 2024年12月",
+      "title": "高齢者に向けたフレイルチェックシステム",
+      "description": "横須賀市のフレイルチェック教室を想定し、Django と音声認識で運営業務を支援するシステムを開発。"
+    },
+    {
+      "period": "2025年4月",
+      "title": "Lyra - Discord Bot",
+      "description": "ゼミ活動を支援する多機能 Bot。スケジュール管理やサーバー統計。"
+    },
+    {
+      "period": "2025年5月 ~",
+      "title": "Drop-Watermark",
+      "description": "写真に Exif データ付きの Apple スタイルのフッターを合成するツール。現在も更新中。"
+    },
+    {
+      "period": "2025年7月 ~ 2025年10月",
+      "title": "OrderManager2 - 注文管理システム",
+      "description": "学祭で使う注文管理システム。Next.js と PostgreSQL で注文受付から呼び出し表示まで。"
+    },
+    {
+      "period": "2025年11月",
+      "title": "ポートフォリオサイトを Next.js 16 で構築",
+      "description": "App Router でポートフォリオサイトを立ち上げ。"
+    },
+    {
+      "period": "2025年12月",
+      "title": "Muse - 楽曲メタデータ管理",
+      "description": "楽曲のメタデータを管理するデスクトップアプリ。"
+    },
+    {
+      "period": "2026年5月 ~",
+      "title": "Health2BPM - iOS/watchOS アプリ",
+      "description": "Apple Watch の心拍数とムードから BPM の合う Spotify のトラックを提案する。現在も開発中。"
+    },
+    {
+      "period": "2026年6月",
+      "title": "hamaryo.dev を取得",
+      "description": "独自ドメインを取得し、Cloudflare へ移行。"
+    }
+  ]
+}

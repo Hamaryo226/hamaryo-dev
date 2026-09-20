@@ -28,6 +28,12 @@ const pages = [
   },
   { path: "/Blog", sitemap: { priority: 0.8, changefreq: "monthly" as const } },
   { path: "/Info", sitemap: { priority: 0.8, changefreq: "monthly" as const } },
+  {
+    path: "/About",
+    sitemap: { priority: 0.8, changefreq: "monthly" as const },
+  },
+  { path: "/Now", sitemap: { priority: 0.7, changefreq: "weekly" as const } },
+  { path: "/Uses", sitemap: { priority: 0.6, changefreq: "monthly" as const } },
   ...getAllSlugs().map((slug) => ({
     path: `/Project/${slug}`,
     sitemap: { priority: 0.6, changefreq: "monthly" as const },
