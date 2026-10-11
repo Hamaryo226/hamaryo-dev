@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 
 import { BackButton } from "@/components/back-button";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -169,10 +168,9 @@ const lastUpdated = `${buildDate.getFullYear()}/${String(buildDate.getMonth() + 
 function InfoPage() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-background">
-      <main className="mx-auto w-full max-w-screen-lg px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
+      <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
         <div className="mb-10 flex items-center justify-between">
           <BackButton href="/" label="ホームに戻る" />
-          <ModeToggle />
         </div>
 
         <header className="mb-10 max-w-2xl">
@@ -189,7 +187,7 @@ function InfoPage() {
 
         <section className="mb-8 grid gap-3 sm:grid-cols-3">
           {summaryItems.map((item) => (
-            <Card key={item.label} className="rounded-lg py-0 shadow-none">
+            <Card key={item.label} className="rounded-2xl py-0 shadow-sm">
               <CardContent className="p-4 sm:p-5">
                 <p className="text-xs text-muted-foreground">{item.label}</p>
                 <p className="mt-1.5 text-base font-semibold tracking-tight sm:mt-2 sm:text-lg">
@@ -219,7 +217,7 @@ function InfoPage() {
               </span>
             </div>
 
-            <Card className="rounded-lg py-0 shadow-none">
+            <Card className="rounded-2xl py-0 shadow-sm">
               <CardContent className="p-0">
                 <div className="divide-y">
                   {techStack.map((item) => (
@@ -260,7 +258,7 @@ function InfoPage() {
           </section>
 
           <aside className="space-y-4">
-            <Card className="rounded-lg shadow-none">
+            <Card className="rounded-2xl shadow-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <GitBranch className="size-4" />
@@ -292,7 +290,7 @@ function InfoPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-lg shadow-none">
+            <Card className="rounded-2xl shadow-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <Globe className="size-4" />
@@ -325,7 +323,7 @@ function InfoPage() {
               </CardContent>
             </Card>
 
-            <Card className="rounded-lg shadow-none">
+            <Card className="rounded-2xl shadow-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <svg

@@ -1,111 +1,71 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
-import { getArticlesByCategory } from "@/lib/articles";
-import type { Article } from "@/lib/articles";
-import { BackButton } from "@/components/back-button";
-import { ModeToggle } from "@/components/mode-toggle";
+import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { getAllArticles } from "@/lib/articles";
+import { ProjectCard } from "@/components/project-card";
 import { pageTitle, seo } from "@/config/site";
 
 export const Route = createFileRoute("/Project/")({
   head: () => ({
     meta: seo({
       title: pageTitle("Projects"),
-      description: "プロジェクト一覧ページです。",
+      description: "制作したプロジェクトの一覧です。",
       path: "/Project",
     }),
   }),
   component: ProjectPage,
 });
-
+const filters = [
+  { value: "all", label: "すべて" },
+  { value: "personal", label: "個人開発" },
+  { value: "university", label: "大学開発" },
+] as const;
 function ProjectPage() {
-  const universityProjects = getArticlesByCategory("university");
-  const personalProjects = getArticlesByCategory("personal");
-
-  return (
-    <div className="min-h-screen w-full overflow-x-hidden">
-      <main className="mx-auto w-full max-w-screen-lg px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        <div className="mb-6 flex items-center justify-between">
-          <BackButton href="/" label="ホームに戻る" />
-          <div>
-            <ModeToggle />
-          </div>
-        </div>
-
-        <header className="mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-            プロジェクト
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            制作したプロジェクトの一覧です。
-          </p>
-        </header>
-
-        <section className="mb-12">
-          <h2 className="text-xl md:text-2xl font-semibold mb-6 flex items-center gap-3">
-            <span className="w-1 h-7 bg-primary rounded-full" />
-            大学開発
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {universityProjects.map((article) => (
-              <ProjectCard key={article.slug} article={article} />
-            ))}
-          </div>
-        </section>
-
-        <section className="mb-12">
-          <h2 className="text-xl md:text-2xl font-semibold mb-6 flex items-center gap-3">
-            <span className="w-1 h-7 bg-primary rounded-full" />
-            個人開発
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {personalProjects.map((article) => (
-              <ProjectCard key={article.slug} article={article} />
-            ))}
-          </div>
-        </section>
-      </main>
-    </div>
+  const [filter, setFilter] = useState<string>("all");
+  const projects = getAllArticles();
+  const visible = projects.filter(
+    (article) => filter === "all" || article.category === filter,
   );
-}
-
-function ProjectCard({ article }: { article: Article }) {
   return (
-    <Link
-      to="/Project/$slug"
-      params={{ slug: article.slug }}
-      className="group block h-full rounded-xl border bg-card overflow-hidden hover:shadow-md transition-all hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-    >
-      {article.thumbnail && (
-        <div className="relative w-full h-40 bg-muted overflow-hidden">
-          <img
-            src={article.thumbnail}
-            alt={article.title}
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        </div>
-      )}
-      <div className="p-4">
-        <div className="flex items-center gap-2 mb-2">
-          <span
-            className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-              article.category === "university"
-                ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
-                : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-            }`}
+    <main className="space-main page-content">
+      <header className="page-heading">
+        <h1>
+          プロジェクト<span className="count-badge">{projects.length}</span>
+        </h1>
+        <p>制作したプロジェクトの一覧です。</p>
+      </header>
+      <div
+        className="filter-bar"
+        role="group"
+        aria-label="プロジェクトのカテゴリ"
+      >
+        {filters.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            aria-pressed={filter === item.value}
+            onClick={() => setFilter(item.value)}
           >
-            {article.category === "university" ? "大学開発" : "個人開発"}
-          </span>
-          <span className="text-[11px] text-muted-foreground">
-            {article.date}
-          </span>
-        </div>
-        <h3 className="font-semibold text-sm line-clamp-2 mb-1">
-          {article.title}
-        </h3>
-        <p className="text-xs text-muted-foreground line-clamp-2">
-          {article.description}
-        </p>
+            {item.label}
+            <span>
+              {item.value === "all"
+                ? projects.length
+                : projects.filter((article) => article.category === item.value)
+                    .length}
+            </span>
+          </button>
+        ))}
       </div>
-    </Link>
+      <p className="sr-only" role="status">
+        {visible.length}件のプロジェクトを表示
+      </p>
+      <section
+        aria-label="プロジェクト一覧"
+        className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {visible.map((article) => (
+          <ProjectCard key={article.slug} article={article} />
+        ))}
+      </section>
+    </main>
   );
 }

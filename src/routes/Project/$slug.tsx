@@ -1,7 +1,6 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { getArticleBySlug } from "@/lib/articles";
 import { BackButton } from "@/components/back-button";
-import { ModeToggle } from "@/components/mode-toggle";
 import { WipBanner } from "@/components/wip-banner";
 import { pageTitle, seo } from "@/config/site";
 
@@ -87,13 +86,10 @@ function ProjectDetailPage() {
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-background to-muted/20">
-      <main className="mx-auto w-full max-w-screen-lg px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      <main className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         {/* 戻る */}
         <div className="mb-6 flex items-center justify-between">
           <BackButton href="/Project" label="プロジェクト一覧に戻る" />
-          <div>
-            <ModeToggle />
-          </div>
         </div>
 
         {/* ===== HERO ===== */}

@@ -7,6 +7,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 
+import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SITE_DESCRIPTION, SITE_NAME, seo } from "@/config/site";
 
@@ -57,7 +58,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <a href="#main-content" className="skip-link">
+            本文へスキップ
+          </a>
+          <SiteHeader />
+          <div id="main-content">{children}</div>
+          <footer className="site-footer">
+            <span>© {new Date().getFullYear()} Hamaryo</span>
+            <Link to="/Info">このサイトについて ↗</Link>
+          </footer>
         </ThemeProvider>
         <TanStackDevtools
           config={{

@@ -1,7 +1,6 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { getBlogBySlug } from "@/lib/blogs";
 import { BackButton } from "@/components/back-button";
-import { ModeToggle } from "@/components/mode-toggle";
 import { pageTitle, seo } from "@/config/site";
 
 function getSpotifyEmbedUrl(url: string) {
@@ -52,9 +51,6 @@ function BlogDetailPage() {
         {/* 戻る */}
         <div className="mb-6 flex items-center justify-between">
           <BackButton href="/Blog" label="ブログ一覧に戻る" />
-          <div>
-            <ModeToggle />
-          </div>
         </div>
 
         {/* ===== HERO ===== */}
@@ -280,9 +276,7 @@ function BlogDetailPage() {
         <div className="mt-12 pt-8 border-t">
           <div className="flex items-center justify-between">
             <BackButton href="/Blog" label="ブログ一覧に戻る" />
-            <div>
-              <ModeToggle />
-            </div>
+            <div></div>
           </div>
         </div>
       </main>
