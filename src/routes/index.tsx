@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Github, Info, Instagram } from "lucide-react";
+import { Info } from "lucide-react";
+import { Github, Instagram } from "@/components/brand-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/mode-toggle";
 import { getAllArticles } from "@/lib/articles";
