@@ -301,50 +301,54 @@ function ProjectDetailPage() {
                 {techEntries.length > 0 && (
                   <section>
                     <SectionHeading>技術スタック</SectionHeading>
-                    <div className="space-y-4">
+                    {/* 区分を左の見出し列に寄せ、バッジは枠を外して軽くする */}
+                    <dl className="divide-y rounded-xl border overflow-hidden">
                       {techEntries.map(([category, techs]) => (
-                        <div key={category}>
-                          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                        <div
+                          key={category}
+                          className="grid gap-1.5 px-4 py-3 sm:grid-cols-[8.5rem_1fr] sm:gap-5"
+                        >
+                          <dt className="text-xs font-medium text-muted-foreground sm:pt-1 sm:text-right">
                             {category}
-                          </h3>
-                          <div className="flex flex-wrap gap-2">
+                          </dt>
+                          <dd className="flex flex-wrap gap-1.5">
                             {techs.map((tech, i) => {
                               const logoPaths = getTechLogoPath(tech);
                               return (
-                                <div
+                                <span
                                   key={i}
-                                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border bg-card text-sm shadow-sm"
+                                  className="inline-flex items-center gap-1.5 rounded-md bg-muted/60 px-2 py-1 text-xs"
                                 >
                                   {logoPaths && (
                                     <>
                                       {logoPaths.light && (
                                         <img
                                           src={logoPaths.light}
-                                          alt={tech}
-                                          width={16}
-                                          height={16}
+                                          alt=""
+                                          width={14}
+                                          height={14}
                                           className="object-contain dark:hidden"
                                         />
                                       )}
                                       {logoPaths.dark && (
                                         <img
                                           src={logoPaths.dark}
-                                          alt={tech}
-                                          width={16}
-                                          height={16}
+                                          alt=""
+                                          width={14}
+                                          height={14}
                                           className="object-contain hidden dark:block"
                                         />
                                       )}
                                     </>
                                   )}
-                                  <span>{tech}</span>
-                                </div>
+                                  {tech}
+                                </span>
                               );
                             })}
-                          </div>
+                          </dd>
                         </div>
                       ))}
-                    </div>
+                    </dl>
                   </section>
                 )}
 
