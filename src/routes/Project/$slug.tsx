@@ -1,6 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { getArticleBySlug } from "@/lib/articles";
 import { BackButton } from "@/components/back-button";
+import { DiagramViewer } from "@/components/diagram-viewer";
 import { ModeToggle } from "@/components/mode-toggle";
 import { WipBanner } from "@/components/wip-banner";
 import { pageTitle, seo } from "@/config/site";
@@ -196,6 +197,28 @@ function ProjectDetailPage() {
                   インストーラーをダウンロード
                 </a>
               </div>
+            )}
+
+            {/* 構成図 */}
+            {article.diagram && (
+              <section className="mb-10">
+                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                  <span className="w-1 h-6 bg-primary rounded-full" />
+                  構成図
+                </h2>
+                <figure>
+                  <DiagramViewer
+                    light={article.diagram.light}
+                    dark={article.diagram.dark}
+                    alt={article.diagram.alt}
+                  />
+                  {article.diagram.caption && (
+                    <figcaption className="mt-2 text-xs text-muted-foreground">
+                      {article.diagram.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              </section>
             )}
 
             {/* コンテンツ */}
