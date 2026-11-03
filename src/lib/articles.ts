@@ -30,8 +30,13 @@ export type Article = {
     想定クライアント?: string;
     目的?: string;
     目標?: string;
-    // 機能ごとの見出しと説明。順序を保ちたいので配列で持つ
-    主な機能?: Array<{ title: string; description: string }>;
+    // 中項目ごとにまとめた機能。順序を保ちたいので配列で持つ
+    // icon は feature-icons.tsx の名前。知らない名前は丸印にフォールバックする
+    主な機能?: Array<{
+      title: string;
+      summary?: string;
+      items: Array<{ icon?: string; title: string; description: string }>;
+    }>;
   };
   links?: Record<string, string>;
   references?: Record<string, string>;

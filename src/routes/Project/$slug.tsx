@@ -3,21 +3,17 @@ import {
   ArrowLeft,
   BookOpen,
   Calendar,
-  Code2,
   Download,
   ExternalLink,
-  FileText,
   Info,
-  Layers,
   Link2,
-  Network,
   SearchX,
-  Sparkles,
   Wrench,
 } from "lucide-react";
 import { getArticleBySlug } from "@/lib/articles";
 import { BackButton } from "@/components/back-button";
 import { DiagramViewer } from "@/components/diagram-viewer";
+import { featureIcon } from "@/components/feature-icons";
 import { MathText } from "@/components/math-text";
 import { SectionHeading } from "@/components/section-heading";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -184,7 +180,7 @@ function ProjectDetailPage() {
             {/* 構成図 */}
             {article.diagram && (
               <section className="mb-10">
-                <SectionHeading icon={Network}>構成図</SectionHeading>
+                <SectionHeading>構成図</SectionHeading>
                 <figure>
                   <DiagramViewer
                     light={article.diagram.light}
@@ -206,7 +202,7 @@ function ProjectDetailPage() {
                 {/* 概要 */}
                 {article.content.概要 && (
                   <section>
-                    <SectionHeading icon={FileText}>概要</SectionHeading>
+                    <SectionHeading>概要</SectionHeading>
                     <div className="space-y-3 text-muted-foreground leading-relaxed">
                       {article.content.概要.split("\n").map((paragraph, i) => (
                         <p key={i}>
@@ -220,9 +216,7 @@ function ProjectDetailPage() {
                 {/* 目的・目標・クライアント */}
                 {hasProjectDetail && (
                   <section>
-                    <SectionHeading icon={Info}>
-                      プロジェクト詳細
-                    </SectionHeading>
+                    <SectionHeading>プロジェクト詳細</SectionHeading>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {article.content.想定クライアント && (
                         <div className="rounded-xl border bg-card p-5">
@@ -266,22 +260,37 @@ function ProjectDetailPage() {
                 {article.content.主な機能 &&
                   article.content.主な機能.length > 0 && (
                     <section>
-                      <SectionHeading icon={Sparkles}>主な機能</SectionHeading>
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        {article.content.主な機能.map((feature, i) => (
-                          <div
-                            key={feature.title}
-                            className="rounded-xl border bg-card p-5"
-                          >
-                            <h3 className="font-semibold mb-1.5 flex items-start gap-2">
-                              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-primary/10 text-[11px] font-mono text-primary">
-                                {i + 1}
-                              </span>
-                              {feature.title}
+                      <SectionHeading>主な機能</SectionHeading>
+                      <div className="space-y-8">
+                        {article.content.主な機能.map((group) => (
+                          <div key={group.title}>
+                            <h3 className="text-lg font-semibold">
+                              {group.title}
                             </h3>
-                            <p className="text-sm leading-relaxed text-muted-foreground">
-                              <MathText>{feature.description}</MathText>
-                            </p>
+                            {group.summary && (
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                <MathText>{group.summary}</MathText>
+                              </p>
+                            )}
+                            <dl className="mt-4 space-y-4 border-l pl-5">
+                              {group.items.map((item) => {
+                                const Icon = featureIcon(item.icon);
+                                return (
+                                  <div key={item.title} className="relative">
+                                    {/* 縦罫の上にアイコンを重ねて、項目の頭を揃える */}
+                                    <span className="absolute -left-[31px] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-background text-primary">
+                                      <Icon className="h-4 w-4" />
+                                    </span>
+                                    <dt className="text-sm font-medium">
+                                      {item.title}
+                                    </dt>
+                                    <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                                      <MathText>{item.description}</MathText>
+                                    </dd>
+                                  </div>
+                                );
+                              })}
+                            </dl>
                           </div>
                         ))}
                       </div>
@@ -291,7 +300,7 @@ function ProjectDetailPage() {
                 {/* 技術スタック */}
                 {techEntries.length > 0 && (
                   <section>
-                    <SectionHeading icon={Layers}>技術スタック</SectionHeading>
+                    <SectionHeading>技術スタック</SectionHeading>
                     <div className="space-y-4">
                       {techEntries.map(([category, techs]) => (
                         <div key={category}>
@@ -342,7 +351,7 @@ function ProjectDetailPage() {
                 {/* コード例 */}
                 {article.code && (
                   <section>
-                    <SectionHeading icon={Code2}>実装例</SectionHeading>
+                    <SectionHeading>実装例</SectionHeading>
                     <div className="space-y-4">
                       {Object.entries(article.code).map(([key, codeData]) => (
                         <div
