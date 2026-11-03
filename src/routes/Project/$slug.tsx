@@ -1,7 +1,25 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import {
+  ArrowLeft,
+  BookOpen,
+  Calendar,
+  Code2,
+  Download,
+  ExternalLink,
+  FileText,
+  Info,
+  Layers,
+  Link2,
+  Network,
+  SearchX,
+  Sparkles,
+  Wrench,
+} from "lucide-react";
 import { getArticleBySlug } from "@/lib/articles";
 import { BackButton } from "@/components/back-button";
 import { DiagramViewer } from "@/components/diagram-viewer";
+import { MathText } from "@/components/math-text";
+import { SectionHeading } from "@/components/section-heading";
 import { ModeToggle } from "@/components/mode-toggle";
 import { WipBanner } from "@/components/wip-banner";
 import { pageTitle, seo } from "@/config/site";
@@ -127,35 +145,11 @@ function ProjectDetailPage() {
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+              <Calendar className="w-4 h-4" />
               {article.date}
             </span>
             <span className="flex items-center gap-1.5">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                />
-              </svg>
+              <Wrench className="w-4 h-4" />
               {article.category === "university" ? "大学開発" : "個人開発"}
             </span>
           </div>
@@ -181,19 +175,7 @@ function ProjectDetailPage() {
                   download
                   className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
+                  <Download className="w-5 h-5" />
                   インストーラーをダウンロード
                 </a>
               </div>
@@ -202,10 +184,7 @@ function ProjectDetailPage() {
             {/* 構成図 */}
             {article.diagram && (
               <section className="mb-10">
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <span className="w-1 h-6 bg-primary rounded-full" />
-                  構成図
-                </h2>
+                <SectionHeading icon={Network}>構成図</SectionHeading>
                 <figure>
                   <DiagramViewer
                     light={article.diagram.light}
@@ -227,23 +206,23 @@ function ProjectDetailPage() {
                 {/* 概要 */}
                 {article.content.概要 && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      概要
-                    </h2>
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                      {article.content.概要}
-                    </p>
+                    <SectionHeading icon={FileText}>概要</SectionHeading>
+                    <div className="space-y-3 text-muted-foreground leading-relaxed">
+                      {article.content.概要.split("\n").map((paragraph, i) => (
+                        <p key={i}>
+                          <MathText>{paragraph}</MathText>
+                        </p>
+                      ))}
+                    </div>
                   </section>
                 )}
 
                 {/* 目的・目標・クライアント */}
                 {hasProjectDetail && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
+                    <SectionHeading icon={Info}>
                       プロジェクト詳細
-                    </h2>
+                    </SectionHeading>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {article.content.想定クライアント && (
                         <div className="rounded-xl border bg-card p-5">
@@ -251,7 +230,9 @@ function ProjectDetailPage() {
                             想定クライアント
                           </h3>
                           <p className="text-foreground font-medium">
-                            {article.content.想定クライアント}
+                            <MathText>
+                              {article.content.想定クライアント}
+                            </MathText>
                           </p>
                         </div>
                       )}
@@ -261,7 +242,7 @@ function ProjectDetailPage() {
                             目的
                           </h3>
                           <p className="text-foreground font-medium">
-                            {article.content.目的}
+                            <MathText>{article.content.目的}</MathText>
                           </p>
                         </div>
                       )}
@@ -273,7 +254,7 @@ function ProjectDetailPage() {
                             目標
                           </h3>
                           <p className="text-foreground font-medium">
-                            {article.content.目標}
+                            <MathText>{article.content.目標}</MathText>
                           </p>
                         </div>
                       )}
@@ -285,21 +266,21 @@ function ProjectDetailPage() {
                 {article.content.主な機能 &&
                   article.content.主な機能.length > 0 && (
                     <section>
-                      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                        <span className="w-1 h-6 bg-primary rounded-full" />
-                        主な機能
-                      </h2>
+                      <SectionHeading icon={Sparkles}>主な機能</SectionHeading>
                       <div className="grid gap-4 sm:grid-cols-2">
-                        {article.content.主な機能.map((feature) => (
+                        {article.content.主な機能.map((feature, i) => (
                           <div
                             key={feature.title}
                             className="rounded-xl border bg-card p-5"
                           >
-                            <h3 className="font-semibold mb-1.5">
+                            <h3 className="font-semibold mb-1.5 flex items-start gap-2">
+                              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-primary/10 text-[11px] font-mono text-primary">
+                                {i + 1}
+                              </span>
                               {feature.title}
                             </h3>
-                            <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
-                              {feature.description}
+                            <p className="text-sm leading-relaxed text-muted-foreground">
+                              <MathText>{feature.description}</MathText>
                             </p>
                           </div>
                         ))}
@@ -310,10 +291,7 @@ function ProjectDetailPage() {
                 {/* 技術スタック */}
                 {techEntries.length > 0 && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      技術スタック
-                    </h2>
+                    <SectionHeading icon={Layers}>技術スタック</SectionHeading>
                     <div className="space-y-4">
                       {techEntries.map(([category, techs]) => (
                         <div key={category}>
@@ -364,10 +342,7 @@ function ProjectDetailPage() {
                 {/* コード例 */}
                 {article.code && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      実装例
-                    </h2>
+                    <SectionHeading icon={Code2}>実装例</SectionHeading>
                     <div className="space-y-4">
                       {Object.entries(article.code).map(([key, codeData]) => (
                         <div
@@ -410,19 +385,7 @@ function ProjectDetailPage() {
                 .length > 0 && (
                 <div className="rounded-xl border bg-card p-5">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                      />
-                    </svg>
+                    <Link2 className="w-4 h-4" />
                     関連リンク
                   </h3>
                   <ul className="space-y-2">
@@ -436,19 +399,7 @@ function ProjectDetailPage() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1.5 px-2 rounded-lg hover:bg-muted/50"
                           >
-                            <svg
-                              className="w-3.5 h-3.5 shrink-0"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                              />
-                            </svg>
+                            <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                             <span className="truncate">{title}</span>
                           </a>
                         </li>
@@ -461,19 +412,7 @@ function ProjectDetailPage() {
             {article.references && (
               <div className="rounded-xl border bg-card p-5">
                 <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
+                  <BookOpen className="w-4 h-4" />
                   参考文献
                 </h3>
                 <ul className="space-y-2">
@@ -499,19 +438,7 @@ function ProjectDetailPage() {
             {/* プロジェクト情報カード */}
             <div className="rounded-xl border bg-card p-5">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <Info className="w-4 h-4" />
                 プロジェクト情報
               </h3>
               <dl className="space-y-2 text-sm">
@@ -547,19 +474,7 @@ function ProjectNotFound() {
       <main className="mx-auto w-full max-w-screen-md px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <div className="mx-auto mb-6 h-20 w-20 rounded-full border flex items-center justify-center">
-            <svg
-              className="h-10 w-10 text-muted-foreground"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <SearchX className="h-10 w-10 text-muted-foreground" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
             ページが見つかりません
@@ -572,20 +487,7 @@ function ProjectNotFound() {
               to="/"
               className="inline-flex items-center gap-2 border rounded-md px-4 py-2 text-sm"
             >
-              <svg
-                aria-hidden
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
+              <ArrowLeft className="h-4 w-4" />
               戻る
             </Link>
           </div>
