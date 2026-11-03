@@ -6,6 +6,8 @@ import lyraData from "../content/articles/lyra.json";
 import museData from "../content/articles/muse.json";
 import health2bpmData from "../content/articles/health2bpm.json";
 import orderManager2Data from "../content/articles/order-manager2.json";
+import taikodiveData from "../content/articles/taikodive.json";
+import strollyData from "../content/articles/strolly.json";
 
 export type Article = {
   slug: string;
@@ -15,6 +17,13 @@ export type Article = {
   systemname: string;
   date: string;
   description: string;
+  // 構成図（stack-diagram スキルで生成）。ライト／ダークで別画像を持つ
+  diagram?: {
+    light: string;
+    dark: string;
+    alt: string;
+    caption?: string;
+  };
   content?: {
     概要?: string;
     技術スタック?: string | Record<string, string[]>;
@@ -45,6 +54,8 @@ export const articles: Article[] = [
   { ...lyraData, slug: "lyra", category: "personal" },
   { ...museData, slug: "muse", category: "personal" },
   { ...health2bpmData, slug: "health2bpm", category: "personal" },
+  { ...taikodiveData, slug: "taikodive", category: "personal" },
+  { ...strollyData, slug: "strolly", category: "personal" },
 ];
 
 // slugから記事を取得

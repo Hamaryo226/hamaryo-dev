@@ -1,0 +1,26 @@
+{
+  "thumbnail": "/thum/taikodive.webp",
+  "title": "TaikoDive - TJA 譜面の太鼓リズムゲーム",
+  "systemname": "TaikoDive",
+  "date": "2026年11月",
+  "description": "TJA 形式の譜面を読み込んで演奏する Windows 向け太鼓リズムゲーム",
+  "diagram": {
+    "light": "/diagram/taikodive.png",
+    "dark": "/diagram/taikodive-dark.png",
+    "alt": "TaikoDive の構成図",
+    "caption": "本体・ランチャー・配布までの構成。実線の青が演奏の流れ、破線が開発と配布。"
+  },
+  "content": {
+    "概要": "C# と DxLibDotNet で実装した Windows 向けの太鼓リズムゲーム。TJA 形式の譜面を読み込み、分岐譜面・連打・風船・裏譜面や #BPMCHANGE / #SCROLL / 停止に対応する。\n通常演奏のほかに段位道場・特訓・AI バトル・試験・2 人プレイのモードがあり、オートプレイとリプレイの記録・再生も備える。キャラやネームプレート、背景は AviUtl のプロジェクトファイル (.aup2) をアニメーションとして読み込んで差し替えられる。\n本体とは別に WinUI 3 製のランチャーがあり、Cloudflare R2 (dl.hamaryo.dev) に置いた暗号化パッケージを取得して build/ へ展開する。",
+    "技術スタック": {
+      "本体": [".NET 10", "C#", "WinForms", "DxLibDotNet"],
+      "ランチャー": [".NET 10", "WinUI 3"],
+      "データ": ["TJA", "Newtonsoft.Json"],
+      "連携": ["Discord Rich Presence", "Stream Deck プラグイン"],
+      "CI / 配布": ["GitHub Actions", "Cloudflare R2"]
+    }
+  },
+  "links": {
+    "GitHub (Launcher)": "https://github.com/Hamaryo226/TaikoDive-Launcher"
+  }
+}

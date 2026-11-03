@@ -1,6 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { getArticleBySlug } from "@/lib/articles";
 import { BackButton } from "@/components/back-button";
+import { DiagramViewer } from "@/components/diagram-viewer";
 import { ModeToggle } from "@/components/mode-toggle";
 import { WipBanner } from "@/components/wip-banner";
 import { pageTitle, seo } from "@/config/site";
@@ -84,6 +85,12 @@ function ProjectDetailPage() {
   const techStack = article.content?.["技術スタック"];
   const techEntries =
     techStack && typeof techStack !== "string" ? Object.entries(techStack) : [];
+  // 3 項目とも無い記事では見出しだけが残るので、セクションごと出さない
+  const hasProjectDetail = Boolean(
+    article.content?.想定クライアント ||
+    article.content?.目的 ||
+    article.content?.目標,
+  );
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-background to-muted/20">
@@ -192,6 +199,28 @@ function ProjectDetailPage() {
               </div>
             )}
 
+            {/* 構成図 */}
+            {article.diagram && (
+              <section className="mb-10">
+                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                  <span className="w-1 h-6 bg-primary rounded-full" />
+                  構成図
+                </h2>
+                <figure>
+                  <DiagramViewer
+                    light={article.diagram.light}
+                    dark={article.diagram.dark}
+                    alt={article.diagram.alt}
+                  />
+                  {article.diagram.caption && (
+                    <figcaption className="mt-2 text-xs text-muted-foreground">
+                      {article.diagram.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              </section>
+            )}
+
             {/* コンテンツ */}
             {article.content && (
               <div className="space-y-10">
@@ -209,46 +238,48 @@ function ProjectDetailPage() {
                 )}
 
                 {/* 目的・目標・クライアント */}
-                <section>
-                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                    <span className="w-1 h-6 bg-primary rounded-full" />
-                    プロジェクト詳細
-                  </h2>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {article.content.想定クライアント && (
-                      <div className="rounded-xl border bg-card p-5">
-                        <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                          想定クライアント
-                        </h3>
-                        <p className="text-foreground font-medium">
-                          {article.content.想定クライアント}
-                        </p>
-                      </div>
-                    )}
-                    {article.content.目的 && (
-                      <div className="rounded-xl border bg-card p-5">
-                        <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                          目的
-                        </h3>
-                        <p className="text-foreground font-medium">
-                          {article.content.目的}
-                        </p>
-                      </div>
-                    )}
-                    {article.content.目標 && (
-                      <div
-                        className={`rounded-xl border bg-card p-5 ${article.content.想定クライアント && article.content.目的 ? "" : "sm:col-span-2"}`}
-                      >
-                        <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                          目標
-                        </h3>
-                        <p className="text-foreground font-medium">
-                          {article.content.目標}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </section>
+                {hasProjectDetail && (
+                  <section>
+                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      <span className="w-1 h-6 bg-primary rounded-full" />
+                      プロジェクト詳細
+                    </h2>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {article.content.想定クライアント && (
+                        <div className="rounded-xl border bg-card p-5">
+                          <h3 className="text-sm font-semibold text-muted-foreground mb-1">
+                            想定クライアント
+                          </h3>
+                          <p className="text-foreground font-medium">
+                            {article.content.想定クライアント}
+                          </p>
+                        </div>
+                      )}
+                      {article.content.目的 && (
+                        <div className="rounded-xl border bg-card p-5">
+                          <h3 className="text-sm font-semibold text-muted-foreground mb-1">
+                            目的
+                          </h3>
+                          <p className="text-foreground font-medium">
+                            {article.content.目的}
+                          </p>
+                        </div>
+                      )}
+                      {article.content.目標 && (
+                        <div
+                          className={`rounded-xl border bg-card p-5 ${article.content.想定クライアント && article.content.目的 ? "" : "sm:col-span-2"}`}
+                        >
+                          <h3 className="text-sm font-semibold text-muted-foreground mb-1">
+                            目標
+                          </h3>
+                          <p className="text-foreground font-medium">
+                            {article.content.目標}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </section>
+                )}
 
                 {/* 技術スタック */}
                 {techEntries.length > 0 && (

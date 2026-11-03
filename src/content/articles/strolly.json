@@ -1,0 +1,22 @@
+{
+  "thumbnail": "/thum/strolly.webp",
+  "title": "Strolly - 聴き切った曲を歩いたルートと結ぶ iOS アプリ",
+  "systemname": "Strolly",
+  "date": "2026年11月",
+  "description": "歩きながら聴いた曲が地図上のどこで再生されていたかを記録する iOS アプリ",
+  "diagram": {
+    "light": "/diagram/strolly.png",
+    "dark": "/diagram/strolly-dark.png",
+    "alt": "Strolly の構成図",
+    "caption": "再生の監視から記録・ルート補正までの流れ。Core は UI 非依存の Packages/SoundWalkCore。"
+  },
+  "content": {
+    "概要": "アプリ内のプレイヤー (Apple Music) で 0 秒から最後まで聴き切った曲だけを、その間に歩いたルートと結び付けて地図に残す iOS アプリ。記録ボタンはなく、位置情報を許可したあとはアプリを開いていなくても記録が続く。\nGPS の揺れは MapKit の経路に、電車で移動した区間は線路に沿わせて補正する。歩数と動きの種類は Core Motion から取る。地図のほかに、Apple Music の歌詞 (音節ごとのアニメーション・訳と読み)、日ごとの記録一覧、GPX 書き出し、ウィジェット、Siri / Spotlight 連携を備える。\n何も鳴っていない間は位置の取得を止め、鳴っていても止まっている間は GPS を弱めて電池を抑えている。",
+    "技術スタック": {
+      "アプリ": ["Swift", "SwiftUI", "iOS 17+"],
+      "データ": ["SwiftData"],
+      "Apple のサービス": ["MusicKit", "MapKit", "Core Motion"],
+      "CI / 配布": ["GitHub Actions", "Xcode Cloud", "TestFlight"]
+    }
+  }
+}
