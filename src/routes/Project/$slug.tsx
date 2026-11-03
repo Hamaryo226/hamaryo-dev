@@ -281,6 +281,32 @@ function ProjectDetailPage() {
                   </section>
                 )}
 
+                {/* 主な機能 */}
+                {article.content.主な機能 &&
+                  article.content.主な機能.length > 0 && (
+                    <section>
+                      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                        <span className="w-1 h-6 bg-primary rounded-full" />
+                        主な機能
+                      </h2>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {article.content.主な機能.map((feature) => (
+                          <div
+                            key={feature.title}
+                            className="rounded-xl border bg-card p-5"
+                          >
+                            <h3 className="font-semibold mb-1.5">
+                              {feature.title}
+                            </h3>
+                            <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-line">
+                              {feature.description}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
                 {/* 技術スタック */}
                 {techEntries.length > 0 && (
                   <section>
