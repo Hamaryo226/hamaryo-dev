@@ -374,8 +374,9 @@ function ProjectDetailPage() {
                           key={key}
                           className="rounded-xl border overflow-hidden shadow-sm"
                         >
-                          <div className="flex items-center justify-between px-4 py-3 bg-muted/30 border-b">
-                            <div>
+                          {/* パス付きの長いファイル名でも見出しが潰れないよう、狭い幅では縦に積む */}
+                          <div className="flex flex-col gap-2 px-4 py-3 bg-muted/30 border-b sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                            <div className="min-w-0">
                               <div className="font-medium text-sm">
                                 {codeData.title}
                               </div>
@@ -383,7 +384,7 @@ function ProjectDetailPage() {
                                 {codeData.description}
                               </div>
                             </div>
-                            <span className="text-xs font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded">
+                            <span className="self-start text-xs font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded break-all sm:self-auto sm:max-w-[45%] sm:text-right">
                               {codeData.filename}
                             </span>
                           </div>
