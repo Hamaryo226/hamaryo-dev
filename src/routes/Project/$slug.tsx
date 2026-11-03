@@ -1,7 +1,21 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import {
+  ArrowLeft,
+  BookOpen,
+  Calendar,
+  Download,
+  ExternalLink,
+  Info,
+  Link2,
+  SearchX,
+  Wrench,
+} from "lucide-react";
 import { getArticleBySlug } from "@/lib/articles";
 import { BackButton } from "@/components/back-button";
 import { DiagramViewer } from "@/components/diagram-viewer";
+import { featureIcon } from "@/components/feature-icons";
+import { MathText } from "@/components/math-text";
+import { SectionHeading } from "@/components/section-heading";
 import { ModeToggle } from "@/components/mode-toggle";
 import { WipBanner } from "@/components/wip-banner";
 import { pageTitle, seo } from "@/config/site";
@@ -127,35 +141,11 @@ function ProjectDetailPage() {
           </h1>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+              <Calendar className="w-4 h-4" />
               {article.date}
             </span>
             <span className="flex items-center gap-1.5">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                />
-              </svg>
+              <Wrench className="w-4 h-4" />
               {article.category === "university" ? "大学開発" : "個人開発"}
             </span>
           </div>
@@ -181,19 +171,7 @@ function ProjectDetailPage() {
                   download
                   className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
+                  <Download className="w-5 h-5" />
                   インストーラーをダウンロード
                 </a>
               </div>
@@ -202,10 +180,7 @@ function ProjectDetailPage() {
             {/* 構成図 */}
             {article.diagram && (
               <section className="mb-10">
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <span className="w-1 h-6 bg-primary rounded-full" />
-                  構成図
-                </h2>
+                <SectionHeading>構成図</SectionHeading>
                 <figure>
                   <DiagramViewer
                     light={article.diagram.light}
@@ -227,23 +202,21 @@ function ProjectDetailPage() {
                 {/* 概要 */}
                 {article.content.概要 && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      概要
-                    </h2>
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                      {article.content.概要}
-                    </p>
+                    <SectionHeading>概要</SectionHeading>
+                    <div className="space-y-3 text-muted-foreground leading-relaxed">
+                      {article.content.概要.split("\n").map((paragraph, i) => (
+                        <p key={i}>
+                          <MathText>{paragraph}</MathText>
+                        </p>
+                      ))}
+                    </div>
                   </section>
                 )}
 
                 {/* 目的・目標・クライアント */}
                 {hasProjectDetail && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      プロジェクト詳細
-                    </h2>
+                    <SectionHeading>プロジェクト詳細</SectionHeading>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {article.content.想定クライアント && (
                         <div className="rounded-xl border bg-card p-5">
@@ -251,7 +224,9 @@ function ProjectDetailPage() {
                             想定クライアント
                           </h3>
                           <p className="text-foreground font-medium">
-                            {article.content.想定クライアント}
+                            <MathText>
+                              {article.content.想定クライアント}
+                            </MathText>
                           </p>
                         </div>
                       )}
@@ -261,7 +236,7 @@ function ProjectDetailPage() {
                             目的
                           </h3>
                           <p className="text-foreground font-medium">
-                            {article.content.目的}
+                            <MathText>{article.content.目的}</MathText>
                           </p>
                         </div>
                       )}
@@ -273,7 +248,7 @@ function ProjectDetailPage() {
                             目標
                           </h3>
                           <p className="text-foreground font-medium">
-                            {article.content.目標}
+                            <MathText>{article.content.目標}</MathText>
                           </p>
                         </div>
                       )}
@@ -281,75 +256,115 @@ function ProjectDetailPage() {
                   </section>
                 )}
 
+                {/* 主な機能 */}
+                {article.content.主な機能 &&
+                  article.content.主な機能.length > 0 && (
+                    <section>
+                      <SectionHeading>主な機能</SectionHeading>
+                      <div className="space-y-8">
+                        {article.content.主な機能.map((group) => (
+                          <div key={group.title}>
+                            <h3 className="text-lg font-semibold">
+                              {group.title}
+                            </h3>
+                            {group.summary && (
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                <MathText>{group.summary}</MathText>
+                              </p>
+                            )}
+                            <dl className="mt-4 space-y-4 border-l pl-5">
+                              {group.items.map((item) => {
+                                const Icon = featureIcon(item.icon);
+                                return (
+                                  <div key={item.title} className="relative">
+                                    {/* 縦罫の上にアイコンを重ねて、項目の頭を揃える */}
+                                    <span className="absolute -left-[31px] top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-background text-primary">
+                                      <Icon className="h-4 w-4" />
+                                    </span>
+                                    <dt className="text-sm font-medium">
+                                      {item.title}
+                                    </dt>
+                                    <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                                      <MathText>{item.description}</MathText>
+                                    </dd>
+                                  </div>
+                                );
+                              })}
+                            </dl>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
                 {/* 技術スタック */}
                 {techEntries.length > 0 && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      技術スタック
-                    </h2>
-                    <div className="space-y-4">
+                    <SectionHeading>技術スタック</SectionHeading>
+                    {/* 区分を左の見出し列に寄せ、バッジは枠を外して軽くする */}
+                    <dl className="divide-y rounded-xl border overflow-hidden">
                       {techEntries.map(([category, techs]) => (
-                        <div key={category}>
-                          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                        <div
+                          key={category}
+                          className="grid gap-1.5 px-4 py-3 sm:grid-cols-[8.5rem_1fr] sm:gap-5"
+                        >
+                          <dt className="text-xs font-medium text-muted-foreground sm:pt-1 sm:text-right">
                             {category}
-                          </h3>
-                          <div className="flex flex-wrap gap-2">
+                          </dt>
+                          <dd className="flex flex-wrap gap-1.5">
                             {techs.map((tech, i) => {
                               const logoPaths = getTechLogoPath(tech);
                               return (
-                                <div
+                                <span
                                   key={i}
-                                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border bg-card text-sm shadow-sm"
+                                  className="inline-flex items-center gap-1.5 rounded-md bg-muted/60 px-2 py-1 text-xs"
                                 >
                                   {logoPaths && (
                                     <>
                                       {logoPaths.light && (
                                         <img
                                           src={logoPaths.light}
-                                          alt={tech}
-                                          width={16}
-                                          height={16}
+                                          alt=""
+                                          width={14}
+                                          height={14}
                                           className="object-contain dark:hidden"
                                         />
                                       )}
                                       {logoPaths.dark && (
                                         <img
                                           src={logoPaths.dark}
-                                          alt={tech}
-                                          width={16}
-                                          height={16}
+                                          alt=""
+                                          width={14}
+                                          height={14}
                                           className="object-contain hidden dark:block"
                                         />
                                       )}
                                     </>
                                   )}
-                                  <span>{tech}</span>
-                                </div>
+                                  {tech}
+                                </span>
                               );
                             })}
-                          </div>
+                          </dd>
                         </div>
                       ))}
-                    </div>
+                    </dl>
                   </section>
                 )}
 
                 {/* コード例 */}
                 {article.code && (
                   <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      実装例
-                    </h2>
+                    <SectionHeading>実装例</SectionHeading>
                     <div className="space-y-4">
                       {Object.entries(article.code).map(([key, codeData]) => (
                         <div
                           key={key}
                           className="rounded-xl border overflow-hidden shadow-sm"
                         >
-                          <div className="flex items-center justify-between px-4 py-3 bg-muted/30 border-b">
-                            <div>
+                          {/* パス付きの長いファイル名でも見出しが潰れないよう、狭い幅では縦に積む */}
+                          <div className="flex flex-col gap-2 px-4 py-3 bg-muted/30 border-b sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                            <div className="min-w-0">
                               <div className="font-medium text-sm">
                                 {codeData.title}
                               </div>
@@ -357,7 +372,7 @@ function ProjectDetailPage() {
                                 {codeData.description}
                               </div>
                             </div>
-                            <span className="text-xs font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded">
+                            <span className="self-start text-xs font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded break-all sm:self-auto sm:max-w-[45%] sm:text-right">
                               {codeData.filename}
                             </span>
                           </div>
@@ -383,19 +398,7 @@ function ProjectDetailPage() {
                 .length > 0 && (
                 <div className="rounded-xl border bg-card p-5">
                   <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                      />
-                    </svg>
+                    <Link2 className="w-4 h-4" />
                     関連リンク
                   </h3>
                   <ul className="space-y-2">
@@ -409,19 +412,7 @@ function ProjectDetailPage() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1.5 px-2 rounded-lg hover:bg-muted/50"
                           >
-                            <svg
-                              className="w-3.5 h-3.5 shrink-0"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                              />
-                            </svg>
+                            <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                             <span className="truncate">{title}</span>
                           </a>
                         </li>
@@ -434,19 +425,7 @@ function ProjectDetailPage() {
             {article.references && (
               <div className="rounded-xl border bg-card p-5">
                 <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
+                  <BookOpen className="w-4 h-4" />
                   参考文献
                 </h3>
                 <ul className="space-y-2">
@@ -472,19 +451,7 @@ function ProjectDetailPage() {
             {/* プロジェクト情報カード */}
             <div className="rounded-xl border bg-card p-5">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <Info className="w-4 h-4" />
                 プロジェクト情報
               </h3>
               <dl className="space-y-2 text-sm">
@@ -520,19 +487,7 @@ function ProjectNotFound() {
       <main className="mx-auto w-full max-w-screen-md px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <div className="mx-auto mb-6 h-20 w-20 rounded-full border flex items-center justify-center">
-            <svg
-              className="h-10 w-10 text-muted-foreground"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <SearchX className="h-10 w-10 text-muted-foreground" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
             ページが見つかりません
@@ -545,20 +500,7 @@ function ProjectNotFound() {
               to="/"
               className="inline-flex items-center gap-2 border rounded-md px-4 py-2 text-sm"
             >
-              <svg
-                aria-hidden
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
+              <ArrowLeft className="h-4 w-4" />
               戻る
             </Link>
           </div>
