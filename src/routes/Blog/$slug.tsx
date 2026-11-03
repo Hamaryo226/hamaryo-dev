@@ -1,23 +1,9 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { getSpotifyEmbedUrl } from "@/lib/security";
 import { getBlogBySlug } from "@/lib/blogs";
 import { BackButton } from "@/components/back-button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { pageTitle, seo } from "@/config/site";
-
-function getSpotifyEmbedUrl(url: string) {
-  try {
-    const parsedUrl = new URL(url);
-    const match = parsedUrl.pathname.match(
-      /^\/(playlist|track|album|episode|show)\/([^/]+)/,
-    );
-
-    if (!match) return url;
-
-    return `https://open.spotify.com/embed/${match[1]}/${match[2]}`;
-  } catch {
-    return url;
-  }
-}
 
 export const Route = createFileRoute("/Blog/$slug")({
   loader: ({ params }) => {
@@ -198,7 +184,9 @@ function BlogDetailPage() {
                     </a>
                   </div>
                 );
-              case "embed":
+              case "embed": {
+                const embedUrl = getSpotifyEmbedUrl(block.url);
+                if (!embedUrl) return null;
                 return (
                   <figure
                     key={index}
@@ -209,7 +197,8 @@ function BlogDetailPage() {
                     {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
                     {block.platform === "spotify" ? (
                       <iframe
-                        src={getSpotifyEmbedUrl(block.url)}
+                        src={embedUrl}
+                        referrerPolicy="strict-origin-when-cross-origin"
                         width="100%"
                         height="352"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -220,6 +209,7 @@ function BlogDetailPage() {
                     ) : null}
                   </figure>
                 );
+              }
               case "list":
                 return (
                   <ul key={index} className="mb-5 space-y-2 text-foreground/80">

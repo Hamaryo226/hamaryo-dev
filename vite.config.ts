@@ -39,10 +39,10 @@ const pages = [
   })),
 ];
 
-const config = defineConfig({
+const config = defineConfig(({ command }) => ({
   resolve: { tsconfigPaths: true },
   plugins: [
-    devtools(),
+    command === "serve" && devtools(),
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),
     tanstackStart({
@@ -60,6 +60,6 @@ const config = defineConfig({
     }),
     viteReact(),
   ],
-});
+}));
 
 export default config;

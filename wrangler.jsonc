@@ -6,7 +6,7 @@
   // @cloudflare/vite-plugin がビルド出力（Worker + 静的アセット）を組み立てる。
   // 全ルートは prerender 済みなので、実際のリクエストはほぼ静的アセットで返り、
   // Worker はフォールバックとしてのみ動く。
-  "main": "@tanstack/react-start/server-entry",
+  "main": "./src/server.ts",
   "assets": {
     // 既存サイトの URL は /Project や /Blog/01 のように末尾スラッシュなし。
     // 既定の auto-trailing-slash だとこれらが /Project/ へ 307 されてしまうため、
