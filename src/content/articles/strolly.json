@@ -72,5 +72,28 @@
   },
   "references": {
     "国土数値情報 鉄道データ (N02) - CC BY 4.0": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N02-v3_1.html"
+  },
+  "code": {
+    "playback": {
+      "title": "曲を最後まで聴いたかの判定",
+      "description": "次の曲が始まった瞬間に、前の曲がクロスフェード分を差し引いて最後まで届いていたかを判定する",
+      "filename": "Packages/SoundWalkCore/Sources/SoundWalkCore/PlaybackTracker.swift",
+      "language": "swift",
+      "code": "    /// 別の曲（またはリピートの2周目）に移ったときに、前の再生が完走だったかを判定する\n    private func close(_ play: ActivePlay, handingOffTo s: PlaybackSnapshot,\n                                sameTrack: Bool, events: inout [TrackerEvent]) {\n        guard play.isEligible else { return }\n        var play = play\n        let skipReason: DiscardReason = sameTrack ? .restarted : .skipped\n        let duration = play.track.durationMs\n        let dt = s.observedAt.timeIntervalSince(play.last.observedAt)\n        let jitter = config.jitterTolerance + max(s.uncertainty, play.last.uncertainty)\n\n        switch play.phase {\n        case .playing(let run):\n            let projectedEnd = run.songZero.addingTimeInterval(seconds(duration))\n            if s.isPlaying {\n                let switchAt = s.songZero  // 次のものが0秒目だった時刻\n                if switchAt < projectedEnd.addingTimeInterval(-config.crossfade - jitter) {\n                    discard(&play, skipReason, at: s.observedAt, events: &events)\n                } else if switchAt > projectedEnd.addingTimeInterval(jitter)\n                            && (dt > config.maxUnverifiedGap || play.sawIdleSinceLast) {\n                    discard(&play, .unverifiableGap, at: s.observedAt, events: &events)\n                } else {\n                    complete(&play, events: &events)\n                }\n            } else {\n                if projectedEnd > s.observedAt.addingTimeInterval(jitter) {\n                    discard(&play, skipReason, at: s.observedAt, events: &events)\n                } else if dt > config.maxUnverifiedGap || play.sawIdleSinceLast {\n                    discard(&play, .unverifiableGap, at: s.observedAt, events: &events)\n                } else {\n                    complete(&play, events: &events)\n                }\n            }\n        case .paused(let pausedMs):\n            if pausedMs >= duration - crossfadeMs - tolerance(s, play.last) {\n                complete(&play, events: &events)\n            } else {\n                discard(&play, skipReason, at: s.observedAt, events: &events)\n            }\n        }\n    }"
+    },
+    "road": {
+      "title": "道沿いの経路を採るかの判定",
+      "description": "MapKit が返した徒歩経路が、遠回りでも別の道でもないかを GPS の軌跡と突き合わせて確かめる",
+      "filename": "Packages/SoundWalkCore/Sources/SoundWalkCore/RoadMatcher.swift",
+      "language": "swift",
+      "code": "    func isAcceptable(_ path: [GeoPoint], for leg: [TimedCoordinate]) -> Bool {\n        guard path.count >= 2 else { return false }\n        let raw = leg.map(\\.coordinate)\n        // 間引いた区間はほぼ直線なので、端点間の直線距離と比べて遠回りを見つける\n        let straight = raw[0].distance(to: raw[raw.count - 1])\n        let length = Geo.length(path)\n        if length > max(straight * config.maxDetourRatio, straight + config.maxDetourExtra) { return false }\n        // GPSの点がすべて経路の近くにある\n        if raw.contains(where: { Geo.project($0, onto: path).distance > config.maxDeviation }) { return false }\n        // 経路がGPSの軌跡から離れていない（別の道・寄り道）\n        return Geo.sample(path, every: 20).allSatisfy { Geo.project($0, onto: raw).distance <= config.maxDeviation }\n    }"
+    },
+    "isotonic": {
+      "title": "GPS の揺れで後戻りしないための単調回帰",
+      "description": "道の上に射影した進み具合を pool adjacent violators で単調増加に当てはめる。立ち止まった間は平均の位置に留まる",
+      "filename": "Packages/SoundWalkCore/Sources/SoundWalkCore/RoadMatcher.swift",
+      "language": "swift",
+      "code": "    /// 単調増加への最小二乗の当てはめ（pool adjacent violators）\n    static func isotonic(_ values: [Double]) -> [Double] {\n        var blocks: [(sum: Double, count: Int)] = []\n        for v in values {\n            blocks.append((v, 1))\n            while blocks.count > 1 {\n                let last = blocks[blocks.count - 1], previous = blocks[blocks.count - 2]\n                guard previous.sum / Double(previous.count) > last.sum / Double(last.count) else { break }\n                blocks.removeLast()\n                blocks[blocks.count - 1] = (previous.sum + last.sum, previous.count + last.count)\n            }\n        }\n        return blocks.flatMap { Array(repeating: $0.sum / Double($0.count), count: $0.count) }\n    }"
+    }
   }
 }
