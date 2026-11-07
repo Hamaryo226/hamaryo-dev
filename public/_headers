@@ -1,4 +1,5 @@
 /*
+  X-Robots-Tag: noindex, nofollow
   Content-Security-Policy: base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src https://open.spotify.com; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY

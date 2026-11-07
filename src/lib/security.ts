@@ -1,5 +1,6 @@
 // Keep public/_headers in sync: static assets bypass the Worker entry point.
 export const SECURITY_HEADERS = {
+  "X-Robots-Tag": "noindex, nofollow",
   "Content-Security-Policy":
     "base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src https://open.spotify.com; upgrade-insecure-requests",
   "X-Content-Type-Options": "nosniff",

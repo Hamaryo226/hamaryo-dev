@@ -14,12 +14,11 @@ export const SITE_OG_IMAGE = "/icon/og.webp";
 /**
  * サイト全体を検索エンジンから除外するかどうか。
  *
- * 旧実装では layout.tsx の `robots: { index: false, follow: false }` と
- * robots.ts の `disallow: '/'` によりサイト全体が noindex になっていた。
- * その挙動をそのまま引き継いでいる。
+ * robots.txt は検索エンジンのクロールを許可し、meta と HTTP ヘッダーの
+ * noindex を読めるようにする。クロール拒否だけでは検索結果から除外できない。
  *
  * 検索エンジンにインデックスさせたくなったら、この値を false にして
- * public/robots.txt の Disallow 行も併せて外すこと。
+ * public/_headers と src/lib/security.ts の X-Robots-Tag も併せて外すこと。
  */
 // boolean 注釈は意図的。true リテラルに固定すると、これを切り替えるだけの変更でも
 // 参照側が「常に真」と判定されて lint エラーになるため。

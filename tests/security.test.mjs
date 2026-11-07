@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { NOINDEX, seo } from "../src/config/site.ts";
 import {
   getSpotifyEmbedUrl,
   SECURITY_HEADERS,
@@ -8,6 +9,62 @@ import {
 } from "../src/lib/security.ts";
 
 const id = "5k6P9fm2sRLMQaCdJPJXvd";
+
+test("HTML metadata continues to exclude the site from search", () => {
+  assert.equal(NOINDEX, true);
+  const metadata = seo({ title: "Search exclusion test", path: "/Project" });
+  for (const name of ["robots", "googlebot"]) {
+    assert.equal(
+      metadata.find((entry) => entry.name === name)?.content,
+      "noindex, nofollow",
+    );
+  }
+});
+
+test("general crawlers can read noindex while specific AI blocks remain", async () => {
+  const robots = await readFile(
+    new URL("../public/robots.txt", import.meta.url),
+    "utf8",
+  );
+  const groups = robots
+    .split(/\n\s*\n/)
+    .map((group) =>
+      group.split("\n").filter((line) => line && !line.startsWith("#")),
+    )
+    .filter((group) => group.length);
+  assert.deepEqual(groups[0], ["User-agent: *", "Allow: /"]);
+  assert.deepEqual(groups[1], [
+    "User-agent: GPTBot",
+    "User-agent: ChatGPT-User",
+    "User-agent: Google-Extended",
+    "User-agent: CCBot",
+    "User-agent: Omgilibot",
+    "User-agent: FacebookBot",
+    "User-agent: anthropic-ai",
+    "User-agent: Claude-Web",
+    "User-agent: ClaudeBot",
+    "User-agent: cohere-ai",
+    "Disallow: /",
+  ]);
+  assert.equal(groups.length, 2);
+});
+
+test("Worker responses enforce noindex on success, redirects and errors", () => {
+  for (const status of [200, 301, 404, 500]) {
+    const response = withSecurityHeaders(
+      new Response(null, {
+        status,
+        headers: {
+          "X-Robots-Tag": "index",
+          Location: "/Project",
+        },
+      }),
+    );
+    assert.equal(response.headers.get("X-Robots-Tag"), "noindex, nofollow");
+    assert.equal(response.status, status);
+    assert.equal(response.headers.get("Location"), "/Project");
+  }
+});
 
 test("Spotify links are canonicalized without tracking parameters", () => {
   for (const type of ["playlist", "track", "album", "episode", "show"]) {
