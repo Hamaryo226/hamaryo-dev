@@ -1,9 +1,9 @@
-# 旧 src/app/robots.ts の移植。サイト全体を検索エンジンから除外している。
-# インデックスさせたくなったら、この Disallow 行を外し、
-# src/config/site.ts の NOINDEX も false にすること。
+# 検索エンジンが HTML と HTTP ヘッダーの noindex を読めるようにする。
+# Disallow はクロールの制御であり、検索結果からの除外を保証しない。
+# 特定の AI クローラーに対する制限は下のグループで維持する。
 
 User-agent: *
-Disallow: /
+Allow: /
 
 User-agent: GPTBot
 User-agent: ChatGPT-User

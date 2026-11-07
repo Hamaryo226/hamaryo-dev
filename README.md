@@ -91,7 +91,19 @@ Cloudflare へは静的アセット＋フォールバック Worker として載�
 ## 検索エンジンへのインデックス
 
 **現在サイト全体を noindex にしている**（旧サイトの設定を引き継いだもの）。
-インデックスさせたい場合は 2 か所を変更する:
+検索エンジンにはクロールを許可し、HTML の meta と HTTP の
+`X-Robots-Tag: noindex, nofollow` で検索結果への掲載を拒否する。
+`robots.txt` の `Disallow` だけでは検索結果からの除外を保証できず、
+noindex を読めなくなるため、一般クローラーをブロックしない。
+特定の AI クローラーへの `Disallow: /` は維持する。
+
+インデックスさせたい場合は 3 か所を変更する:
 
 1. `src/config/site.ts` の `NOINDEX` を `false` に
-2. `public/robots.txt` の `Disallow: /` を外す
+2. `public/_headers` の `X-Robots-Tag` を外す（静的アセット）
+3. `src/lib/security.ts` の `X-Robots-Tag` を外す（Worker 応答）
+
+noindex はアクセス制御ではない。URL を知っている人は引き続き閲覧でき、
+従わないクローラーも防げない。既に検索結果にある URL の反映には再クロールが必要。
+デプロイ後は Cloudflare が追加する robots.txt を含めた実応答と、
+静的ページ・画像・Worker の 404 応答のヘッダーを確認すること。
