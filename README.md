@@ -7,16 +7,16 @@
 
 ## 技術スタック
 
-| 領域 | 採用技術 |
-| --- | --- |
-| フレームワーク | TanStack Start v1（TanStack Router + Vite） |
-| UI | React 19 / shadcn/ui (new-york, neutral) / Radix UI |
-| スタイル | Tailwind CSS v4（CSS-first、`src/styles.css`） |
-| フォント | Geist / Geist Mono（`@fontsource-variable/*` でセルフホスト） |
-| テーマ | next-themes（`class` 属性、system 追従） |
-| アイコン | lucide-react |
-| ホスティング | Cloudflare Workers（`@cloudflare/vite-plugin` + wrangler） |
-| Lint / Format | ESLint（`@tanstack/eslint-config`）/ Prettier |
+| 領域           | 採用技術                                                      |
+| -------------- | ------------------------------------------------------------- |
+| フレームワーク | TanStack Start v1（TanStack Router + Vite）                   |
+| UI             | React 19 / shadcn/ui (new-york, neutral) / Radix UI           |
+| スタイル       | Tailwind CSS v4（CSS-first、`src/styles.css`）                |
+| フォント       | Geist / Geist Mono（`@fontsource-variable/*` でセルフホスト） |
+| テーマ         | next-themes（`class` 属性、system 追従）                      |
+| アイコン       | lucide-react                                                  |
+| ホスティング   | Cloudflare Workers（`@cloudflare/vite-plugin` + wrangler）    |
+| Lint / Format  | ESLint（`@tanstack/eslint-config`）/ Prettier                 |
 
 ## 開発
 
@@ -32,10 +32,17 @@ npm run build        # 本番ビルド（全ページを prerender ＋ sitemap.x
 npm run lint         # ESLint
 npm run format       # Prettier + ESLint --fix
 npm run check        # Prettier チェックのみ
+npm run test:security # URL・ヘッダー方針のテスト
+npm run test:e2e     # ビルド済みサイトのブラウザテスト（Chromium）
 npx tsc --noEmit     # 型チェック
 npx wrangler dev     # ビルド成果物をローカルで配信（本番相当の確認）
 npm run deploy       # ビルドして Cloudflare へデプロイ
 ```
+
+ブラウザテストは初回に `npx playwright install chromium` を実行し、
+`npm run build` の後に `npm run test:e2e` を実行します。記事への遷移、
+構成図のフォーカス・キーボード操作、モバイル幅とダークテーマを確認します。
+既存の Chromium を使う場合は `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` で指定できます。
 
 ## 構成
 
@@ -52,8 +59,8 @@ src/
 │   │   └── $slug.tsx    /Blog/:slug
 │   └── Info/index.tsx   /Info
 ├── content/             記事・ブログの実データ（JSON）
-│   ├── articles/        プロジェクト記事 7 件
-│   └── blog/            ブログ記事 5 件
+│   ├── articles/        プロジェクト記事
+│   └── blog/            ブログ記事
 ├── components/
 │   └── ui/              shadcn/ui コンポーネント
 ├── lib/                 articles.ts / blogs.ts / utils.ts
@@ -80,7 +87,7 @@ src/
 ## ビルドと配信の仕組み
 
 `vite.config.ts` で全ルートを列挙し、ビルド時に静的 HTML へ prerender している
-（`dist/client/` に 16 ファイル）。同時に `sitemap.xml` も生成される。
+（`dist/client/`）。同時に `sitemap.xml` も生成される。
 
 Cloudflare へは静的アセット＋フォールバック Worker として載る。実リクエストはほぼ
 静的アセットで返るため、サーバー実行はほとんど発生しない。
