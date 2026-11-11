@@ -14,10 +14,21 @@ test("featured project and profile have distinct destinations", async ({
   page,
 }) => {
   await openHydratedPage(page, "/");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hamaryo");
+  await expect(page.getByText("Webから、")).toHaveCount(0);
+  await expect(
+    page.getByText("コンセプトイメージ", { exact: false }),
+  ).toHaveCount(0);
+  const icon = page.getByRole("img", { name: "Strollyのアプリアイコン" });
+  await expect(icon).toBeVisible();
+  await expect(icon).toHaveAttribute("src", "/img/strolly/app-icon.png");
   await page.getByRole("link", { name: /FEATURED.*Strolly/ }).click();
   await expect(page).toHaveURL("/Project/strolly");
   await page.goBack();
-  await page.getByRole("link", { name: "プロフィール", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "メインナビゲーション" })
+    .getByRole("link", { name: "About", exact: true })
+    .click();
   await expect(page).toHaveURL("/About");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("About me.");
   await expect(

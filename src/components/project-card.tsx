@@ -25,7 +25,7 @@ export function ProjectCard({
   article: Article;
   headingLevel?: 2 | 3;
 }) {
-  const { platform, tags, tone } = getProjectPresentation(article);
+  const { platform, tags, tone, appIcon } = getProjectPresentation(article);
   const Icon = platform ? icons[platform] : Code2;
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const hasCover = article.thumbnail && article.thumbnail !== "/thum/0.jpg";
@@ -39,7 +39,16 @@ export function ProjectCard({
       <div
         className={`relative mb-5 flex aspect-[16/9] items-center justify-center overflow-hidden rounded-xl ${tones[tone]}`}
       >
-        {hasCover ? (
+        {appIcon ? (
+          <img
+            src={appIcon}
+            alt={`${article.systemname}のアプリアイコン`}
+            width={1024}
+            height={1024}
+            loading="lazy"
+            className="size-32 rounded-[22%] shadow-sm sm:size-40"
+          />
+        ) : hasCover ? (
           <img
             src={article.thumbnail}
             alt=""

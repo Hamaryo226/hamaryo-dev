@@ -12,6 +12,7 @@ export type Platform = keyof typeof platforms;
 
 type ProjectPresentation = {
   platform?: Platform;
+  appIcon?: string;
   tags: string[];
   tone: "green" | "violet" | "blue" | "amber";
 };
@@ -20,6 +21,7 @@ type ProjectPresentation = {
 const presentation: Partial<Record<string, ProjectPresentation>> = {
   strolly: {
     platform: "apple",
+    appIcon: "/img/strolly/app-icon.png",
     tags: ["SwiftUI", "MusicKit", "MapKit"],
     tone: "green",
   },
