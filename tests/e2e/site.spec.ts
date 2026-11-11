@@ -4,7 +4,10 @@ const title = "hamaryo.dev の記事を JSON から静的ページにする仕�
 
 test("home links to the blog and the new article", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: "ブログ 技術記事" }).click();
+  await page
+    .getByRole("navigation", { name: "メインナビゲーション" })
+    .getByRole("link", { name: "Blog", exact: true })
+    .click();
   await expect(page).toHaveURL("/Blog");
   await page.getByRole("link", { name: new RegExp(title) }).click();
   await expect(page).toHaveURL("/Blog/06");

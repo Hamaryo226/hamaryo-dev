@@ -3,7 +3,8 @@
 ポートフォリオサイト **[hamaryo.dev](https://hamaryo.dev)** のソースコード。
 
 [Next.js 16 App Router 版（`Hamaryo226/ryota-space`）](https://github.com/Hamaryo226/ryota-space)を
-**TanStack Start + shadcn/ui** で再構築したもの。デザインは旧版から忠実に移植している。
+**TanStack Start + shadcn/ui** で再構築したもの。既存の URL と記事データを引き継ぎ、
+トップ・Project・About は余白と作品を中心にした共通デザインを使用している。
 
 ## 技術スタック
 
@@ -57,7 +58,8 @@ src/
 │   ├── Blog/
 │   │   ├── index.tsx    /Blog
 │   │   └── $slug.tsx    /Blog/:slug
-│   └── Info/index.tsx   /Info
+│   ├── Info/index.tsx   /Info
+│   └── About/index.tsx  /About（人物紹介・制作分野）
 ├── content/             記事・ブログの実データ（JSON）
 │   ├── articles/        プロジェクト記事
 │   └── blog/            ブログ記事
@@ -77,6 +79,13 @@ src/
 
 **プロジェクト記事**: `src/content/articles/` に JSON を置き、`src/lib/articles.ts` の
 `articles` 配列に `slug` と `category`（`university` / `personal`）付きで追加する。
+
+一覧のプラットフォーム分類・技術タグ・カバー色は `src/config/portfolio.ts` に置く。
+未登録でも一覧に表示されるが、プラットフォームで絞り込みたい場合は分類を登録する。
+トップの注目作品も同ファイルの `getFeaturedProjects()` で選ぶ。
+
+`/Project?platform=apple&category=personal` のように絞り込み条件を URL で共有できる。
+About はプロフィールと制作分野、Info はサイトの技術構成・バージョンを担当する。
 
 **ブログ記事**: `src/content/blog/` に JSON を置き、`src/lib/blogs.ts` の `blogs` 配列に
 追加する。本文は `paragraph` / `heading` / `list` / `image` / `code` / `embed` / `link` の

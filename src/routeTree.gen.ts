@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutIndexRouteImport } from './routes/About/index'
 import { Route as BlogIndexRouteImport } from './routes/Blog/index'
 import { Route as BlogSlugRouteImport } from './routes/Blog/$slug'
 import { Route as InfoIndexRouteImport } from './routes/Info/index'
@@ -19,6 +20,11 @@ import { Route as ProjectSlugRouteImport } from './routes/Project/$slug'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutIndexRoute = AboutIndexRouteImport.update({
+  id: '/About/',
+  path: '/About/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/Blog/$slug': typeof BlogSlugRoute
   '/Project/$slug': typeof ProjectSlugRoute
+  '/About/': typeof AboutIndexRoute
   '/Blog/': typeof BlogIndexRoute
   '/Info/': typeof InfoIndexRoute
   '/Project/': typeof ProjectIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/Blog/$slug': typeof BlogSlugRoute
   '/Project/$slug': typeof ProjectSlugRoute
+  '/About': typeof AboutIndexRoute
   '/Blog': typeof BlogIndexRoute
   '/Info': typeof InfoIndexRoute
   '/Project': typeof ProjectIndexRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/Blog/$slug': typeof BlogSlugRoute
   '/Project/$slug': typeof ProjectSlugRoute
+  '/About/': typeof AboutIndexRoute
   '/Blog/': typeof BlogIndexRoute
   '/Info/': typeof InfoIndexRoute
   '/Project/': typeof ProjectIndexRoute
@@ -75,14 +84,28 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/Blog/$slug' | '/Project/$slug' | '/Blog/' | '/Info/' | '/Project/'
+    | '/'
+    | '/Blog/$slug'
+    | '/Project/$slug'
+    | '/About/'
+    | '/Blog/'
+    | '/Info/'
+    | '/Project/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/Blog/$slug' | '/Project/$slug' | '/Blog' | '/Info' | '/Project'
+  to:
+    | '/'
+    | '/Blog/$slug'
+    | '/Project/$slug'
+    | '/About'
+    | '/Blog'
+    | '/Info'
+    | '/Project'
   id:
     | '__root__'
     | '/'
     | '/Blog/$slug'
     | '/Project/$slug'
+    | '/About/'
     | '/Blog/'
     | '/Info/'
     | '/Project/'
@@ -92,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogSlugRoute: typeof BlogSlugRoute
   ProjectSlugRoute: typeof ProjectSlugRoute
+  AboutIndexRoute: typeof AboutIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
   InfoIndexRoute: typeof InfoIndexRoute
   ProjectIndexRoute: typeof ProjectIndexRoute
@@ -104,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/About/': {
+      id: '/About/'
+      path: '/About'
+      fullPath: '/About/'
+      preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/Blog/': {
@@ -148,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogSlugRoute: BlogSlugRoute,
   ProjectSlugRoute: ProjectSlugRoute,
+  AboutIndexRoute: AboutIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
   InfoIndexRoute: InfoIndexRoute,
   ProjectIndexRoute: ProjectIndexRoute,

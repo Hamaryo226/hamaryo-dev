@@ -367,6 +367,12 @@ function InfoPage() {
 
         <footer className="mt-12 border-t pt-6">
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+            <Link
+              to="/About"
+              className="transition-colors hover:text-foreground"
+            >
+              プロフィール
+            </Link>
             <Link to="/" className="transition-colors hover:text-foreground">
               ホーム
             </Link>
