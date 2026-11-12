@@ -4,7 +4,7 @@
 
 [Next.js 16 App Router 版（`Hamaryo226/ryota-space`）](https://github.com/Hamaryo226/ryota-space)を
 **TanStack Start + shadcn/ui** で再構築したもの。既存の URL と記事データを引き継ぎ、
-トップ・Project・About は余白と作品を中心にした共通デザインを使用している。
+一覧・記事詳細・サイト情報・404 を含む全ページで、自作シンボルと白黒基調の共通デザインを使用している。
 
 ## 技術スタック
 
@@ -42,7 +42,8 @@ npm run deploy       # ビルドして Cloudflare へデプロイ
 
 ブラウザテストは初回に `npx playwright install chromium` を実行し、
 `npm run build` の後に `npm run test:e2e` を実行します。記事への遷移、
-構成図のフォーカス・キーボード操作、モバイル幅とダークテーマを確認します。
+構成図のフォーカス・キーボード操作、本文とコードの保持、埋め込み URL、404 の復帰、
+モバイル幅とダークテーマを確認します。
 既存の Chromium を使う場合は `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` で指定できます。
 
 ## 構成
@@ -64,6 +65,9 @@ src/
 │   ├── articles/        プロジェクト記事
 │   └── blog/            ブログ記事
 ├── components/
+│   ├── portfolio-layout.tsx  全ページの共通ナビゲーション・フッター
+│   ├── article-elements.tsx  記事のセクション・コード・外部リンク
+│   ├── missing-page.tsx      共通の404表示
 │   └── ui/              shadcn/ui コンポーネント
 ├── lib/                 articles.ts / blogs.ts / utils.ts
 ├── config/site.ts       サイト共通メタ情報・SEO ヘルパー

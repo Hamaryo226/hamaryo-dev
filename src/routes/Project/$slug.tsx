@@ -1,59 +1,18 @@
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
+import { Download } from "lucide-react";
 import { getArticleBySlug } from "@/lib/articles";
+import { getProjectPresentation, platforms } from "@/config/portfolio";
 import { BackButton } from "@/components/back-button";
+import {
+  ArticleSection,
+  CodeBlock,
+  ExternalLink,
+} from "@/components/article-elements";
 import { DiagramViewer } from "@/components/diagram-viewer";
-import { ModeToggle } from "@/components/mode-toggle";
+import { MissingPage } from "@/components/missing-page";
+import { PortfolioLayout } from "@/components/portfolio-layout";
 import { WipBanner } from "@/components/wip-banner";
 import { pageTitle, seo } from "@/config/site";
-
-function getTechLogoPath(
-  techName: string,
-): { light?: string; dark?: string } | null {
-  const normalizedName = techName
-    .toLowerCase()
-    .replace(/\s+/g, "")
-    .replace(/#/g, "sharp");
-
-  const logoMap: Record<string, { light?: string; dark?: string }> = {
-    nextjs: { light: "/Logo/nextjs.svg", dark: "/Logo/nextjs.svg" },
-    "next.js": { light: "/Logo/nextjs.svg", dark: "/Logo/nextjs.svg" },
-    react: { light: "/Logo/nextjs.svg", dark: "/Logo/nextjs.svg" },
-    javascript: { light: "/Logo/javascript.svg", dark: "/Logo/javascript.svg" },
-    typescript: { light: "/Logo/typescript.svg", dark: "/Logo/typescript.svg" },
-    tailwindcss: {
-      light: "/Logo/tailwindcss.svg",
-      dark: "/Logo/tailwindcss.svg",
-    },
-    tailwind: { light: "/Logo/tailwindcss.svg", dark: "/Logo/tailwindcss.svg" },
-    bootstrap: { light: "/Logo/bootstrap.svg", dark: "/Logo/bootstrap.svg" },
-    bootstrap5: { light: "/Logo/bootstrap.svg", dark: "/Logo/bootstrap.svg" },
-    python: { light: "/Logo/python.svg", dark: "/Logo/python.svg" },
-    django: { light: "/Logo/django.svg", dark: "/Logo/django.svg" },
-    php: { light: "/Logo/php.svg", dark: "/Logo/php_dark.svg" },
-    csharp: { light: "/Logo/csharp.svg", dark: "/Logo/csharp.svg" },
-    "c#": { light: "/Logo/csharp.svg", dark: "/Logo/csharp.svg" },
-    dotnet: { light: "/Logo/dotnet.svg", dark: "/Logo/dotnet.svg" },
-    ".net": { light: "/Logo/dotnet.svg", dark: "/Logo/dotnet.svg" },
-    ".netfreamework": { light: "/Logo/dotnet.svg", dark: "/Logo/dotnet.svg" },
-    ".netframework": { light: "/Logo/dotnet.svg", dark: "/Logo/dotnet.svg" },
-    neon: { light: "/Logo/neon.svg", dark: "/Logo/neon.svg" },
-    postgresql: { light: "/Logo/neon.svg", dark: "/Logo/neon.svg" },
-    "postgresql(neon)": { light: "/Logo/neon.svg", dark: "/Logo/neon.svg" },
-    vercel: { light: "/Logo/Vercel_light.svg", dark: "/Logo/Vercel_dark.svg" },
-    webcomponents: {
-      light: "/Logo/webcomponents.svg",
-      dark: "/Logo/webcomponents.svg",
-    },
-  };
-
-  for (const [key, paths] of Object.entries(logoMap)) {
-    if (normalizedName.includes(key)) {
-      return paths;
-    }
-  }
-
-  return null;
-}
 
 export const Route = createFileRoute("/Project/$slug")({
   loader: ({ params }) => {
@@ -63,9 +22,7 @@ export const Route = createFileRoute("/Project/$slug")({
   },
   head: ({ loaderData }) => {
     const article = loaderData?.article;
-    if (!article) {
-      return { meta: seo({ title: "記事が見つかりません" }) };
-    }
+    if (!article) return { meta: seo({ title: "記事が見つかりません" }) };
     return {
       meta: seo({
         title: pageTitle(article.title),
@@ -81,489 +38,215 @@ export const Route = createFileRoute("/Project/$slug")({
 
 function ProjectDetailPage() {
   const { article } = Route.useLoaderData();
-
-  const techStack = article.content?.["技術スタック"];
+  const { platform, appIcon } = getProjectPresentation(article);
+  const techStack = article.content?.技術スタック;
   const techEntries =
     techStack && typeof techStack !== "string" ? Object.entries(techStack) : [];
-  // 3 項目とも無い記事では見出しだけが残るので、セクションごと出さない
-  const hasProjectDetail = Boolean(
-    article.content?.想定クライアント ||
-    article.content?.目的 ||
-    article.content?.目標,
+  const details = [
+    ["想定クライアント", article.content?.想定クライアント],
+    ["目的", article.content?.目的],
+    ["目標", article.content?.目標],
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+  const related = Object.entries(article.links ?? {}).filter(
+    ([title]) => title !== "Installer",
   );
+  const references = Object.entries(article.references ?? {});
+  const image =
+    appIcon ??
+    (article.thumbnail === "/thum/0.jpg" ? undefined : article.thumbnail);
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-background to-muted/20">
-      <main className="mx-auto w-full max-w-screen-lg px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        {/* 戻る */}
-        <div className="mb-6 flex items-center justify-between">
-          <BackButton href="/Project" label="プロジェクト一覧に戻る" />
-          <div>
-            <ModeToggle />
+    <PortfolioLayout>
+      <div className="py-8 sm:py-10">
+        <BackButton href="/Project" label="プロジェクト一覧に戻る" />
+        <header className="mb-9 mt-8 border-b pb-8 sm:mt-10 sm:pb-10">
+          <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+            <span className="font-mono">{article.date}</span>
+            <span>
+              {article.category === "university" ? "大学開発" : "個人開発"}
+            </span>
+            {platform && <span>{platforms[platform]}</span>}
           </div>
-        </div>
-
-        {/* ===== HERO ===== */}
-        {article.thumbnail && (
-          <div className="relative w-full max-h-[200px] sm:max-h-[280px] md:max-h-[360px] aspect-[16/9] sm:aspect-[21/9] rounded-xl sm:rounded-2xl overflow-hidden border mb-8 shadow-sm">
+          <h1 className="max-w-4xl break-words text-3xl font-semibold leading-[1.5] tracking-tight sm:text-4xl">
+            {article.title}
+          </h1>
+          <p className="mt-5 max-w-3xl text-sm leading-8 text-muted-foreground">
+            {article.description}
+          </p>
+        </header>
+        {image && (
+          <div className="mb-10 aspect-[16/9] overflow-hidden rounded-xl border bg-muted">
             <img
-              src={article.thumbnail}
-              alt={article.title}
+              src={image}
+              alt={
+                appIcon
+                  ? `${article.systemname}のアプリアイコン`
+                  : article.title
+              }
+              width={appIcon ? 1024 : 1920}
+              height={appIcon ? 1024 : 1080}
               fetchPriority="high"
-              className="absolute inset-0 h-full w-full object-cover"
+              className={`h-full w-full ${appIcon ? "object-cover object-bottom" : "object-contain"}`}
             />
           </div>
         )}
-
-        {/* ===== ヘッダー情報 ===== */}
-        <header className="mb-10">
-          {article.systemname && (
-            <div className="mb-3 inline-flex items-center gap-2 px-3 py-1 text-xs font-mono font-medium text-primary bg-primary/10 rounded-full border border-primary/20">
-              {article.systemname}
-            </div>
-          )}
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight break-words leading-tight">
-            {article.title}
-          </h1>
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              {article.date}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                />
-              </svg>
-              {article.category === "university" ? "大学開発" : "個人開発"}
-            </span>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 lg:gap-12">
-          {/* ===== メインコンテンツ ===== */}
-          <div className="min-w-0">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-16">
+          <article className="min-w-0">
             <WipBanner />
-
-            {/* 説明 */}
-            {article.description && (
-              <p className="text-base leading-relaxed text-foreground/80 mb-10 border-l-4 border-primary/40 pl-4 italic">
-                {article.description}
-              </p>
-            )}
-
-            {/* ダウンロード */}
             {article.links?.Installer && (
-              <div className="mb-10">
-                <a
-                  href={article.links.Installer}
-                  download
-                  className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-medium shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              <a
+                href={article.links.Installer}
+                download
+                className="mb-10 inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm text-background transition-opacity hover:opacity-80"
+              >
+                <Download className="size-4" aria-hidden="true" />
+                インストーラーをダウンロード
+              </a>
+            )}
+            <div className="space-y-12">
+              {article.content?.概要 && (
+                <ArticleSection title="概要">
+                  <p className="whitespace-pre-line break-words text-base leading-8 text-muted-foreground">
+                    {article.content.概要}
+                  </p>
+                </ArticleSection>
+              )}
+              {article.diagram && (
+                <ArticleSection title="構成図">
+                  <figure>
+                    <DiagramViewer
+                      light={article.diagram.light}
+                      dark={article.diagram.dark}
+                      alt={article.diagram.alt}
                     />
-                  </svg>
-                  インストーラーをダウンロード
-                </a>
-              </div>
-            )}
-
-            {/* 構成図 */}
-            {article.diagram && (
-              <section className="mb-10">
-                <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <span className="w-1 h-6 bg-primary rounded-full" />
-                  構成図
-                </h2>
-                <figure>
-                  <DiagramViewer
-                    light={article.diagram.light}
-                    dark={article.diagram.dark}
-                    alt={article.diagram.alt}
-                  />
-                  {article.diagram.caption && (
-                    <figcaption className="mt-2 text-xs text-muted-foreground">
-                      {article.diagram.caption}
-                    </figcaption>
-                  )}
-                </figure>
-              </section>
-            )}
-
-            {/* コンテンツ */}
-            {article.content && (
-              <div className="space-y-10">
-                {/* 概要 */}
-                {article.content.概要 && (
-                  <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      概要
-                    </h2>
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                      {article.content.概要}
+                    {article.diagram.caption && (
+                      <figcaption className="mt-3 text-xs leading-6 text-muted-foreground">
+                        {article.diagram.caption}
+                      </figcaption>
+                    )}
+                  </figure>
+                </ArticleSection>
+              )}
+              {details.length > 0 && (
+                <ArticleSection title="プロジェクト詳細">
+                  <dl className="divide-y border-y">
+                    {details.map(([label, value]) => (
+                      <div
+                        key={label}
+                        className="grid gap-2 py-5 sm:grid-cols-[130px_1fr] sm:gap-6"
+                      >
+                        <dt className="text-xs leading-7 text-muted-foreground">
+                          {label}
+                        </dt>
+                        <dd className="text-sm leading-8">{value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </ArticleSection>
+              )}
+              {(techEntries.length > 0 ||
+                (typeof techStack === "string" && techStack)) && (
+                <ArticleSection title="技術スタック">
+                  {typeof techStack === "string" ? (
+                    <p className="text-sm leading-8 text-muted-foreground">
+                      {techStack}
                     </p>
-                  </section>
-                )}
-
-                {/* 目的・目標・クライアント */}
-                {hasProjectDetail && (
-                  <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      プロジェクト詳細
-                    </h2>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      {article.content.想定クライアント && (
-                        <div className="rounded-xl border bg-card p-5">
-                          <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                            想定クライアント
-                          </h3>
-                          <p className="text-foreground font-medium">
-                            {article.content.想定クライアント}
-                          </p>
-                        </div>
-                      )}
-                      {article.content.目的 && (
-                        <div className="rounded-xl border bg-card p-5">
-                          <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                            目的
-                          </h3>
-                          <p className="text-foreground font-medium">
-                            {article.content.目的}
-                          </p>
-                        </div>
-                      )}
-                      {article.content.目標 && (
-                        <div
-                          className={`rounded-xl border bg-card p-5 ${article.content.想定クライアント && article.content.目的 ? "" : "sm:col-span-2"}`}
-                        >
-                          <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                            目標
-                          </h3>
-                          <p className="text-foreground font-medium">
-                            {article.content.目標}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </section>
-                )}
-
-                {/* 技術スタック */}
-                {techEntries.length > 0 && (
-                  <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      技術スタック
-                    </h2>
-                    <div className="space-y-4">
+                  ) : (
+                    <div className="space-y-5">
                       {techEntries.map(([category, techs]) => (
-                        <div key={category}>
-                          <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                        <div
+                          key={category}
+                          className="grid gap-3 sm:grid-cols-[130px_1fr] sm:gap-6"
+                        >
+                          <h3 className="text-xs leading-7 text-muted-foreground">
                             {category}
                           </h3>
-                          <div className="flex flex-wrap gap-2">
-                            {techs.map((tech, i) => {
-                              const logoPaths = getTechLogoPath(tech);
-                              return (
-                                <div
-                                  key={i}
-                                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border bg-card text-sm shadow-sm"
-                                >
-                                  {logoPaths && (
-                                    <>
-                                      {logoPaths.light && (
-                                        <img
-                                          src={logoPaths.light}
-                                          alt={tech}
-                                          width={16}
-                                          height={16}
-                                          className="object-contain dark:hidden"
-                                        />
-                                      )}
-                                      {logoPaths.dark && (
-                                        <img
-                                          src={logoPaths.dark}
-                                          alt={tech}
-                                          width={16}
-                                          height={16}
-                                          className="object-contain hidden dark:block"
-                                        />
-                                      )}
-                                    </>
-                                  )}
-                                  <span>{tech}</span>
-                                </div>
-                              );
-                            })}
-                          </div>
+                          <ul className="flex flex-wrap gap-2">
+                            {techs.map((tech) => (
+                              <li
+                                key={tech}
+                                className="rounded-md border px-3 py-1.5 text-xs leading-5"
+                              >
+                                {tech}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       ))}
                     </div>
-                  </section>
-                )}
-
-                {/* コード例 */}
-                {article.code && (
-                  <section>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <span className="w-1 h-6 bg-primary rounded-full" />
-                      実装例
-                    </h2>
-                    <div className="space-y-4">
-                      {Object.entries(article.code).map(([key, codeData]) => (
-                        <div
-                          key={key}
-                          className="rounded-xl border overflow-hidden shadow-sm"
-                        >
-                          <div className="flex items-center justify-between px-4 py-3 bg-muted/30 border-b">
-                            <div>
-                              <div className="font-medium text-sm">
-                                {codeData.title}
-                              </div>
-                              <div className="text-xs text-muted-foreground mt-0.5">
-                                {codeData.description}
-                              </div>
-                            </div>
-                            <span className="text-xs font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded">
-                              {codeData.filename}
-                            </span>
-                          </div>
-                          <pre className="bg-muted/50 p-4 overflow-x-auto text-xs sm:text-sm leading-relaxed">
-                            <code className={`language-${codeData.language}`}>
-                              {codeData.code}
-                            </code>
-                          </pre>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* ===== サイドバー ===== */}
-          <aside className="space-y-6">
-            {/* 関連リンク */}
-            {article.links &&
-              Object.entries(article.links).filter(([t]) => t !== "Installer")
-                .length > 0 && (
-                <div className="rounded-xl border bg-card p-5">
-                  <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                      />
-                    </svg>
-                    関連リンク
-                  </h3>
-                  <ul className="space-y-2">
-                    {Object.entries(article.links)
-                      .filter(([t]) => t !== "Installer")
-                      .map(([title, url], i) => (
-                        <li key={i}>
-                          <a
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1.5 px-2 rounded-lg hover:bg-muted/50"
-                          >
-                            <svg
-                              className="w-3.5 h-3.5 shrink-0"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                              />
-                            </svg>
-                            <span className="truncate">{title}</span>
-                          </a>
-                        </li>
-                      ))}
-                  </ul>
-                </div>
+                  )}
+                </ArticleSection>
               )}
-
-            {/* 参考文献 */}
-            {article.references && (
-              <div className="rounded-xl border bg-card p-5">
-                <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                    />
-                  </svg>
-                  参考文献
-                </h3>
-                <ul className="space-y-2">
-                  {Object.entries(article.references).map(([title, url], i) => (
-                    <li key={i}>
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1.5 px-2 rounded-lg hover:bg-muted/50"
-                      >
-                        <span className="text-xs text-primary shrink-0 mt-0.5">
-                          [{i + 1}]
-                        </span>
-                        <span className="truncate">{title}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* プロジェクト情報カード */}
-            <div className="rounded-xl border bg-card p-5">
-              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                プロジェクト情報
-              </h3>
-              <dl className="space-y-2 text-sm">
-                <div className="flex justify-between">
+              {article.code && (
+                <ArticleSection title="実装例">
+                  <div className="space-y-6">
+                    {Object.entries(article.code).map(([key, code]) => (
+                      <CodeBlock key={key} {...code} />
+                    ))}
+                  </div>
+                </ArticleSection>
+              )}
+            </div>
+          </article>
+          <aside className="min-w-0 space-y-9 lg:sticky lg:top-8">
+            <section className="border-t pt-5">
+              <h2 className="mb-4 text-sm font-semibold">プロジェクト情報</h2>
+              <dl className="space-y-3 text-xs leading-6">
+                <div className="flex justify-between gap-4">
                   <dt className="text-muted-foreground">カテゴリ</dt>
-                  <dd className="font-medium">
+                  <dd>
                     {article.category === "university"
                       ? "大学開発"
                       : "個人開発"}
                   </dd>
                 </div>
-                <div className="flex justify-between">
-                  <dt className="text-muted-foreground">期間</dt>
-                  <dd className="font-medium text-right">{article.date}</dd>
+                <div className="flex justify-between gap-4">
+                  <dt className="shrink-0 text-muted-foreground">期間</dt>
+                  <dd className="text-right">{article.date}</dd>
                 </div>
               </dl>
-            </div>
+            </section>
+            {related.length > 0 && (
+              <section className="border-t pt-5">
+                <h2 className="mb-4 text-sm font-semibold">関連リンク</h2>
+                <ul className="space-y-3">
+                  {related.map(([title, url]) => (
+                    <li key={title}>
+                      <ExternalLink href={url}>{title}</ExternalLink>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+            {references.length > 0 && (
+              <section className="border-t pt-5">
+                <h2 className="mb-4 text-sm font-semibold">参考文献</h2>
+                <ol className="list-decimal space-y-4 pl-4 text-xs text-muted-foreground">
+                  {references.map(([title, url]) => (
+                    <li key={title}>
+                      <ExternalLink href={url}>{title}</ExternalLink>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
           </aside>
         </div>
-
-        {/* フッター戻る */}
-        <div className="mt-12 pt-8 border-t">
+        <div className="mt-12 border-t pt-6">
           <BackButton href="/Project" label="プロジェクト一覧に戻る" />
         </div>
-      </main>
-    </div>
+      </div>
+    </PortfolioLayout>
   );
 }
 
 function ProjectNotFound() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
-      <main className="mx-auto w-full max-w-screen-md px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">
-          <div className="mx-auto mb-6 h-20 w-20 rounded-full border flex items-center justify-center">
-            <svg
-              className="h-10 w-10 text-muted-foreground"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            ページが見つかりません
-          </h1>
-          <p className="mt-2 text-sm sm:text-base text-muted-foreground">
-            お探しのプロジェクトは存在しないか、URLが変更された可能性があります。
-          </p>
-          <div className="mt-6">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 border rounded-md px-4 py-2 text-sm"
-            >
-              <svg
-                aria-hidden
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              戻る
-            </Link>
-          </div>
-        </div>
-      </main>
-    </div>
+    <MissingPage
+      title="ページが見つかりません"
+      description="お探しのプロジェクトは存在しないか、URLが変更された可能性があります。"
+      backTo="/Project"
+      backLabel="プロジェクト一覧に戻る"
+    />
   );
 }
