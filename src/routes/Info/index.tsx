@@ -163,8 +163,7 @@ const repoInfo = {
   url: "https://github.com/Hamaryo226/hamaryo-dev",
 };
 
-const buildDate = new Date();
-const lastUpdated = `${buildDate.getFullYear()}/${String(buildDate.getMonth() + 1).padStart(2, "0")}/${String(buildDate.getDate()).padStart(2, "0")}`;
+const lastUpdated = import.meta.env.VITE_BUILD_DATE;
 
 function InfoPage() {
   return (

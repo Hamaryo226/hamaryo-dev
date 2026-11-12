@@ -10,12 +10,6 @@ import {
 import type { Article } from "@/lib/articles";
 import { getProjectPresentation, platforms } from "@/config/portfolio";
 
-const tones = {
-  green: "bg-[#e8eee5] text-[#24533e] dark:bg-[#20342a] dark:text-[#c4e2bb]",
-  violet: "bg-[#ece9f3] text-[#50416e] dark:bg-[#2c263a] dark:text-[#d7c8f0]",
-  blue: "bg-[#e6ecf0] text-[#365466] dark:bg-[#20303b] dark:text-[#bcd7e6]",
-  amber: "bg-[#f1eade] text-[#71562b] dark:bg-[#382f20] dark:text-[#e8d5a7]",
-};
 const icons = { web: Globe, apple: Smartphone, desktop: Monitor, bot: Bot };
 
 export function ProjectCard({
@@ -25,7 +19,7 @@ export function ProjectCard({
   article: Article;
   headingLevel?: 2 | 3;
 }) {
-  const { platform, tags, tone, appIcon } = getProjectPresentation(article);
+  const { platform, tags, appIcon } = getProjectPresentation(article);
   const Icon = platform ? icons[platform] : Code2;
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const hasCover = article.thumbnail && article.thumbnail !== "/thum/0.jpg";
@@ -36,9 +30,7 @@ export function ProjectCard({
       params={{ slug: article.slug }}
       className="group block min-w-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4"
     >
-      <div
-        className={`relative mb-5 flex aspect-[16/9] items-center justify-center overflow-hidden rounded-xl ${tones[tone]}`}
-      >
+      <div className="relative mb-5 flex aspect-[16/9] items-center justify-center overflow-hidden rounded-xl bg-muted text-foreground">
         {appIcon ? (
           <img
             src={appIcon}
@@ -46,7 +38,7 @@ export function ProjectCard({
             width={1024}
             height={1024}
             loading="lazy"
-            className="size-32 rounded-[22%] shadow-sm sm:size-40"
+            className="h-full w-full object-cover object-bottom"
           />
         ) : hasCover ? (
           <img

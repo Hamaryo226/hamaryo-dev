@@ -45,11 +45,8 @@ function AboutPage() {
   return (
     <PortfolioLayout>
       <header className="py-12 sm:py-16">
-        <p className="mb-5 font-mono text-xs tracking-[0.16em] text-muted-foreground">
-          ABOUT / BEHIND THE WORK
-        </p>
-        <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">
-          About me<span className="text-emerald-700 dark:text-lime-300">.</span>
+        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          About
         </h1>
       </header>
       <section
@@ -64,10 +61,7 @@ function AboutPage() {
             />
             <AvatarFallback>H</AvatarFallback>
           </Avatar>
-          <h2
-            id="profile-heading"
-            className="text-2xl font-semibold tracking-tight"
-          >
+          <h2 id="profile-heading" className="text-base font-medium">
             Hamaryo
           </h2>
           <p className="mt-3 text-xs leading-6 text-muted-foreground">
@@ -81,16 +75,11 @@ function AboutPage() {
             rel="noopener noreferrer"
             className="mt-5 inline-flex items-center gap-2 rounded-sm font-mono text-xs hover:underline hover:underline-offset-4"
           >
-            @Hamaryo226 <ArrowUpRight className="size-3.5" aria-hidden="true" />
+            GitHub <ArrowUpRight className="size-3.5" aria-hidden="true" />
           </a>
         </div>
         <div className="max-w-xl self-center">
-          <p className="text-xl font-medium leading-[1.8] tracking-tight sm:text-2xl">
-            Web、モバイル、デスクトップ。
-            <br />
-            幅広い環境で制作しています。
-          </p>
-          <div className="mt-6 space-y-4 text-sm leading-8 text-muted-foreground">
+          <div className="space-y-4 text-sm leading-8 text-muted-foreground">
             <p>
               システムエンジニアとしての制作や、個人で取り組んだ成果をこのサイトにまとめています。大学でのシステム開発をはじめ、WebアプリやiOSアプリ、PC向けのツールを制作してきました。
             </p>
@@ -127,7 +116,7 @@ function AboutPage() {
             <div key={area.number} className="border-t pt-6">
               <div className="mb-6 flex items-center justify-between">
                 <area.icon
-                  className="size-6 text-emerald-700 dark:text-lime-300"
+                  className="size-6 text-muted-foreground"
                   aria-hidden="true"
                 />
                 <span className="font-mono text-xs text-muted-foreground">
@@ -172,7 +161,7 @@ function AboutPage() {
             ELSEWHERE
           </p>
           <h2 id="elsewhere-heading" className="text-lg font-semibold">
-            ほかの場所でも。
+            リンク
           </h2>
           <div className="mt-5 flex gap-6 text-sm">
             <a

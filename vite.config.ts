@@ -43,6 +43,12 @@ const pages = [
 ];
 
 const config = defineConfig(({ command }) => ({
+  define: {
+    // 静的HTMLとブラウザで同じ更新日を使う。Workerの初期化時の時計は参照しない。
+    "import.meta.env.VITE_BUILD_DATE": JSON.stringify(
+      new Date().toISOString().slice(0, 10).replaceAll("-", "/"),
+    ),
+  },
   resolve: { tsconfigPaths: true },
   plugins: [
     command === "serve" && devtools(),

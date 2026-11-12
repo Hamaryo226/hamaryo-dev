@@ -130,20 +130,3 @@
     @apply bg-background text-foreground antialiased;
   }
 }
-
-/* 入口の3ページにだけ適用し、既存の記事本文の配色は維持する。 */
-.portfolio-shell {
-  --background: #f7f7f2;
-  --foreground: #242821;
-  --muted: #eeeee6;
-  --muted-foreground: #62685d;
-  --border: #dddfd5;
-}
-
-.dark .portfolio-shell {
-  --background: #151813;
-  --foreground: #edf0e8;
-  --muted: #23281f;
-  --muted-foreground: #a7b09f;
-  --border: #343b2f;
-}

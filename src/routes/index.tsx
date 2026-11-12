@@ -21,7 +21,7 @@ function Home() {
   const blogs = getAllBlogs().slice(0, 2);
   return (
     <PortfolioLayout>
-      <h1 className="sr-only">Hamaryo</h1>
+      <h1 className="sr-only">プロジェクトとブログ</h1>
       <section
         id="selected-work"
         aria-labelledby="selected-work-heading"
@@ -44,32 +44,29 @@ function Home() {
         <Link
           to="/Project/$slug"
           params={{ slug: featured.slug }}
-          className="group grid overflow-hidden rounded-2xl border border-[#234b3d] bg-[#173e30] text-[#f2f6ed] focus-visible:outline-2 focus-visible:outline-offset-4 md:grid-cols-[0.9fr_1.1fr]"
+          className="group grid overflow-hidden rounded-2xl border bg-card text-card-foreground focus-visible:outline-2 focus-visible:outline-offset-4 md:grid-cols-2"
         >
-          <div className="flex flex-col items-start p-7 sm:p-10 lg:p-12">
-            <p className="font-mono text-[10px] tracking-[0.14em] text-[#c1d6bb]">
+          <div className="flex flex-col items-start justify-center p-7 sm:p-10 lg:p-12">
+            <p className="font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
               FEATURED / iOS APP
             </p>
             <h3 className="mt-8 text-4xl font-semibold tracking-tight sm:text-5xl">
               {featured.systemname}
             </h3>
-            <p className="mt-5 max-w-xs text-sm leading-8 text-[#d2e2cf]">
+            <p className="mt-5 max-w-xs text-sm leading-8 text-muted-foreground">
               {featured.description}
             </p>
             <ul
               aria-label="使用技術"
-              className="mt-6 flex flex-wrap gap-2 text-[10px] text-[#d2e2cf]"
+              className="mt-6 flex flex-wrap gap-2 text-[10px] text-muted-foreground"
             >
               {getProjectPresentation(featured).tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="rounded-full border border-white/20 px-3 py-1"
-                >
+                <li key={tag} className="rounded-full border px-3 py-1">
                   {tag}
                 </li>
               ))}
             </ul>
-            <span className="mt-10 inline-flex items-center gap-3 border-b border-[#bde3aa]/50 pb-2 text-sm text-[#d7f0bd]">
+            <span className="mt-10 inline-flex items-center gap-3 border-b pb-2 text-sm">
               プロジェクトを読む{" "}
               <ArrowUpRight
                 className="size-4 transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
@@ -77,14 +74,14 @@ function Home() {
               />
             </span>
           </div>
-          <div className="m-4 mt-0 flex items-center justify-center rounded-xl bg-[#e7eff5] px-8 py-10 md:m-5 md:ml-0 dark:bg-[#223743]">
+          <div className="relative aspect-square overflow-hidden border-t bg-muted md:border-t-0 md:border-l">
             <img
               src={getProjectPresentation(featured).appIcon}
               alt="Strollyのアプリアイコン"
               width={1024}
               height={1024}
               fetchPriority="high"
-              className="size-56 rounded-[22%] shadow-lg sm:size-64"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
         </Link>

@@ -53,7 +53,6 @@ function ProjectPage() {
         </p>
         <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
           プロジェクト
-          <span className="text-emerald-700 dark:text-lime-300">。</span>
         </h1>
         <p className="mt-6 max-w-xl text-sm leading-8 text-muted-foreground">
           WebからiOS、デスクトップまで。

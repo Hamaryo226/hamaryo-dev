@@ -14,7 +14,18 @@ test("featured project and profile have distinct destinations", async ({
   page,
 }) => {
   await openHydratedPage(page, "/");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hamaryo");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "プロジェクトとブログ",
+  );
+  const home = page
+    .getByRole("banner")
+    .getByRole("link", { name: "ホーム", exact: true });
+  await expect(home).toBeVisible();
+  await expect(home).toHaveText("");
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
+    "href",
+    "/icon/site-symbol.svg",
+  );
   await expect(page.getByText("Webから、")).toHaveCount(0);
   await expect(
     page.getByText("コンセプトイメージ", { exact: false }),
@@ -30,7 +41,7 @@ test("featured project and profile have distinct destinations", async ({
     .getByRole("link", { name: "About", exact: true })
     .click();
   await expect(page).toHaveURL("/About");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("About me.");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("About");
   await expect(
     page
       .getByRole("navigation", { name: "メインナビゲーション" })
@@ -92,6 +103,8 @@ test("About is directly served with sitemap metadata and invalid filters are ign
   const response = await request.get("/About");
   expect(response.status()).toBe(200);
   expect(await response.text()).toContain("取り組んできた分野");
+  expect((await request.get("/icon/site-symbol.svg")).status()).toBe(200);
+  expect((await request.get("/icon/site-touch-icon.png")).status()).toBe(200);
   expect(response.headers()["x-robots-tag"]).toBe("noindex, nofollow");
   expect(await (await request.get("/sitemap.xml")).text()).toContain(
     "https://hamaryo.dev/About</loc>",
@@ -107,6 +120,18 @@ test("About is directly served with sitemap metadata and invalid filters are ign
   ).toHaveCount(9);
 });
 
+test("site information retains the build date after hydration", async ({
+  page,
+  request,
+}) => {
+  const html = await (await request.get("/Info")).text();
+  const date = html.match(/最終更新: <!-- -->(\d{4}\/\d{2}\/\d{2})/)?.[1];
+  expect(date).toBeTruthy();
+  expect(date).not.toBe("1970/01/01");
+  await openHydratedPage(page, "/Info");
+  await expect(page.getByText(/^最終更新:/)).toHaveText(`最終更新: ${date}`);
+});
+
 test("portfolio pages fit mobile and desktop in both themes", async ({
   page,
 }, testInfo) => {
@@ -119,6 +144,11 @@ test("portfolio pages fit mobile and desktop in both themes", async ({
         (value) => localStorage.setItem("theme", value),
         theme,
       );
+      await openHydratedPage(page, "/Info");
+      const reference = await page.locator("body").evaluate((body) => ({
+        background: getComputedStyle(body).backgroundColor,
+        color: getComputedStyle(body).color,
+      }));
       for (const [name, path] of [
         ["home", "/"],
         ["about", "/About"],
@@ -126,6 +156,14 @@ test("portfolio pages fit mobile and desktop in both themes", async ({
       ]) {
         await openHydratedPage(page, path);
         await expect(page.locator("html")).toHaveClass(new RegExp(theme));
+        await expect(page.locator(".portfolio-shell")).toHaveCSS(
+          "background-color",
+          reference.background,
+        );
+        await expect(page.locator(".portfolio-shell")).toHaveCSS(
+          "color",
+          reference.color,
+        );
         await page.evaluate(() => document.fonts.ready);
         // 全ページのスクリーンショットに、画面外の遅延画像も含める。
         expect(
@@ -140,6 +178,22 @@ test("portfolio pages fit mobile and desktop in both themes", async ({
               .every((image) => image.naturalWidth > 0);
           }),
         ).toBe(true);
+        for (const image of await page
+          .getByRole("img", { name: "Strollyのアプリアイコン" })
+          .all()) {
+          expect(
+            await image.evaluate((element) => {
+              const imageBox = element.getBoundingClientRect();
+              const container = element.parentElement?.getBoundingClientRect();
+              return (
+                container &&
+                Math.abs(imageBox.width - container.width) <= 2 &&
+                Math.abs(imageBox.height - container.height) <= 2
+              );
+            }),
+          ).toBe(true);
+          await expect(image).toHaveCSS("border-radius", "0px");
+        }
         expect(
           await page.evaluate(
             () => document.documentElement.scrollWidth <= innerWidth,

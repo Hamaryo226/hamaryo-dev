@@ -23,10 +23,13 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
         <div className="flex flex-wrap items-center justify-between gap-x-6 border-b py-5 sm:py-6">
           <Link
             to="/"
-            className="rounded-sm text-xl font-bold tracking-tight focus-visible:outline-2 focus-visible:outline-offset-4"
+            aria-label="ホーム"
+            className="inline-flex size-10 items-center justify-center rounded-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-4"
           >
-            hamaryo
-            <span className="text-emerald-700 dark:text-lime-300">.</span>
+            <span
+              aria-hidden="true"
+              className="size-8 bg-current [mask-image:url('/icon/site-symbol.svg')] [mask-repeat:no-repeat] [mask-size:contain]"
+            />
           </Link>
           <nav
             aria-label="メインナビゲーション"
@@ -39,7 +42,7 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
                 className="rounded-sm py-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4"
                 activeProps={{
                   className:
-                    "text-foreground underline decoration-emerald-600 decoration-2 underline-offset-8 dark:decoration-lime-300",
+                    "text-foreground underline decoration-current decoration-2 underline-offset-8",
                   "aria-current": "page",
                 }}
               >
@@ -59,7 +62,7 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
       </main>
       <footer className="mx-auto mt-20 w-full max-w-6xl px-5 pb-6 sm:mt-28 sm:px-8">
         <div className="flex flex-wrap items-center justify-between gap-5 border-t pt-6 text-xs text-muted-foreground">
-          <p>© {new Date().getFullYear()} Hamaryo</p>
+          <p>© {new Date().getFullYear()}</p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
             <Link to="/About" className="hover:text-foreground">
               About
