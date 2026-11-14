@@ -82,6 +82,9 @@ export function createTidalRenderer(
   onStatus: (status: TidalStatus) => void,
 ) {
   const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+  // Read once, then use the event payload. Polling matches in RAF can consume
+  // the change before Chromium dispatches the MediaQueryList change event.
+  let reducedMotion = media.matches;
   let gl: WebGLRenderingContext | null = null;
   let program: WebGLProgram | null = null;
   let buffer: WebGLBuffer | null = null;
@@ -107,7 +110,7 @@ export function createTidalRenderer(
       motion:
         !program || lost
           ? "static"
-          : media.matches
+          : reducedMotion
             ? "reduced"
             : paused
               ? "paused"
@@ -195,7 +198,7 @@ export function createTidalRenderer(
       !lost &&
       !!program &&
       !paused &&
-      !media.matches &&
+      !reducedMotion &&
       !document.hidden
     );
   }
@@ -215,7 +218,7 @@ export function createTidalRenderer(
   }
   function sync() {
     cancel();
-    if (media.matches) {
+    if (reducedMotion) {
       px = tx = 10;
       py = ty = 10;
       strength = targetStrength = 0;
@@ -223,6 +226,10 @@ export function createTidalRenderer(
     }
     publish();
     if (running()) frame = requestAnimationFrame(tick);
+  }
+  function mediaChanged(event: MediaQueryListEvent) {
+    reducedMotion = event.matches;
+    sync();
   }
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -277,7 +284,7 @@ export function createTidalRenderer(
   canvas.addEventListener("webglcontextrestored", contextRestored);
   canvas.addEventListener("pointermove", move);
   canvas.addEventListener("pointerleave", leave);
-  media.addEventListener("change", sync);
+  media.addEventListener("change", mediaChanged);
   document.addEventListener("visibilitychange", sync);
   window.addEventListener("resize", resize);
   const observer = new ResizeObserver(resize);
@@ -298,7 +305,7 @@ export function createTidalRenderer(
       canvas.removeEventListener("webglcontextrestored", contextRestored);
       canvas.removeEventListener("pointermove", move);
       canvas.removeEventListener("pointerleave", leave);
-      media.removeEventListener("change", sync);
+      media.removeEventListener("change", mediaChanged);
       document.removeEventListener("visibilitychange", sync);
       window.removeEventListener("resize", resize);
       release();
