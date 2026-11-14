@@ -4,6 +4,7 @@ import b02 from "../content/blog/b02.json";
 import b03 from "../content/blog/b03.json";
 import b04 from "../content/blog/b04.json";
 import b05 from "../content/blog/b05.json";
+import b06 from "../content/blog/b06.json";
 
 export type BlogContent =
   | { type: "paragraph"; text: string }
@@ -26,6 +27,7 @@ export type Blog = {
 
 // ブログデータにslugを追加
 export const blogs: Blog[] = [
+  { ...b06, slug: "06" } as Blog,
   { ...b05, slug: "05" } as Blog,
   { ...b04, slug: "04" } as Blog,
   { ...b03, slug: "03" } as Blog,

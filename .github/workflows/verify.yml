@@ -23,6 +23,9 @@ jobs:
         # 落としたため eslint-plugin-import-x が動かず、上げて塞ぐことができない
       - run: npm audit --omit=dev --audit-level=moderate
       - run: npm run test:security
+      - run: npm run check
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

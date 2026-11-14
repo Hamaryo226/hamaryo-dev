@@ -80,6 +80,8 @@ function DiagramOverlay({
   alt,
   onClose,
 }: DiagramViewerProps & { onClose: () => void }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -133,25 +135,49 @@ function DiagramOverlay({
     setOffset({ x: 0, y: 0 });
   }, []);
 
-  // 開いている間は背面をスクロールさせない
+  // native dialog で背面を inert にし、フォーカスをビューアー内に保つ。
+  // 閉じたときは、開く直前に操作していた要素へ戻す。
   useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const previousFocus = document.activeElement;
     const previous = document.body.style.overflow;
+    dialog.showModal();
+    closeRef.current?.focus();
     document.body.style.overflow = "hidden";
     return () => {
+      dialog.close();
       document.body.style.overflow = previous;
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) {
+        previousFocus.focus();
+      }
     };
   }, []);
 
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      else if (e.key === "+" || e.key === "=") zoomTo(scale * STEP);
-      else if (e.key === "-" || e.key === "_") zoomTo(scale / STEP);
-      else if (e.key === "0") reset();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onClose, reset, scale, zoomTo]);
+  const onKeyDown = (e: React.KeyboardEvent<HTMLDialogElement>) => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === "Tab") {
+      // ブラウザーの UI にフォーカスが移る前に、操作ボタンを巡回させる。
+      const buttons = e.currentTarget.querySelectorAll<HTMLButtonElement>(
+        "button:not(:disabled)",
+      );
+      const first = buttons[0];
+      const last = buttons[buttons.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+      return;
+    }
+    if (e.key === "+" || e.key === "=") zoomTo(scale * STEP);
+    else if (e.key === "-" || e.key === "_") zoomTo(scale / STEP);
+    else if (e.key === "0") reset();
+    else return;
+    e.preventDefault();
+  };
 
   // ホイールはブラウザのスクロールを止めたいので、passive でない listener で受ける
   useEffect(() => {
@@ -213,11 +239,15 @@ function DiagramOverlay({
   };
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
+    <dialog
+      ref={dialogRef}
       aria-label={alt}
-      className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-sm"
+      onKeyDown={onKeyDown}
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
+      className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none border-0 p-0 flex flex-col bg-background/95 text-foreground backdrop-blur-sm"
     >
       <div className="flex items-center justify-between gap-2 border-b px-3 py-2 sm:px-4">
         <span className="truncate text-sm font-medium">{alt}</span>
@@ -252,6 +282,7 @@ function DiagramOverlay({
             <RotateCcw className="h-4 w-4" />
           </Button>
           <Button
+            ref={closeRef}
             variant="ghost"
             size="icon"
             aria-label="閉じる"
@@ -292,8 +323,9 @@ function DiagramOverlay({
         </div>
       </div>
       <p className="border-t px-3 py-2 text-center text-xs text-muted-foreground sm:px-4">
-        ドラッグで移動、ホイールかピンチで拡大縮小、Esc で閉じる
+        ドラッグで移動、ホイール・ピンチ・＋/− で拡大縮小、0 で等倍、Esc
+        で閉じる
       </p>
-    </div>
+    </dialog>
   );
 }

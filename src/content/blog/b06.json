@@ -1,0 +1,127 @@
+{
+  "title": "hamaryo.dev の記事を JSON から静的ページにする仕組み",
+  "date": "2026年11月11日",
+  "description": "TanStack Start と Cloudflare Workers を使う hamaryo.dev で、JSON の記事データをページと sitemap に反映する仕組みを紹介します。",
+  "tags": ["TanStack Start", "Cloudflare", "TypeScript"],
+  "content": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "はじめに"
+    },
+    {
+      "type": "paragraph",
+      "text": "以前、このサイトを Next.js で構築した記事を書きました。現在の hamaryo.dev は TanStack Start と React、Tailwind CSS を使い、Cloudflare Workers で配信しています。今回は、記事のデータをどこに置き、どうやってページとして配信しているのかを紹介します。"
+    },
+    {
+      "type": "paragraph",
+      "text": "ここで紹介するのは、このサイトのリポジトリで確認できる実装です。CMS やデータベースを経由せず、JSON の記事データと画面のコンポーネントを組み合わせています。"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "本文はブロックの配列で管理"
+    },
+    {
+      "type": "paragraph",
+      "text": "ブログの記事データは src/content/blog/ に置いています。タイトル、日付、説明、タグなどに加えて、content という配列に本文を持たせています。段落や見出し、コードなどを type で区別する形です。"
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "code": "{\n  \"title\": \"記事のタイトル\",\n  \"date\": \"2026年11月11日\",\n  \"description\": \"記事の説明\",\n  \"content\": [\n    { \"type\": \"heading\", \"level\": 2, \"text\": \"はじめに\" },\n    { \"type\": \"paragraph\", \"text\": \"本文をここに書きます。\" }\n  ]\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": "これは記事データの最小例です。ほかにもリスト、画像、リンク、Spotify の埋め込みに対応しています。src/lib/blogs.ts の BlogContent 型と、詳細ページの描画処理で、それぞれのブロックを扱っています。"
+    },
+    {
+      "type": "paragraph",
+      "text": "ただし、現在のブログ登録処理には as Blog という型アサーションがあります。JSON の内容を実行時に検証する仕組みではないため、型チェックが通っても本文が正しいとは限りません。新しい種類のブロックを追加するときは、型と描画処理の両方を見直す必要があります。"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "記事を登録すると URL が決まる"
+    },
+    {
+      "type": "paragraph",
+      "text": "JSON ファイルを置くだけでは、まだ記事一覧には出ません。src/lib/blogs.ts でデータをインポートし、blogs 配列に slug を付けて登録します。この記事の slug は 06 なので、URL は /Blog/06 です。"
+    },
+    {
+      "type": "list",
+      "items": [
+        "src/content/blog/ に記事の JSON を追加する",
+        "src/lib/blogs.ts でインポートし、重複しない slug で blogs 配列に登録する",
+        "一覧と詳細ページを確認してからビルドする"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "詳細ページは src/routes/Blog/$slug.tsx が担当します。URL の slug から記事を探し、該当するデータがなければ notFound() を返します。/Blog や /Project の大文字・小文字は旧サイトから引き継いでいるため、リンクを作るときもこの表記に合わせています。"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "ビルド時に HTML と sitemap を生成"
+    },
+    {
+      "type": "paragraph",
+      "text": "vite.config.ts では、固定ページとプロジェクト記事、ブログ記事の URL を pages にまとめています。ブログの URL は getAllBlogSlugs() から作るため、記事一覧への登録がビルド対象にも反映されます。"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "code": "...getAllBlogSlugs().map((slug) => ({\n  path: `/Blog/${slug}`,\n  sitemap: { priority: 0.5, changefreq: \"weekly\" as const },\n})),"
+    },
+    {
+      "type": "paragraph",
+      "text": "これは pages の定義から抜き出した部分です。TanStack Start の prerender を有効にして、列挙したページをビルド時に HTML にします。同じ一覧をもとに sitemap.xml も生成しています。本文を更新したときも、配信される静的ページへの反映には再ビルドとデプロイが必要です。"
+    },
+    {
+      "type": "paragraph",
+      "text": "リンクをたどる自動クロールは無効にしています。プロジェクト記事からリンクしているインストーラーや、末尾スラッシュの違う URL までページ一覧に入らないように、配信するページを明示する構成です。"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Cloudflare での配信と検索への掲載"
+    },
+    {
+      "type": "paragraph",
+      "text": "ビルドしたページは静的アセットとして配信し、アセットで処理できないリクエストは Worker が扱います。セキュリティヘッダーも、静的アセット用の public/_headers と Worker 用の src/lib/security.ts の両方に設定しています。片方を変更しただけでは、すべての応答には反映されません。"
+    },
+    {
+      "type": "paragraph",
+      "text": "また、現在のサイトは全体を noindex, nofollow にしています。sitemap を生成していても、検索結果への掲載を許可しているわけではありません。これはアクセス制限ではないので、URL を知っていれば記事は閲覧できます。"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "更新後に確認すること"
+    },
+    {
+      "type": "paragraph",
+      "text": "記事を追加したら、JSON の書式だけでなく、一覧から詳細へ移動できることや、小さい画面でもコードを読めることを確認します。ビルドで HTML が生成されるところまで確かめておくと、登録漏れにも気づきやすくなります。"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "code": "npm run lint\nnpm run typecheck\nnpm run test:security\nnpm run build\nnpm run test:e2e"
+    },
+    {
+      "type": "paragraph",
+      "text": "この構成では、記事データと表示方法をリポジトリ内で一緒に確認できます。ブロックを増やすときには描画側の変更も必要ですが、今の仕組みを把握しておけば、記事の追加から配信までを追いやすくなります。"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "実装を確認する"
+    },
+    {
+      "type": "link",
+      "text": "hamaryo-dev のソースコード",
+      "url": "https://github.com/Hamaryo226/hamaryo-dev"
+    }
+  ]
+}

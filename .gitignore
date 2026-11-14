@@ -13,3 +13,5 @@ node_modules
 .vinxi
 __unconfig*
 todos.json
+/playwright-report
+/test-results

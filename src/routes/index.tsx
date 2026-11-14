@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Info } from "lucide-react";
+import { Info, Newspaper } from "lucide-react";
 import { Github, Instagram } from "@/components/brand-icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -94,22 +94,22 @@ function Home() {
                 </div>
               </div>
             </Link>
-            {/* }
             <Link
               to="/Blog"
               className="flex-1 group relative overflow-hidden rounded-xl border bg-card p-4 sm:p-6 hover:shadow-md transition-all hover:-translate-y-0.5"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+                  <Newspaper className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 </div>
                 <div>
                   <h2 className="font-semibold text-sm sm:text-base">ブログ</h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground">技術記事や開発記録、その他の考え</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
+                    技術記事や開発記録、その他の考え
+                  </p>
                 </div>
               </div>
             </Link>
-            */}
             <Link
               to="/Info"
               className="flex-1 group relative overflow-hidden rounded-xl border bg-card p-4 sm:p-6 hover:shadow-md transition-all hover:-translate-y-0.5"
@@ -222,7 +222,12 @@ function Home() {
             >
               Project
             </Link>
-            {/* <Link to="/Blog" className="hover:text-foreground transition-colors">Blog</Link> */}
+            <Link
+              to="/Blog"
+              className="hover:text-foreground transition-colors"
+            >
+              Blog
+            </Link>
             <Link
               to="/Info"
               className="hover:text-foreground transition-colors"

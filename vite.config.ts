@@ -14,8 +14,7 @@ import { getAllBlogSlugs } from "./src/lib/blogs";
 /**
  * ビルド時に静的 HTML へ焼くページの一覧。
  *
- * crawlLinks は使わない。ホームからブログへのリンクがコメントアウトされていて
- * /Blog 以下に到達できないうえ、クロールさせると
+ * crawlLinks は使わない。クロールさせると
  * /dist/Muse_2.4.1_x64-setup.exe（インストーラー）や末尾スラッシュ違いの重複 URL まで
  * sitemap に載ってしまうため。ここで列挙した内容がそのまま sitemap.xml になる。
  *
