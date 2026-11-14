@@ -3,7 +3,10 @@
 ポートフォリオサイト **[hamaryo.dev](https://hamaryo.dev)** のソースコード。
 
 [Next.js 16 App Router 版（`Hamaryo226/ryota-space`）](https://github.com/Hamaryo226/ryota-space)を
-**TanStack Start + shadcn/ui** で再構築したもの。デザインは旧版から忠実に移植している。
+**TanStack Start + shadcn/ui** で再構築したもの。既存の URL と記事データを引き継ぎ、
+一覧・記事詳細・サイト情報・404 を含む全ページで、自作シンボルと白黒基調の共通デザインを使用している。
+幅640pxを上限とした中央カラムに、小さなプロフィールと開閉式の作品紹介を配置する。
+初回はダークテーマで表示し、テーマ切り替え後は選択を保存する。
 
 ## 技術スタック
 
@@ -13,7 +16,7 @@
 | UI             | React 19 / shadcn/ui (new-york, neutral) / Radix UI           |
 | スタイル       | Tailwind CSS v4（CSS-first、`src/styles.css`）                |
 | フォント       | Geist / Geist Mono（`@fontsource-variable/*` でセルフホスト） |
-| テーマ         | next-themes（`class` 属性、system 追従）                      |
+| テーマ         | next-themes（`class` 属性、初期ダーク・選択保存）             |
 | アイコン       | lucide-react                                                  |
 | ホスティング   | Cloudflare Workers（`@cloudflare/vite-plugin` + wrangler）    |
 | Lint / Format  | ESLint（`@tanstack/eslint-config`）/ Prettier                 |
@@ -41,7 +44,9 @@ npm run deploy       # ビルドして Cloudflare へデプロイ
 
 ブラウザテストは初回に `npx playwright install chromium` を実行し、
 `npm run build` の後に `npm run test:e2e` を実行します。記事への遷移、
-構成図のフォーカス・キーボード操作、モバイル幅とダークテーマを確認します。
+作品紹介の開閉・テーマ保存、構成図のフォーカス・キーボード操作、
+本文とコードの保持、埋め込み URL、404 の復帰、
+モバイル幅とダークテーマを確認します。
 既存の Chromium を使う場合は `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` で指定できます。
 
 ## 構成
@@ -57,11 +62,15 @@ src/
 │   ├── Blog/
 │   │   ├── index.tsx    /Blog
 │   │   └── $slug.tsx    /Blog/:slug
-│   └── Info/index.tsx   /Info
+│   ├── Info/index.tsx   /Info
+│   └── About/index.tsx  /About（人物紹介・制作分野）
 ├── content/             記事・ブログの実データ（JSON）
 │   ├── articles/        プロジェクト記事
 │   └── blog/            ブログ記事
 ├── components/
+│   ├── portfolio-layout.tsx  全ページの共通ナビゲーション・フッター
+│   ├── article-elements.tsx  記事のセクション・コード・外部リンク
+│   ├── missing-page.tsx      共通の404表示
 │   └── ui/              shadcn/ui コンポーネント
 ├── lib/                 articles.ts / blogs.ts / utils.ts
 ├── config/site.ts       サイト共通メタ情報・SEO ヘルパー
@@ -77,6 +86,17 @@ src/
 
 **プロジェクト記事**: `src/content/articles/` に JSON を置き、`src/lib/articles.ts` の
 `articles` 配列に `slug` と `category`（`university` / `personal`）付きで追加する。
+
+一覧のプラットフォーム分類・技術タグ・アプリ画像は `src/config/portfolio.ts` に置く。
+未登録でも一覧に表示されるが、プラットフォームで絞り込みたい場合は分類を登録する。
+トップの注目作品も同ファイルの `getFeaturedProjects()` で選ぶ。
+作品紹介はネイティブの `details` / `summary` で開閉し、件数は記事データから集計する。
+
+`/Project?platform=apple&category=personal` のように絞り込み条件を URL で共有できる。
+About はプロフィールと制作分野、Info はサイトの技術構成・バージョンを担当する。
+
+自作のサイトシンボルは `public/icon/site-symbol.svg`。ヘッダーと favicon で同じ
+SVG を使用し、`public/icon/site-touch-icon.png` は同じ図形を PNG に書き出したもの。
 
 **ブログ記事**: `src/content/blog/` に JSON を置き、`src/lib/blogs.ts` の `blogs` 配列に
 追加する。本文は `paragraph` / `heading` / `list` / `image` / `code` / `embed` / `link` の

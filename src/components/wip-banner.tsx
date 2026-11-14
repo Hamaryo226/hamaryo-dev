@@ -3,7 +3,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export function WipBanner() {
   return (
-    <Alert className="mb-8 border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50 sm:mb-10">
+    <Alert className="mb-8 border-border bg-muted/40 text-foreground sm:mb-10">
       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 sm:h-5 sm:w-5" />
       <div className="space-y-1">
         <AlertTitle>作成途中</AlertTitle>

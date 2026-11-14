@@ -1,264 +1,200 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Info, Newspaper } from "lucide-react";
-import { Github, Instagram } from "@/components/brand-icons";
+import { ArrowUpRight, FolderOpen, Layers, NotebookText } from "lucide-react";
+import { PortfolioLayout } from "@/components/portfolio-layout";
+import { ProjectDisclosure } from "@/components/project-disclosure";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ModeToggle } from "@/components/mode-toggle";
-import { getAllArticles } from "@/lib/articles";
+import {
+  getFeaturedProjects,
+  getProjectPresentation,
+} from "@/config/portfolio";
 import { SITE_DESCRIPTION, SITE_NAME, seo } from "@/config/site";
+import { getAllArticles } from "@/lib/articles";
+import { getAllBlogs } from "@/lib/blogs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: seo({
-      title: SITE_NAME,
-      description: SITE_DESCRIPTION,
-      path: "/",
-    }),
+    meta: seo({ title: SITE_NAME, description: SITE_DESCRIPTION, path: "/" }),
   }),
   component: Home,
 });
 
 function Home() {
-  const projects = getAllArticles().slice(0, 3);
+  const articles = getAllArticles();
+  const blogs = getAllBlogs();
+  const featured = getFeaturedProjects();
+  const platformCount = new Set(
+    articles.flatMap((article) => {
+      const platform = getProjectPresentation(article).platform;
+      return platform ? [platform] : [];
+    }),
+  ).size;
+  const stats = [
+    { label: "プロジェクト", value: articles.length, icon: FolderOpen },
+    { label: "ブログ記事", value: blogs.length, icon: NotebookText },
+    { label: "プラットフォーム", value: platformCount, icon: Layers },
+  ] as const;
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-background to-muted/20">
-      <main className="mx-auto w-full max-w-screen-lg px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        {/* ===== ヘッダー ===== */}
-        <div className="mb-6 flex items-center justify-between">
-          <Link
-            to="/"
-            className="text-sm font-mono text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ryota-space
-          </Link>
-          <div className="flex items-center gap-3">
-            <ModeToggle />
-          </div>
-        </div>
-
-        {/* ===== HERO ===== */}
-        <section className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-12 mb-12 md:mb-24">
-          {/* アバター */}
-          <div className="relative shrink-0">
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-primary/30 via-primary/10 to-transparent blur-sm" />
-            <Avatar className="w-28 h-28 sm:w-36 sm:h-36 border-2 border-border/50 shadow-md">
-              <AvatarImage src="https://avatars.githubusercontent.com/u/52881627?v=4" />
-              <AvatarFallback />
-            </Avatar>
-          </div>
-
-          {/* テキスト */}
-          <div className="text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-xs font-mono text-primary bg-primary/10 rounded-full border border-primary/20">
-              システムエンジニア / プログラマー
-            </div>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-              Hama<span className="text-primary">ryo</span>
+    <PortfolioLayout>
+      <section className="pt-10 sm:pt-14" aria-labelledby="profile-heading">
+        <div className="flex items-center gap-3">
+          <Avatar className="size-12 border border-border/60">
+            <AvatarImage
+              src="https://avatars.githubusercontent.com/u/52881627?v=4"
+              alt=""
+            />
+            <AvatarFallback>H</AvatarFallback>
+          </Avatar>
+          <div>
+            <h1
+              id="profile-heading"
+              className="text-lg font-medium tracking-tight"
+            >
+              Hamaryo
             </h1>
-            <p className="mt-4 text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed">
-              システムエンジニアとして開発したプロジェクトや、個人で取り組んだ成果をまとめています。
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              システムエンジニア / プログラマー
             </p>
           </div>
-        </section>
-
-        {/* ===== ナビゲーション ===== */}
-        <section className="mb-12 md:mb-20">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              to="/Project"
-              className="flex-1 group relative overflow-hidden rounded-xl border bg-card p-4 sm:p-6 hover:shadow-md transition-all hover:-translate-y-0.5"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <svg
-                    className="w-4 h-4 sm:w-5 sm:h-5 text-primary"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="font-semibold text-sm sm:text-base">
-                    プロジェクト
-                  </h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    制作したプロジェクト一覧
-                  </p>
-                </div>
-              </div>
-            </Link>
-            <Link
-              to="/Blog"
-              className="flex-1 group relative overflow-hidden rounded-xl border bg-card p-4 sm:p-6 hover:shadow-md transition-all hover:-translate-y-0.5"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <Newspaper className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-sm sm:text-base">ブログ</h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    技術記事や開発記録、その他の考え
-                  </p>
-                </div>
-              </div>
-            </Link>
-            <Link
-              to="/Info"
-              className="flex-1 group relative overflow-hidden rounded-xl border bg-card p-4 sm:p-6 hover:shadow-md transition-all hover:-translate-y-0.5"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <Info className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-sm sm:text-base">
-                    サイト情報
-                  </h2>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    技術スタック・バージョン・リポジトリ
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </section>
-
-        {/* ===== プロジェクト ===== */}
-        <section className="mb-12 md:mb-20">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
-              <span className="w-1 h-5 sm:h-6 bg-primary rounded-full" />
-              プロジェクト
-            </h2>
-            <Link
-              to="/Project"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              すべて見る →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {projects.map((article) => (
-              <Link
-                key={article.slug}
-                to="/Project/$slug"
-                params={{ slug: article.slug }}
-                className="group rounded-xl border bg-card overflow-hidden hover:shadow-md transition-all hover:-translate-y-0.5"
-              >
-                {article.thumbnail && (
-                  <div className="relative w-full h-40 bg-muted overflow-hidden">
-                    <img
-                      src={article.thumbnail}
-                      alt={article.title}
-                      loading="lazy"
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                )}
-                <div className="p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${article.category === "university" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400" : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"}`}
-                    >
-                      {article.category === "university"
-                        ? "大学開発"
-                        : "個人開発"}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground">
-                      {article.date}
-                    </span>
-                  </div>
-                  <h3 className="font-semibold text-sm line-clamp-2 mb-1">
-                    {article.title}
-                  </h3>
-                  <p className="text-xs text-muted-foreground line-clamp-2">
-                    {article.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ===== ソーシャル ===== */}
-        <section className="mb-12">
-          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
-            <span className="w-1 h-5 sm:h-6 bg-primary rounded-full" />
-            リンク
-          </h2>
-          <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-            {/* <SocialLink href="https://twitter.com/_hamaryo" icon={Twitter} label="X (Twitter)" /> */}
-            <SocialLink
-              href="https://www.instagram.com/ryota_ztts"
-              icon={Instagram}
-              label="Instagram"
-            />
-            <SocialLink
-              href="https://github.com/Hamaryo226"
-              icon={Github}
-              label="GitHub"
-            />
-            {/* <SocialLink href="https://www.youtube.com/@Fumolat" icon={Youtube} label="YouTube" /> */}
-          </div>
-        </section>
-      </main>
-
-      {/* ===== フッター ===== */}
-      <footer className="border-t py-6">
-        <div className="mx-auto w-full max-w-screen-lg px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Hamaryo</p>
-          <div className="flex items-center gap-4">
-            <Link
-              to="/Project"
-              className="hover:text-foreground transition-colors"
-            >
-              Project
-            </Link>
-            <Link
-              to="/Blog"
-              className="hover:text-foreground transition-colors"
-            >
-              Blog
-            </Link>
-            <Link
-              to="/Info"
-              className="hover:text-foreground transition-colors"
-            >
-              Info
-            </Link>
-          </div>
         </div>
-      </footer>
-    </div>
-  );
-}
-
-function SocialLink({
-  href,
-  icon: Icon,
-  label,
-}: {
-  href: string;
-  icon: React.ElementType;
-  label: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="w-full sm:w-auto inline-flex items-center justify-center sm:justify-start gap-2.5 px-4 py-3 sm:py-2.5 rounded-xl border bg-card text-sm text-muted-foreground hover:text-foreground hover:shadow-sm transition-all hover:-translate-y-0.5"
-    >
-      <Icon className="w-4 h-4" />
-      <span>{label}</span>
-    </a>
+        <div className="mt-6 space-y-4 text-[13px] leading-7 text-muted-foreground">
+          <p>
+            Webアプリケーション、iOSアプリ、PC向けのツールを制作しています。大学でのシステム開発と個人開発の成果を、このサイトにまとめています。
+          </p>
+          <p>
+            音楽と移動を記録する
+            <Link
+              to="/Project/$slug"
+              params={{ slug: "strolly" }}
+              className="text-foreground/80 underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              Strolly
+            </Link>
+            、リズムゲームの
+            <Link
+              to="/Project/$slug"
+              params={{ slug: "taikodive" }}
+              className="text-foreground/80 underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              TaikoDive
+            </Link>
+            、写真を扱う
+            <Link
+              to="/Project/$slug"
+              params={{ slug: "drop-watermark" }}
+              className="text-foreground/80 underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              Drop-Watermark
+            </Link>
+            などを制作しています。開発の記録や、普段使うアプリの話はブログに掲載しています。
+          </p>
+        </div>
+        <dl className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="flex flex-col rounded-xl bg-muted/50 p-3 sm:p-4"
+            >
+              <dt className="order-last mt-1 text-[10px] text-muted-foreground">
+                {stat.label}
+              </dt>
+              <dd>
+                <stat.icon
+                  className="mb-3 size-3.5 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <span className="text-lg font-medium tabular-nums">
+                  {stat.value}
+                </span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <div className="mt-5 flex flex-wrap items-center gap-2 text-[11px]">
+          <Link
+            to="/About"
+            className="rounded-full bg-foreground px-3 py-1.5 text-background transition-opacity hover:opacity-80"
+          >
+            プロフィール
+          </Link>
+          <a
+            href="https://github.com/Hamaryo226"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-full bg-muted/50 px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            GitHub <ArrowUpRight className="size-3" aria-hidden="true" />
+          </a>
+          <a
+            href="https://www.instagram.com/ryota_ztts"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-full bg-muted/50 px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Instagram <ArrowUpRight className="size-3" aria-hidden="true" />
+          </a>
+        </div>
+      </section>
+      <section
+        id="selected-work"
+        aria-labelledby="selected-work-heading"
+        className="mt-14 scroll-mt-8"
+      >
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <h2
+            id="selected-work-heading"
+            className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground"
+          >
+            PROJECTS / {String(featured.length).padStart(2, "0")}
+          </h2>
+          <Link
+            to="/Project"
+            className="text-[10px] text-muted-foreground hover:text-foreground"
+          >
+            すべて見る
+          </Link>
+        </div>
+        <div>
+          {featured.map((article, index) => (
+            <ProjectDisclosure
+              key={article.slug}
+              article={article}
+              initiallyOpen={index === 0}
+            />
+          ))}
+        </div>
+      </section>
+      <section aria-labelledby="notes-heading" className="mt-12">
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <h2
+            id="notes-heading"
+            className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground"
+          >
+            NOTES / {String(blogs.length).padStart(2, "0")}
+          </h2>
+          <Link
+            to="/Blog"
+            className="text-[10px] text-muted-foreground hover:text-foreground"
+          >
+            ブログ一覧
+          </Link>
+        </div>
+        {blogs.slice(0, 3).map((blog) => (
+          <Link
+            key={blog.slug}
+            to="/Blog/$slug"
+            params={{ slug: blog.slug }}
+            className="group flex items-start justify-between gap-4 py-3"
+          >
+            <h3 className="text-[13px] font-normal leading-6 text-foreground/85 group-hover:underline group-hover:underline-offset-4">
+              {blog.title}
+            </h3>
+            <span className="mt-1 shrink-0 font-mono text-[9px] text-muted-foreground">
+              {blog.date}
+            </span>
+          </Link>
+        ))}
+      </section>
+    </PortfolioLayout>
   );
 }
