@@ -1,7 +1,8 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Download } from "lucide-react";
-import { getArticleBySlug } from "@/lib/articles";
+import { getArticleBySlug, getAllArticles } from "@/lib/articles";
 import { getProjectPresentation, platforms } from "@/config/portfolio";
+import { getArticleSections, getArticleState } from "@/lib/article-schema";
 import { BackButton } from "@/components/back-button";
 import {
   ArticleSection,
@@ -39,14 +40,21 @@ export const Route = createFileRoute("/Project/$slug")({
 function ProjectDetailPage() {
   const { article } = Route.useLoaderData();
   const { platform, appIcon } = getProjectPresentation(article);
+  const { articleStatus, distribution } = getArticleState(article);
+  const sections = getArticleSections(article);
+  const otherProjects = getAllArticles()
+    .filter((other) => other.slug !== article.slug)
+    .slice(-3);
   const techStack = article.content?.技術スタック;
   const techEntries =
-    techStack && typeof techStack !== "string" ? Object.entries(techStack) : [];
+    techStack && typeof techStack !== "string"
+      ? Object.entries(techStack).filter(([, techs]) => techs.length > 0)
+      : [];
   const details = [
     ["想定クライアント", article.content?.想定クライアント],
     ["目的", article.content?.目的],
     ["目標", article.content?.目標],
-  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]?.trim()));
   const related = Object.entries(article.links ?? {}).filter(
     ([title]) => title !== "Installer",
   );
@@ -60,22 +68,49 @@ function ProjectDetailPage() {
       <div className="py-8 sm:py-10">
         <BackButton href="/Project" label="プロジェクト一覧に戻る" />
         <header className="mb-8 mt-6 border-b border-border/60 pb-7">
-          <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+          <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             <span className="font-mono">{article.date}</span>
             <span>
               {article.category === "university" ? "大学開発" : "個人開発"}
             </span>
             {platform && <span>{platforms[platform]}</span>}
           </div>
-          <h1 className="max-w-4xl break-words text-[22px] font-medium leading-[1.6] tracking-tight sm:text-2xl">
-            {article.title}
-          </h1>
-          <p className="mt-4 text-[13px] leading-7 text-muted-foreground">
-            {article.description}
+          <div className="flex items-center gap-4">
+            {appIcon && (
+              <img
+                src={appIcon}
+                alt={`${article.systemname}のアプリアイコン`}
+                width={80}
+                height={80}
+                className="size-20 shrink-0 rounded-xl border object-contain"
+              />
+            )}
+            <h1 className="max-w-4xl break-words text-[22px] font-medium leading-[1.6] tracking-tight sm:text-2xl">
+              {article.intro ? article.systemname : article.title}
+            </h1>
+          </div>
+          {article.intro && (
+            <p className="mt-6 text-xl font-medium leading-relaxed">
+              {article.intro.headline}
+            </p>
+          )}
+          <p className="mt-4 text-[15px] leading-[1.8] text-muted-foreground sm:text-base">
+            {article.intro?.lead ?? article.description}
           </p>
+          {article.intro && (
+            <p className="mt-4 text-xs leading-6">
+              対応環境：{article.intro.environment}
+            </p>
+          )}
         </header>
-        {image && (
-          <div className="mb-10 aspect-[16/9] overflow-hidden rounded-xl border bg-muted">
+        {image && !appIcon && (
+          <div
+            className={
+              appIcon
+                ? "mb-8 size-20 overflow-hidden rounded-xl border bg-muted"
+                : "mb-10 aspect-[16/9] overflow-hidden rounded-xl border bg-muted"
+            }
+          >
             <img
               src={image}
               alt={
@@ -86,14 +121,21 @@ function ProjectDetailPage() {
               width={appIcon ? 1024 : 1920}
               height={appIcon ? 1024 : 1080}
               fetchPriority="high"
-              className={`h-full w-full ${appIcon ? "object-cover object-bottom" : "object-contain"}`}
+              className="h-full w-full object-contain"
             />
           </div>
         )}
         <div className="space-y-10">
           <article className="min-w-0">
-            <WipBanner />
-            {article.links?.Installer && (
+            {articleStatus !== "published" && <WipBanner />}
+            {distribution.status === "available" && (
+              <p className="mb-8">
+                <ExternalLink href={distribution.url}>
+                  {distribution.label}
+                </ExternalLink>
+              </p>
+            )}
+            {!article.distribution && article.links?.Installer && (
               <a
                 href={article.links.Installer}
                 download
@@ -103,14 +145,52 @@ function ProjectDetailPage() {
                 インストーラーをダウンロード
               </a>
             )}
+            {sections.some((section) => section.navLabel && section.id) && (
+              <nav
+                aria-label="記事内ナビゲーション"
+                className="mb-8 flex flex-wrap gap-5 text-sm"
+              >
+                {sections
+                  .filter((section) => section.navLabel && section.id)
+                  .map((section) => (
+                    <a
+                      key={section.id}
+                      href={`#${section.id}`}
+                      className="underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4"
+                    >
+                      {section.navLabel}
+                    </a>
+                  ))}
+              </nav>
+            )}
             <div className="space-y-9">
-              {article.content?.概要 && (
-                <ArticleSection title="概要">
-                  <p className="whitespace-pre-line break-words text-[13px] leading-7 text-muted-foreground">
-                    {article.content.概要}
-                  </p>
+              {sections.map((section, index) => (
+                <ArticleSection
+                  key={`${index}-${section.title}`}
+                  title={section.title}
+                  id={section.id}
+                >
+                  {section.body.trim() && (
+                    <p className="whitespace-pre-line break-words text-[15px] leading-[1.8] text-muted-foreground sm:text-base">
+                      {section.body}
+                    </p>
+                  )}
+                  {section.type === "features" && (
+                    <div className="space-y-6">
+                      {section.items?.map((item, itemIndex) => (
+                        <div key={`${itemIndex}-${item.title}`}>
+                          <h3 className="mb-2 text-base font-medium">
+                            {item.title}
+                          </h3>
+                          <p className="whitespace-pre-line break-words text-[15px] leading-[1.8] text-muted-foreground sm:text-base">
+                            {item.body}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </ArticleSection>
-              )}
+              ))}
               {article.diagram && (
                 <ArticleSection title="構成図">
                   <figure>
@@ -145,7 +225,7 @@ function ProjectDetailPage() {
                 </ArticleSection>
               )}
               {(techEntries.length > 0 ||
-                (typeof techStack === "string" && techStack)) && (
+                (typeof techStack === "string" && techStack.trim())) && (
                 <ArticleSection title="技術スタック">
                   {typeof techStack === "string" ? (
                     <p className="text-[13px] leading-7 text-muted-foreground">
@@ -177,7 +257,7 @@ function ProjectDetailPage() {
                   )}
                 </ArticleSection>
               )}
-              {article.code && (
+              {article.code && Object.keys(article.code).length > 0 && (
                 <ArticleSection title="実装例">
                   <div className="space-y-6">
                     {Object.entries(article.code).map(([key, code]) => (
@@ -232,6 +312,29 @@ function ProjectDetailPage() {
             )}
           </aside>
         </div>
+        {otherProjects.length > 0 && (
+          <section
+            className="mt-10 border-t pt-6"
+            aria-labelledby="other-projects"
+          >
+            <h2 id="other-projects" className="mb-4 text-sm font-semibold">
+              ほかの作品
+            </h2>
+            <ul className="space-y-4 text-sm">
+              {otherProjects.map((other) => (
+                <li key={other.slug}>
+                  <Link
+                    to="/Project/$slug"
+                    params={{ slug: other.slug }}
+                    className="underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4"
+                  >
+                    {other.systemname}の詳細を見る
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         <div className="mt-12 border-t pt-6">
           <BackButton href="/Project" label="プロジェクト一覧に戻る" />
         </div>

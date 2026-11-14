@@ -9,7 +9,16 @@ import orderManager2Data from "../content/articles/order-manager2.json";
 import taikodiveData from "../content/articles/taikodive.json";
 import strollyData from "../content/articles/strolly.json";
 
-export type Article = {
+import { validateArticleCollection } from "./article-schema";
+import type {
+  ArticleState,
+  ArticleSectionData,
+  ArticleIntro,
+} from "./article-schema";
+
+export type Article = ArticleState & {
+  sections?: ArticleSectionData[];
+  intro?: ArticleIntro;
   slug: string;
   category: "university" | "personal";
   thumbnail?: string;
@@ -46,7 +55,7 @@ export type Article = {
 };
 
 // 記事データにslugとcategoryを追加
-export const articles: Article[] = [
+const articleData = [
   { ...fcsData, slug: "fcs", category: "university" },
   { ...sdsData, slug: "sds", category: "university" },
   { ...orderManager2Data, slug: "order-manager2", category: "university" },
@@ -57,6 +66,16 @@ export const articles: Article[] = [
   { ...taikodiveData, slug: "taikodive", category: "personal" },
   { ...strollyData, slug: "strolly", category: "personal" },
 ];
+
+// Vite imports this module during configuration, so invalid JSON fails the build.
+validateArticleCollection(
+  articleData.map((article) => ({
+    data: article,
+    slug: article.slug,
+    file: `src/content/articles/${article.slug === "drop-watermark" ? "dw" : article.slug}.json`,
+  })),
+);
+export const articles = articleData as Article[];
 
 // slugから記事を取得
 export function getArticleBySlug(slug: string): Article | undefined {

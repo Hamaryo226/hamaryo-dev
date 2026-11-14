@@ -2,8 +2,10 @@ import { expect, test } from "@playwright/test";
 
 const title = "hamaryo.dev の記事を JSON から静的ページにする仕組み";
 
-test("home links to the blog and the new article", async ({ page }) => {
-  await page.goto("/");
+test("inner navigation links to the blog and the new article", async ({
+  page,
+}) => {
+  await page.goto("/Project");
   await page
     .getByRole("navigation", { name: "メインナビゲーション" })
     .getByRole("link", { name: "Blog", exact: true })
