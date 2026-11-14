@@ -96,11 +96,9 @@ const environment = [
 function InfoPage() {
   return (
     <PortfolioLayout>
-      <header className="py-12 sm:py-16">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          サイト情報
-        </h1>
-        <p className="mt-5 max-w-2xl text-sm leading-8 text-muted-foreground">
+      <header className="pt-10 pb-8 sm:pt-14">
+        <h1 className="text-xl font-medium tracking-tight">サイト情報</h1>
+        <p className="mt-4 text-[13px] leading-7 text-muted-foreground">
           このサイトの構成、利用している技術、公開しているリポジトリを確認できます。
         </p>
       </header>
@@ -108,19 +106,19 @@ function InfoPage() {
         {summary.map((item) => (
           <div key={item.label} className="py-5 sm:px-6 sm:first:pl-0">
             <dt className="text-xs text-muted-foreground">{item.label}</dt>
-            <dd className="mt-2 text-lg font-medium">{item.value}</dd>
+            <dd className="mt-2 text-sm font-medium">{item.value}</dd>
             <dd className="mt-2 font-mono text-xs text-muted-foreground">
               {item.detail}
             </dd>
           </div>
         ))}
       </dl>
-      <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-16">
+      <div className="space-y-10">
         <section aria-labelledby="stack-heading" className="min-w-0">
           <div className="mb-5 flex items-center justify-between gap-4">
             <h2
               id="stack-heading"
-              className="text-xl font-semibold tracking-tight"
+              className="text-sm font-medium tracking-tight"
             >
               技術スタック
             </h2>
@@ -128,10 +126,10 @@ function InfoPage() {
               {techStack.length} items
             </span>
           </div>
-          <p className="mb-6 text-sm leading-7 text-muted-foreground">
+          <p className="mb-5 text-[12px] leading-6 text-muted-foreground">
             使用している主要パッケージとバージョンです。
           </p>
-          <table className="w-full table-fixed border-y text-left text-sm">
+          <table className="w-full table-fixed border-y border-border/60 text-left text-[12px]">
             <thead className="border-b">
               <tr>
                 <th
@@ -177,7 +175,7 @@ function InfoPage() {
             最終更新: {import.meta.env.VITE_BUILD_DATE}
           </p>
         </section>
-        <aside className="min-w-0 space-y-9">
+        <aside className="grid min-w-0 gap-8 sm:grid-cols-2">
           <section className="border-t pt-5">
             <h2 className="mb-4 text-sm font-semibold">リポジトリ</h2>
             <p className="mb-3 break-words font-mono text-xs leading-6 text-muted-foreground">

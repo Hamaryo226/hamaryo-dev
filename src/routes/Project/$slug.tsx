@@ -59,18 +59,18 @@ function ProjectDetailPage() {
     <PortfolioLayout>
       <div className="py-8 sm:py-10">
         <BackButton href="/Project" label="プロジェクト一覧に戻る" />
-        <header className="mb-9 mt-8 border-b pb-8 sm:mt-10 sm:pb-10">
-          <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+        <header className="mb-8 mt-6 border-b border-border/60 pb-7">
+          <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
             <span className="font-mono">{article.date}</span>
             <span>
               {article.category === "university" ? "大学開発" : "個人開発"}
             </span>
             {platform && <span>{platforms[platform]}</span>}
           </div>
-          <h1 className="max-w-4xl break-words text-3xl font-semibold leading-[1.5] tracking-tight sm:text-4xl">
+          <h1 className="max-w-4xl break-words text-[22px] font-medium leading-[1.6] tracking-tight sm:text-2xl">
             {article.title}
           </h1>
-          <p className="mt-5 max-w-3xl text-sm leading-8 text-muted-foreground">
+          <p className="mt-4 text-[13px] leading-7 text-muted-foreground">
             {article.description}
           </p>
         </header>
@@ -90,7 +90,7 @@ function ProjectDetailPage() {
             />
           </div>
         )}
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-16">
+        <div className="space-y-10">
           <article className="min-w-0">
             <WipBanner />
             {article.links?.Installer && (
@@ -103,10 +103,10 @@ function ProjectDetailPage() {
                 インストーラーをダウンロード
               </a>
             )}
-            <div className="space-y-12">
+            <div className="space-y-9">
               {article.content?.概要 && (
                 <ArticleSection title="概要">
-                  <p className="whitespace-pre-line break-words text-base leading-8 text-muted-foreground">
+                  <p className="whitespace-pre-line break-words text-[13px] leading-7 text-muted-foreground">
                     {article.content.概要}
                   </p>
                 </ArticleSection>
@@ -138,7 +138,7 @@ function ProjectDetailPage() {
                         <dt className="text-xs leading-7 text-muted-foreground">
                           {label}
                         </dt>
-                        <dd className="text-sm leading-8">{value}</dd>
+                        <dd className="text-[13px] leading-7">{value}</dd>
                       </div>
                     ))}
                   </dl>
@@ -148,7 +148,7 @@ function ProjectDetailPage() {
                 (typeof techStack === "string" && techStack)) && (
                 <ArticleSection title="技術スタック">
                   {typeof techStack === "string" ? (
-                    <p className="text-sm leading-8 text-muted-foreground">
+                    <p className="text-[13px] leading-7 text-muted-foreground">
                       {techStack}
                     </p>
                   ) : (
@@ -188,7 +188,7 @@ function ProjectDetailPage() {
               )}
             </div>
           </article>
-          <aside className="min-w-0 space-y-9 lg:sticky lg:top-8">
+          <aside className="grid min-w-0 gap-7 sm:grid-cols-2">
             <section className="border-t pt-5">
               <h2 className="mb-4 text-sm font-semibold">プロジェクト情報</h2>
               <dl className="space-y-3 text-xs leading-6">

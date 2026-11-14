@@ -47,14 +47,12 @@ function ProjectPage() {
   );
   return (
     <PortfolioLayout>
-      <header className="py-12 sm:py-16">
-        <p className="mb-5 font-mono text-xs tracking-[0.16em] text-muted-foreground">
+      <header className="pt-10 pb-8 sm:pt-14">
+        <p className="mb-3 font-mono text-[10px] tracking-[0.12em] text-muted-foreground">
           WORK / PROJECT ARCHIVE
         </p>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
-          プロジェクト
-        </h1>
-        <p className="mt-6 max-w-xl text-sm leading-8 text-muted-foreground">
+        <h1 className="text-xl font-medium tracking-tight">プロジェクト</h1>
+        <p className="mt-4 text-[13px] leading-7 text-muted-foreground">
           WebからiOS、デスクトップまで。
           <br />
           個人開発と大学での制作を、分野ごとにまとめています。
@@ -62,7 +60,7 @@ function ProjectPage() {
       </header>
       <section
         aria-label="プロジェクトの絞り込み"
-        className="space-y-4 border-y py-5"
+        className="space-y-3 border-y border-border/60 py-4"
       >
         <div
           role="group"
@@ -127,7 +125,7 @@ function ProjectPage() {
           </div>
         </div>
       </section>
-      <div className="mb-8 mt-6 flex items-center justify-between gap-3">
+      <div className="mb-3 mt-5 flex items-center justify-between gap-3">
         <p role="status" className="text-xs text-muted-foreground">
           <span className="mr-1 font-mono text-base text-foreground">
             {String(filtered.length).padStart(2, "0")}
@@ -145,17 +143,14 @@ function ProjectPage() {
         )}
       </div>
       {filtered.length > 0 ? (
-        <section
-          aria-label="作品一覧"
-          className="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:gap-y-16"
-        >
+        <section aria-label="作品一覧" className="divide-y divide-border/40">
           {filtered.map((project) => (
             <ProjectCard key={project.slug} article={project} />
           ))}
         </section>
       ) : (
-        <div className="rounded-xl border border-dashed px-6 py-16 text-center">
-          <h2 className="text-lg font-semibold">
+        <div className="rounded-xl border border-dashed px-5 py-12 text-center">
+          <h2 className="text-sm font-medium">
             条件に合うプロジェクトがありません
           </h2>
           <p className="mt-3 text-sm text-muted-foreground">

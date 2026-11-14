@@ -35,19 +35,19 @@ function BlogDetailPage() {
   const { blog } = Route.useLoaderData();
   return (
     <PortfolioLayout>
-      <div className="mx-auto max-w-3xl py-8 sm:py-10">
+      <div className="min-w-0 py-8 sm:py-10">
         <BackButton href="/Blog" label="ブログ一覧に戻る" />
-        <header className="mb-9 mt-8 border-b pb-8 sm:mt-10 sm:pb-10">
-          <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+        <header className="mb-8 mt-6 border-b border-border/60 pb-7">
+          <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
             <time className="font-mono">{blog.date}</time>
             {blog.tags?.map((tag) => (
               <span key={tag}>{tag}</span>
             ))}
           </div>
-          <h1 className="break-words text-3xl font-semibold leading-[1.5] tracking-tight sm:text-4xl">
+          <h1 className="break-words text-[22px] font-medium leading-[1.6] tracking-tight sm:text-2xl">
             {blog.title}
           </h1>
-          <p className="mt-5 text-sm leading-8 text-muted-foreground">
+          <p className="mt-4 text-[13px] leading-7 text-muted-foreground">
             {blog.description}
           </p>
         </header>
@@ -82,29 +82,29 @@ function BlogBlock({ block }: { block: BlogContent }) {
       // 記事タイトルを唯一の h1 とし、本文の見出しは h2 以下にする。
       const level = Math.min(6, Math.max(2, block.level));
       const sizes: Record<number, string> = {
-        2: "mt-12 mb-5 text-2xl",
-        3: "mt-9 mb-4 text-xl",
-        4: "mt-8 mb-3 text-lg",
+        2: "mt-10 mb-4 text-lg",
+        3: "mt-8 mb-3 text-base",
+        4: "mt-7 mb-3 text-sm",
         5: "mt-7 mb-3 text-base",
         6: "mt-7 mb-3 text-sm",
       };
       return createElement(
         `h${level}`,
         {
-          className: `${sizes[level]} font-semibold leading-relaxed tracking-tight`,
+          className: `${sizes[level]} font-medium leading-relaxed tracking-tight`,
         },
         block.text,
       );
     }
     case "paragraph":
       return (
-        <p className="mb-6 whitespace-pre-line break-words text-base leading-8 text-muted-foreground">
+        <p className="mb-6 whitespace-pre-line break-words text-[13px] leading-7 text-muted-foreground">
           {block.text}
         </p>
       );
     case "list":
       return (
-        <ul className="mb-7 list-disc space-y-3 pl-5 text-base leading-8 text-muted-foreground">
+        <ul className="mb-7 list-disc space-y-3 pl-5 text-[13px] leading-7 text-muted-foreground">
           {block.items.map((item, index) => (
             <li key={index} className="pl-1 break-words">
               {item}

@@ -5,6 +5,8 @@
 [Next.js 16 App Router 版（`Hamaryo226/ryota-space`）](https://github.com/Hamaryo226/ryota-space)を
 **TanStack Start + shadcn/ui** で再構築したもの。既存の URL と記事データを引き継ぎ、
 一覧・記事詳細・サイト情報・404 を含む全ページで、自作シンボルと白黒基調の共通デザインを使用している。
+幅640pxを上限とした中央カラムに、小さなプロフィールと開閉式の作品紹介を配置する。
+初回はダークテーマで表示し、テーマ切り替え後は選択を保存する。
 
 ## 技術スタック
 
@@ -14,7 +16,7 @@
 | UI             | React 19 / shadcn/ui (new-york, neutral) / Radix UI           |
 | スタイル       | Tailwind CSS v4（CSS-first、`src/styles.css`）                |
 | フォント       | Geist / Geist Mono（`@fontsource-variable/*` でセルフホスト） |
-| テーマ         | next-themes（`class` 属性、system 追従）                      |
+| テーマ         | next-themes（`class` 属性、初期ダーク・選択保存）             |
 | アイコン       | lucide-react                                                  |
 | ホスティング   | Cloudflare Workers（`@cloudflare/vite-plugin` + wrangler）    |
 | Lint / Format  | ESLint（`@tanstack/eslint-config`）/ Prettier                 |
@@ -42,7 +44,8 @@ npm run deploy       # ビルドして Cloudflare へデプロイ
 
 ブラウザテストは初回に `npx playwright install chromium` を実行し、
 `npm run build` の後に `npm run test:e2e` を実行します。記事への遷移、
-構成図のフォーカス・キーボード操作、本文とコードの保持、埋め込み URL、404 の復帰、
+作品紹介の開閉・テーマ保存、構成図のフォーカス・キーボード操作、
+本文とコードの保持、埋め込み URL、404 の復帰、
 モバイル幅とダークテーマを確認します。
 既存の Chromium を使う場合は `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` で指定できます。
 
@@ -87,6 +90,7 @@ src/
 一覧のプラットフォーム分類・技術タグ・アプリ画像は `src/config/portfolio.ts` に置く。
 未登録でも一覧に表示されるが、プラットフォームで絞り込みたい場合は分類を登録する。
 トップの注目作品も同ファイルの `getFeaturedProjects()` で選ぶ。
+作品紹介はネイティブの `details` / `summary` で開閉し、件数は記事データから集計する。
 
 `/Project?platform=apple&category=personal` のように絞り込み条件を URL で共有できる。
 About はプロフィールと制作分野、Info はサイトの技術構成・バージョンを担当する。

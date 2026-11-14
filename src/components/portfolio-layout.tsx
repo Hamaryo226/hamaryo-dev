@@ -19,30 +19,29 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
       >
         本文へスキップ
       </a>
-      <header className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-x-6 border-b py-5 sm:py-6">
+      <header className="mx-auto w-full max-w-[640px] px-5 sm:px-6">
+        <div className="flex items-center justify-between gap-3 py-5 sm:py-6">
           <Link
             to="/"
             aria-label="ホーム"
-            className="inline-flex size-10 items-center justify-center rounded-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-4"
+            className="inline-flex size-8 shrink-0 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4"
           >
             <span
               aria-hidden="true"
-              className="size-8 bg-current [mask-image:url('/icon/site-symbol.svg')] [mask-repeat:no-repeat] [mask-size:contain]"
+              className="size-5 bg-current [mask-image:url('/icon/site-symbol.svg')] [mask-repeat:no-repeat] [mask-size:contain]"
             />
           </Link>
           <nav
             aria-label="メインナビゲーション"
-            className="order-3 mt-4 flex w-full gap-6 text-sm sm:order-none sm:mt-0 sm:ml-auto sm:w-auto sm:gap-7"
+            className="ml-auto flex flex-wrap items-center gap-3 text-[11px] sm:gap-5"
           >
             {navigation.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className="rounded-sm py-1 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4"
+                className="rounded-sm py-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4"
                 activeProps={{
-                  className:
-                    "text-foreground underline decoration-current decoration-2 underline-offset-8",
+                  className: "text-foreground",
                   "aria-current": "page",
                 }}
               >
@@ -56,19 +55,19 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
       <main
         id="main-content"
         tabIndex={-1}
-        className="mx-auto w-full max-w-6xl flex-1 px-5 outline-none sm:px-8"
+        className="mx-auto w-full max-w-[640px] flex-1 px-5 outline-none sm:px-6"
       >
         {children}
       </main>
-      <footer className="mx-auto mt-20 w-full max-w-6xl px-5 pb-6 sm:mt-28 sm:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-5 border-t pt-6 text-xs text-muted-foreground">
+      <footer className="mx-auto mt-16 w-full max-w-[640px] px-5 pb-7 sm:mt-20 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 text-[10px] text-muted-foreground">
           <p>© {new Date().getFullYear()}</p>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+          <div className="flex flex-wrap items-center gap-4">
             <Link to="/About" className="hover:text-foreground">
               About
             </Link>
             <Link to="/Info" className="hover:text-foreground">
-              このサイトについて
+              サイト情報
             </Link>
             <a
               href="https://github.com/Hamaryo226"
@@ -76,7 +75,7 @@ export function PortfolioLayout({ children }: { children: ReactNode }) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 hover:text-foreground"
             >
-              GitHub <ArrowUpRight className="size-3.5" aria-hidden="true" />
+              GitHub <ArrowUpRight className="size-3" aria-hidden="true" />
             </a>
           </div>
         </div>

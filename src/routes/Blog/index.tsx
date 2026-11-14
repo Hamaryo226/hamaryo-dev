@@ -19,11 +19,9 @@ function BlogPage() {
   const blogs = getAllBlogs();
   return (
     <PortfolioLayout>
-      <header className="py-12 sm:py-16">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          ブログ
-        </h1>
-        <p className="mt-5 text-sm leading-8 text-muted-foreground">
+      <header className="pt-10 pb-8 sm:pt-14">
+        <h1 className="text-xl font-medium tracking-tight">ブログ</h1>
+        <p className="mt-4 text-[13px] leading-7 text-muted-foreground">
           技術記事や開発の記録、その他の考えを投稿しています。
         </p>
       </header>
@@ -33,21 +31,21 @@ function BlogPage() {
             key={blog.slug}
             to="/Blog/$slug"
             params={{ slug: blog.slug }}
-            className="group grid min-w-0 grid-cols-[1fr_20px] items-center gap-4 border-b py-7 outline-offset-4 sm:grid-cols-[1fr_180px_20px] sm:gap-8 sm:py-9"
+            className="group grid min-w-0 grid-cols-[1fr_20px] items-center gap-3 border-b border-border/50 py-5 outline-offset-4 sm:grid-cols-[1fr_96px_16px] sm:gap-4 sm:py-6"
           >
             <div
               className={`min-w-0 ${!blog.thumbnail ? "sm:col-span-2" : ""}`}
             >
-              <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+              <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
                 <time className="font-mono">{blog.date}</time>
                 {blog.tags?.map((tag) => (
                   <span key={tag}>{tag}</span>
                 ))}
               </div>
-              <h2 className="text-lg font-semibold leading-8 tracking-tight group-hover:underline group-hover:underline-offset-4 sm:text-xl">
+              <h2 className="text-sm font-medium leading-6 group-hover:underline group-hover:underline-offset-4">
                 {blog.title}
               </h2>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+              <p className="mt-2 text-[12px] leading-6 text-muted-foreground">
                 {blog.description}
               </p>
             </div>
@@ -63,7 +61,10 @@ function BlogPage() {
                 />
               </div>
             )}
-            <ArrowUpRight className="size-5" aria-hidden="true" />
+            <ArrowUpRight
+              className="size-3.5 text-muted-foreground"
+              aria-hidden="true"
+            />
           </Link>
         ))}
       </section>

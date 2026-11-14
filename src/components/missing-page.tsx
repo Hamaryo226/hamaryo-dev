@@ -18,10 +18,10 @@ export function MissingPage({
       <div className="flex min-h-[55vh] items-center py-16 sm:py-24">
         <div className="max-w-xl">
           <p className="mb-5 font-mono text-xs text-muted-foreground">404</p>
-          <h1 className="text-2xl font-semibold leading-relaxed tracking-tight sm:text-4xl">
+          <h1 className="text-xl font-medium leading-relaxed tracking-tight">
             {title}
           </h1>
-          <p className="mt-5 text-sm leading-8 text-muted-foreground">
+          <p className="mt-5 text-[13px] leading-7 text-muted-foreground">
             {description}
           </p>
           <Link

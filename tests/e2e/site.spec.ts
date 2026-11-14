@@ -60,6 +60,7 @@ test("mobile article and dark diagram fit the viewport", async ({
   page,
 }, testInfo) => {
   await page.setViewportSize({ width: 375, height: 812 });
+  await page.addInitScript(() => localStorage.setItem("theme", "light"));
   for (const path of ["/", "/Blog", "/Blog/06"]) {
     await page.goto(path);
     expect(

@@ -14,9 +14,7 @@ test("featured project and profile have distinct destinations", async ({
   page,
 }) => {
   await openHydratedPage(page, "/");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "プロジェクトとブログ",
-  );
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hamaryo");
   const home = page
     .getByRole("banner")
     .getByRole("link", { name: "ホーム", exact: true });
@@ -33,7 +31,9 @@ test("featured project and profile have distinct destinations", async ({
   const icon = page.getByRole("img", { name: "Strollyのアプリアイコン" });
   await expect(icon).toBeVisible();
   await expect(icon).toHaveAttribute("src", "/img/strolly/app-icon.png");
-  await page.getByRole("link", { name: /FEATURED.*Strolly/ }).click();
+  await page
+    .getByRole("link", { name: "Strollyの詳細を見る", exact: true })
+    .click();
   await expect(page).toHaveURL("/Project/strolly");
   await page.goBack();
   await page
@@ -52,6 +52,40 @@ test("featured project and profile have distinct destinations", async ({
   await expect(
     page.getByRole("region", { name: "作品一覧" }).getByRole("link"),
   ).toHaveCount(2);
+});
+
+test("compact profile defaults to dark and projects open with the keyboard", async ({
+  page,
+}) => {
+  await openHydratedPage(page, "/");
+  await expect(page.locator("html")).toHaveClass(/dark/);
+  expect(
+    await page
+      .getByRole("main")
+      .evaluate((main) => main.getBoundingClientRect().width),
+  ).toBeLessThanOrEqual(640);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveCSS(
+    "font-size",
+    "18px",
+  );
+  await expect(page.getByRole("definition")).toHaveText(["9", "6", "4"]);
+  const project = page.getByRole("group", {
+    name: "Strollyの紹介",
+    exact: true,
+  });
+  await expect(project).toHaveJSProperty("open", true);
+  await project.locator("summary").focus();
+  await page.keyboard.press("Enter");
+  await expect(project).toHaveJSProperty("open", false);
+  await page.keyboard.press("Enter");
+  await expect(project).toHaveJSProperty("open", true);
+  await expect(
+    project.getByRole("link", { name: "Strollyの詳細を見る" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Toggle theme" }).click();
+  await expect(page.locator("html")).toHaveClass(/light/);
+  await page.reload();
+  await expect(page.locator("html")).toHaveClass(/light/);
 });
 
 test("project filters persist in URL, reload and browser history", async ({
@@ -102,7 +136,7 @@ test("About is directly served with sitemap metadata and invalid filters are ign
 }) => {
   const response = await request.get("/About");
   expect(response.status()).toBe(200);
-  expect(await response.text()).toContain("取り組んできた分野");
+  expect(await response.text()).toContain("制作分野");
   expect((await request.get("/icon/site-symbol.svg")).status()).toBe(200);
   expect((await request.get("/icon/site-touch-icon.png")).status()).toBe(200);
   expect(response.headers()["x-robots-tag"]).toBe("noindex, nofollow");

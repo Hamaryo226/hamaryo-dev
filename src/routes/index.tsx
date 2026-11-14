@@ -1,12 +1,14 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, FolderOpen, Layers, NotebookText } from "lucide-react";
 import { PortfolioLayout } from "@/components/portfolio-layout";
-import { ProjectCard } from "@/components/project-card";
+import { ProjectDisclosure } from "@/components/project-disclosure";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   getFeaturedProjects,
   getProjectPresentation,
 } from "@/config/portfolio";
 import { SITE_DESCRIPTION, SITE_NAME, seo } from "@/config/site";
+import { getAllArticles } from "@/lib/articles";
 import { getAllBlogs } from "@/lib/blogs";
 
 export const Route = createFileRoute("/")({
@@ -17,116 +19,179 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const [featured, ...projects] = getFeaturedProjects();
-  const blogs = getAllBlogs().slice(0, 2);
+  const articles = getAllArticles();
+  const blogs = getAllBlogs();
+  const featured = getFeaturedProjects();
+  const platformCount = new Set(
+    articles.flatMap((article) => {
+      const platform = getProjectPresentation(article).platform;
+      return platform ? [platform] : [];
+    }),
+  ).size;
+  const stats = [
+    { label: "プロジェクト", value: articles.length, icon: FolderOpen },
+    { label: "ブログ記事", value: blogs.length, icon: NotebookText },
+    { label: "プラットフォーム", value: platformCount, icon: Layers },
+  ] as const;
+
   return (
     <PortfolioLayout>
-      <h1 className="sr-only">プロジェクトとブログ</h1>
+      <section className="pt-10 sm:pt-14" aria-labelledby="profile-heading">
+        <div className="flex items-center gap-3">
+          <Avatar className="size-12 border border-border/60">
+            <AvatarImage
+              src="https://avatars.githubusercontent.com/u/52881627?v=4"
+              alt=""
+            />
+            <AvatarFallback>H</AvatarFallback>
+          </Avatar>
+          <div>
+            <h1
+              id="profile-heading"
+              className="text-lg font-medium tracking-tight"
+            >
+              Hamaryo
+            </h1>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              システムエンジニア / プログラマー
+            </p>
+          </div>
+        </div>
+        <div className="mt-6 space-y-4 text-[13px] leading-7 text-muted-foreground">
+          <p>
+            Webアプリケーション、iOSアプリ、PC向けのツールを制作しています。大学でのシステム開発と個人開発の成果を、このサイトにまとめています。
+          </p>
+          <p>
+            音楽と移動を記録する
+            <Link
+              to="/Project/$slug"
+              params={{ slug: "strolly" }}
+              className="text-foreground/80 underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              Strolly
+            </Link>
+            、リズムゲームの
+            <Link
+              to="/Project/$slug"
+              params={{ slug: "taikodive" }}
+              className="text-foreground/80 underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              TaikoDive
+            </Link>
+            、写真を扱う
+            <Link
+              to="/Project/$slug"
+              params={{ slug: "drop-watermark" }}
+              className="text-foreground/80 underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              Drop-Watermark
+            </Link>
+            などを制作しています。開発の記録や、普段使うアプリの話はブログに掲載しています。
+          </p>
+        </div>
+        <dl className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="flex flex-col rounded-xl bg-muted/50 p-3 sm:p-4"
+            >
+              <dt className="order-last mt-1 text-[10px] text-muted-foreground">
+                {stat.label}
+              </dt>
+              <dd>
+                <stat.icon
+                  className="mb-3 size-3.5 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <span className="text-lg font-medium tabular-nums">
+                  {stat.value}
+                </span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <div className="mt-5 flex flex-wrap items-center gap-2 text-[11px]">
+          <Link
+            to="/About"
+            className="rounded-full bg-foreground px-3 py-1.5 text-background transition-opacity hover:opacity-80"
+          >
+            プロフィール
+          </Link>
+          <a
+            href="https://github.com/Hamaryo226"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-full bg-muted/50 px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            GitHub <ArrowUpRight className="size-3" aria-hidden="true" />
+          </a>
+          <a
+            href="https://www.instagram.com/ryota_ztts"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-full bg-muted/50 px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Instagram <ArrowUpRight className="size-3" aria-hidden="true" />
+          </a>
+        </div>
+      </section>
       <section
         id="selected-work"
         aria-labelledby="selected-work-heading"
-        className="scroll-mt-8 pt-8 sm:pt-12"
+        className="mt-14 scroll-mt-8"
       >
-        <div className="mb-7 flex flex-wrap items-center justify-between gap-4 border-t pt-6">
-          <div className="flex items-center gap-4">
-            <span className="font-mono text-xs text-muted-foreground">01</span>
-            <h2 id="selected-work-heading" className="text-lg font-semibold">
-              注目のプロジェクト
-            </h2>
-          </div>
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <h2
+            id="selected-work-heading"
+            className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground"
+          >
+            PROJECTS / {String(featured.length).padStart(2, "0")}
+          </h2>
           <Link
             to="/Project"
-            className="inline-flex items-center gap-2 rounded-sm text-xs text-muted-foreground hover:text-foreground"
+            className="text-[10px] text-muted-foreground hover:text-foreground"
           >
-            すべての作品 <ArrowUpRight className="size-4" aria-hidden="true" />
+            すべて見る
           </Link>
         </div>
-        <Link
-          to="/Project/$slug"
-          params={{ slug: featured.slug }}
-          className="group grid overflow-hidden rounded-2xl border bg-card text-card-foreground focus-visible:outline-2 focus-visible:outline-offset-4 md:grid-cols-2"
-        >
-          <div className="flex flex-col items-start justify-center p-7 sm:p-10 lg:p-12">
-            <p className="font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
-              FEATURED / iOS APP
-            </p>
-            <h3 className="mt-8 text-4xl font-semibold tracking-tight sm:text-5xl">
-              {featured.systemname}
-            </h3>
-            <p className="mt-5 max-w-xs text-sm leading-8 text-muted-foreground">
-              {featured.description}
-            </p>
-            <ul
-              aria-label="使用技術"
-              className="mt-6 flex flex-wrap gap-2 text-[10px] text-muted-foreground"
-            >
-              {getProjectPresentation(featured).tags.map((tag) => (
-                <li key={tag} className="rounded-full border px-3 py-1">
-                  {tag}
-                </li>
-              ))}
-            </ul>
-            <span className="mt-10 inline-flex items-center gap-3 border-b pb-2 text-sm">
-              プロジェクトを読む{" "}
-              <ArrowUpRight
-                className="size-4 transition-transform motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </span>
-          </div>
-          <div className="relative aspect-square overflow-hidden border-t bg-muted md:border-t-0 md:border-l">
-            <img
-              src={getProjectPresentation(featured).appIcon}
-              alt="Strollyのアプリアイコン"
-              width={1024}
-              height={1024}
-              fetchPriority="high"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
-        </Link>
-        <div className="mt-9 grid gap-10 sm:grid-cols-2 sm:gap-7">
-          {projects.map((project) => (
-            <ProjectCard
-              key={project.slug}
-              article={project}
-              headingLevel={3}
+        <div>
+          {featured.map((article, index) => (
+            <ProjectDisclosure
+              key={article.slug}
+              article={article}
+              initiallyOpen={index === 0}
             />
           ))}
         </div>
       </section>
-      <section aria-labelledby="notes-heading" className="mt-16 sm:mt-24">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-4 border-t pt-6">
-          <div className="flex items-center gap-4">
-            <span className="font-mono text-xs text-muted-foreground">02</span>
-            <h2 id="notes-heading" className="text-lg font-semibold">
-              最近の記事
-            </h2>
-          </div>
+      <section aria-labelledby="notes-heading" className="mt-12">
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <h2
+            id="notes-heading"
+            className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground"
+          >
+            NOTES / {String(blogs.length).padStart(2, "0")}
+          </h2>
           <Link
             to="/Blog"
-            className="inline-flex items-center gap-2 rounded-sm text-xs text-muted-foreground hover:text-foreground"
+            className="text-[10px] text-muted-foreground hover:text-foreground"
           >
-            ブログ一覧 <ArrowUpRight className="size-4" aria-hidden="true" />
+            ブログ一覧
           </Link>
         </div>
-        {blogs.map((blog) => (
+        {blogs.slice(0, 3).map((blog) => (
           <Link
             key={blog.slug}
             to="/Blog/$slug"
             params={{ slug: blog.slug }}
-            className="group grid items-center gap-3 border-b py-6 sm:grid-cols-[145px_1fr_24px] sm:gap-6"
+            className="group flex items-start justify-between gap-4 py-3"
           >
-            <span className="font-mono text-xs text-muted-foreground">
-              {blog.date}
-            </span>
-            <h3 className="text-sm font-medium leading-7 group-hover:underline group-hover:underline-offset-4 sm:text-base">
+            <h3 className="text-[13px] font-normal leading-6 text-foreground/85 group-hover:underline group-hover:underline-offset-4">
               {blog.title}
             </h3>
-            <ArrowUpRight
-              className="hidden size-5 sm:block"
-              aria-hidden="true"
-            />
+            <span className="mt-1 shrink-0 font-mono text-[9px] text-muted-foreground">
+              {blog.date}
+            </span>
           </Link>
         ))}
       </section>

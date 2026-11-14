@@ -33,6 +33,7 @@ export function ModeToggle() {
     <Button
       variant="ghost"
       size="icon"
+      className="size-8 text-muted-foreground hover:text-foreground"
       onClick={handleToggle}
       aria-label="Toggle theme"
     >
