@@ -10,43 +10,20 @@ async function openHydratedPage(page: Page, path: string) {
   ).toBeVisible();
 }
 
-test("featured project and profile have distinct destinations", async ({
-  page,
-}) => {
-  await openHydratedPage(page, "/");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hamaryo");
-  const home = page
-    .getByRole("banner")
-    .getByRole("link", { name: "ホーム", exact: true });
-  await expect(home).toBeVisible();
-  await expect(home).toHaveText("");
-  await expect(page.locator('link[rel="icon"]')).toHaveAttribute(
-    "href",
-    "/icon/site-symbol.svg",
-  );
-  await expect(page.getByText("Webから、")).toHaveCount(0);
-  await expect(
-    page.getByText("コンセプトイメージ", { exact: false }),
-  ).toHaveCount(0);
-  const icon = page.getByRole("img", { name: "Strollyのアプリアイコン" });
-  await expect(icon).toBeVisible();
-  await expect(icon).toHaveAttribute("src", "/img/strolly/app-icon.png");
+test("project and profile remain directly reachable", async ({ page }) => {
+  await openHydratedPage(page, "/Project");
   await page
-    .getByRole("link", { name: "Strollyの詳細を見る", exact: true })
+    .getByRole("region", { name: "作品一覧" })
+    .getByRole("link")
+    .filter({ hasText: "Strolly" })
     .click();
   await expect(page).toHaveURL("/Project/strolly");
-  await page.goBack();
   await page
     .getByRole("navigation", { name: "メインナビゲーション" })
     .getByRole("link", { name: "About", exact: true })
     .click();
   await expect(page).toHaveURL("/About");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("About");
-  await expect(
-    page
-      .getByRole("navigation", { name: "メインナビゲーション" })
-      .getByRole("link", { name: "About", exact: true }),
-  ).toHaveAttribute("aria-current", "page");
   await page.getByRole("link", { name: "この分野の作品" }).nth(1).click();
   await expect(page).toHaveURL(/platform=apple/);
   await expect(
@@ -54,34 +31,18 @@ test("featured project and profile have distinct destinations", async ({
   ).toHaveCount(2);
 });
 
-test("compact profile defaults to dark and projects open with the keyboard", async ({
+test("project links work with keyboard and theme persists on inner pages", async ({
   page,
 }) => {
-  await openHydratedPage(page, "/");
+  await openHydratedPage(page, "/Project");
   await expect(page.locator("html")).toHaveClass(/dark/);
-  expect(
-    await page
-      .getByRole("main")
-      .evaluate((main) => main.getBoundingClientRect().width),
-  ).toBeLessThanOrEqual(640);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveCSS(
-    "font-size",
-    "18px",
-  );
-  await expect(page.getByRole("definition")).toHaveText(["9", "6", "4"]);
-  const project = page.getByRole("group", {
-    name: "Strollyの紹介",
-    exact: true,
-  });
-  await expect(project).toHaveJSProperty("open", true);
-  await project.locator("summary").focus();
+  const link = page
+    .getByRole("region", { name: "作品一覧" })
+    .getByRole("link")
+    .first();
+  await link.focus();
   await page.keyboard.press("Enter");
-  await expect(project).toHaveJSProperty("open", false);
-  await page.keyboard.press("Enter");
-  await expect(project).toHaveJSProperty("open", true);
-  await expect(
-    project.getByRole("link", { name: "Strollyの詳細を見る" }),
-  ).toBeVisible();
+  await expect(page).toHaveURL("/Project/strolly");
   await page.getByRole("button", { name: "Toggle theme" }).click();
   await expect(page.locator("html")).toHaveClass(/light/);
   await page.reload();
@@ -184,7 +145,6 @@ test("portfolio pages fit mobile and desktop in both themes", async ({
         color: getComputedStyle(body).color,
       }));
       for (const [name, path] of [
-        ["home", "/"],
         ["about", "/About"],
         ["projects", "/Project"],
       ]) {

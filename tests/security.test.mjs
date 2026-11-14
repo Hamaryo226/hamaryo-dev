@@ -22,31 +22,36 @@ test("HTML metadata continues to exclude the site from search", () => {
 });
 
 test("general crawlers can read noindex while specific AI blocks remain", async () => {
-  const robots = await readFile(
+  const rawRobots = await readFile(
     new URL("../public/robots.txt", import.meta.url),
     "utf8",
   );
-  const groups = robots
-    .split(/\n\s*\n/)
-    .map((group) =>
-      group.split("\n").filter((line) => line && !line.startsWith("#")),
-    )
-    .filter((group) => group.length);
-  assert.deepEqual(groups[0], ["User-agent: *", "Allow: /"]);
-  assert.deepEqual(groups[1], [
-    "User-agent: GPTBot",
-    "User-agent: ChatGPT-User",
-    "User-agent: Google-Extended",
-    "User-agent: CCBot",
-    "User-agent: Omgilibot",
-    "User-agent: FacebookBot",
-    "User-agent: anthropic-ai",
-    "User-agent: Claude-Web",
-    "User-agent: ClaudeBot",
-    "User-agent: cohere-ai",
-    "Disallow: /",
-  ]);
-  assert.equal(groups.length, 2);
+  for (const robots of [
+    rawRobots.replace(/\r?\n/g, "\n"),
+    rawRobots.replace(/\r?\n/g, "\r\n"),
+  ]) {
+    const groups = robots
+      .split(/\r?\n\s*\r?\n/)
+      .map((group) =>
+        group.split(/\r?\n/).filter((line) => line && !line.startsWith("#")),
+      )
+      .filter((group) => group.length);
+    assert.deepEqual(groups[0], ["User-agent: *", "Allow: /"]);
+    assert.deepEqual(groups[1], [
+      "User-agent: GPTBot",
+      "User-agent: ChatGPT-User",
+      "User-agent: Google-Extended",
+      "User-agent: CCBot",
+      "User-agent: Omgilibot",
+      "User-agent: FacebookBot",
+      "User-agent: anthropic-ai",
+      "User-agent: Claude-Web",
+      "User-agent: ClaudeBot",
+      "User-agent: cohere-ai",
+      "Disallow: /",
+    ]);
+    assert.equal(groups.length, 2);
+  }
 });
 
 test("Worker responses enforce noindex on success, redirects and errors", () => {
@@ -125,20 +130,25 @@ test("Worker responses preserve body, status and existing headers", async () => 
 });
 
 test("static asset policy matches the Worker policy", async () => {
-  const text = await readFile(
+  const rawHeaders = await readFile(
     new URL("../public/_headers", import.meta.url),
     "utf8",
   );
-  assert.equal(text.split("\n")[0], "/*");
-  const rules = Object.fromEntries(
-    text
-      .trim()
-      .split("\n")
-      .slice(1)
-      .map((line) => {
-        const split = line.indexOf(":");
-        return [line.slice(0, split).trim(), line.slice(split + 1).trim()];
-      }),
-  );
-  assert.deepEqual(rules, SECURITY_HEADERS);
+  for (const text of [
+    rawHeaders.replace(/\r?\n/g, "\n"),
+    rawHeaders.replace(/\r?\n/g, "\r\n"),
+  ]) {
+    assert.equal(text.split(/\r?\n/)[0], "/*");
+    const rules = Object.fromEntries(
+      text
+        .trim()
+        .split(/\r?\n/)
+        .slice(1)
+        .map((line) => {
+          const split = line.indexOf(":");
+          return [line.slice(0, split).trim(), line.slice(split + 1).trim()];
+        }),
+    );
+    assert.deepEqual(rules, SECURITY_HEADERS);
+  }
 });
