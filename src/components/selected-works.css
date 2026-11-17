@@ -48,6 +48,49 @@
   font-size: clamp(34px, 4.8vw, 70px);
   margin-bottom: 16px;
 }
+/* The right third is the resting ink. The left third holds the warm finish. */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  @media (forced-colors: none) {
+    .work-row h2 {
+      width: fit-content;
+      max-width: 100%;
+      background-image: linear-gradient(
+        105deg,
+        #ff9564 0%,
+        #ffcca2 17%,
+        #fff4e3 32%,
+        #eeaa7a 43%,
+        #fffdf5 49%,
+        #ffc18f 52%,
+        var(--ink) 66%
+      );
+      background-size: 320% 100%;
+      background-position: var(--title-light-position, 100%) center;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .work-row:focus-visible,
+    .work-row:active {
+      --title-light-position: 0%;
+    }
+    @media (hover: hover) {
+      .work-row:hover {
+        --title-light-position: 0%;
+      }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .work-row h2 {
+        transition: background-position 620ms cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+    }
+    @media (hover: none) {
+      .work-row:active h2 {
+        transition: none;
+      }
+    }
+  }
+}
 .work-lead,
 .about-text p,
 .work-chapters p {
@@ -69,8 +112,8 @@
 .about-text .folio-link {
   margin-top: 18px;
 }
-.folio a:hover,
-.folio a:focus-visible {
+.folio a:not(.work-row):hover,
+.folio a:not(.work-row):focus-visible {
   color: var(--ember);
 }
 .work-figure {
