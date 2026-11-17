@@ -94,6 +94,7 @@ export function createTidalRenderer(
   let last = 0;
   let elapsed = 0;
   let paused = false;
+  let inView = true;
   let destroyed = false;
   let lost = false;
   let px = 10,
@@ -114,7 +115,7 @@ export function createTidalRenderer(
             ? "reduced"
             : paused
               ? "paused"
-              : document.hidden
+              : document.hidden || !inView
                 ? "hidden"
                 : "running",
     });
@@ -199,6 +200,7 @@ export function createTidalRenderer(
       !!program &&
       !paused &&
       !reducedMotion &&
+      inView &&
       !document.hidden
     );
   }
@@ -289,6 +291,13 @@ export function createTidalRenderer(
   window.addEventListener("resize", resize);
   const observer = new ResizeObserver(resize);
   observer.observe(canvas);
+  const visibilityObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting !== inView) {
+      inView = entry.isIntersecting;
+      sync();
+    }
+  });
+  visibilityObserver.observe(canvas);
   init();
   resize();
   sync();
@@ -301,6 +310,7 @@ export function createTidalRenderer(
       destroyed = true;
       cancel();
       observer.disconnect();
+      visibilityObserver.disconnect();
       canvas.removeEventListener("webglcontextlost", contextLost);
       canvas.removeEventListener("webglcontextrestored", contextRestored);
       canvas.removeEventListener("pointermove", move);

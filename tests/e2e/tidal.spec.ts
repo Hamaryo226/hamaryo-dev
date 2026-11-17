@@ -1,21 +1,23 @@
 import { expect, test } from "@playwright/test";
 
 for (const width of [390, 1280]) {
-  test(`tidal home contains only the centered title at ${width}`, async ({
+  test(`tidal home centers the title before the works at ${width}`, async ({
     page,
   }, info) => {
     await page.setViewportSize({ width, height: 900 });
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/");
-    await expect(page.getByRole("heading")).toHaveCount(1);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     const title = page.getByRole("heading", {
       level: 1,
       name: "hamaryo.dev",
       exact: true,
     });
     await expect(title).toBeVisible();
-    await expect(page.locator("nav, footer, a")).toHaveCount(0);
+    await expect(
+      page.getByRole("heading", { name: "Works", exact: true }),
+    ).not.toBeInViewport();
     const box = (await title.boundingBox())!;
     expect(Math.abs(box.x + box.width / 2 - width / 2)).toBeLessThan(2);
     expect(Math.abs(box.y + box.height / 2 - 450)).toBeLessThan(2);
@@ -23,7 +25,7 @@ for (const width of [390, 1280]) {
       await page.evaluate(
         () =>
           document.documentElement.scrollWidth <= innerWidth &&
-          document.documentElement.scrollHeight <= innerHeight,
+          document.documentElement.scrollHeight > innerHeight,
       ),
     ).toBe(true);
     const canvas = page.locator("canvas");
@@ -85,7 +87,7 @@ test("keyboard focus reveals the motion control without making the title interac
     "running",
   );
   await page.keyboard.press("Tab");
-  await expect(page.getByRole("heading")).not.toBeFocused();
+  await expect(page.getByRole("heading", { level: 1 })).not.toBeFocused();
   await expect(label).toBeHidden();
 });
 

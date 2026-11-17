@@ -61,7 +61,9 @@ for (const width of [390, 1280]) {
     ).toBe(true);
     await page.mouse.click(box.x + box.width / 2, y);
     await expect(canvas).toHaveAttribute("data-motion", "running");
-    await expect(page.getByRole("heading")).toHaveText("hamaryo.dev");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "hamaryo.dev",
+    );
     await page.keyboard.press("Tab");
     await expect(page.getByRole("button")).toBeFocused();
     await page.keyboard.press("Space");

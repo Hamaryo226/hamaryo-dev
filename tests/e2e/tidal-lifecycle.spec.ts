@@ -102,7 +102,7 @@ test("background touch does not pause and the title remains inert", async ({
   await page.goto("http://127.0.0.1:4173/");
   const canvas = page.locator("canvas");
   await expect(canvas).toHaveAttribute("data-motion", "running");
-  const title = (await page.getByRole("heading").boundingBox())!;
+  const title = (await page.getByRole("heading", { level: 1 }).boundingBox())!;
   await page.touchscreen.tap(
     title.x + title.width / 2,
     title.y + title.height / 2,

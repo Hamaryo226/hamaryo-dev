@@ -32,6 +32,10 @@ const pages = [
     path: "/About",
     sitemap: { priority: 0.8, changefreq: "monthly" as const },
   },
+  ...["/works/taikodive", "/works/better-tello-gui"].map((path) => ({
+    path,
+    sitemap: { priority: 0.7, changefreq: "monthly" as const },
+  })),
   ...getAllSlugs().map((slug) => ({
     path: `/Project/${slug}`,
     sitemap: { priority: 0.6, changefreq: "monthly" as const },
