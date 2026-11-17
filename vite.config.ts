@@ -32,7 +32,7 @@ const pages = [
     path: "/About",
     sitemap: { priority: 0.8, changefreq: "monthly" as const },
   },
-  ...["/works/taikodive", "/works/better-tello-gui"].map((path) => ({
+  ...["/works", "/works/taikodive", "/works/better-tello-gui"].map((path) => ({
     path,
     sitemap: { priority: 0.7, changefreq: "monthly" as const },
   })),

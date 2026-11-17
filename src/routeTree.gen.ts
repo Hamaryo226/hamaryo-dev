@@ -16,6 +16,7 @@ import { Route as BlogSlugRouteImport } from './routes/Blog/$slug'
 import { Route as InfoIndexRouteImport } from './routes/Info/index'
 import { Route as ProjectIndexRouteImport } from './routes/Project/index'
 import { Route as ProjectSlugRouteImport } from './routes/Project/$slug'
+import { Route as WorksIndexRouteImport } from './routes/works/index'
 import { Route as WorksBetterTelloGuiRouteImport } from './routes/works/better-tello-gui'
 import { Route as WorksTaikodiveRouteImport } from './routes/works/taikodive'
 
@@ -54,6 +55,11 @@ const ProjectSlugRoute = ProjectSlugRouteImport.update({
   path: '/Project/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorksIndexRoute = WorksIndexRouteImport.update({
+  id: '/works/',
+  path: '/works/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WorksBetterTelloGuiRoute = WorksBetterTelloGuiRouteImport.update({
   id: '/works/better-tello-gui',
   path: '/works/better-tello-gui',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/Blog/': typeof BlogIndexRoute
   '/Info/': typeof InfoIndexRoute
   '/Project/': typeof ProjectIndexRoute
+  '/works/': typeof WorksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/Blog': typeof BlogIndexRoute
   '/Info': typeof InfoIndexRoute
   '/Project': typeof ProjectIndexRoute
+  '/works': typeof WorksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/Blog/': typeof BlogIndexRoute
   '/Info/': typeof InfoIndexRoute
   '/Project/': typeof ProjectIndexRoute
+  '/works/': typeof WorksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/Blog/'
     | '/Info/'
     | '/Project/'
+    | '/works/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/Blog'
     | '/Info'
     | '/Project'
+    | '/works'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/Blog/'
     | '/Info/'
     | '/Project/'
+    | '/works/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   BlogIndexRoute: typeof BlogIndexRoute
   InfoIndexRoute: typeof InfoIndexRoute
   ProjectIndexRoute: typeof ProjectIndexRoute
+  WorksIndexRoute: typeof WorksIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/works/': {
+      id: '/works/'
+      path: '/works'
+      fullPath: '/works/'
+      preLoaderRoute: typeof WorksIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/works/better-tello-gui': {
       id: '/works/better-tello-gui'
       path: '/works/better-tello-gui'
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   BlogIndexRoute: BlogIndexRoute,
   InfoIndexRoute: InfoIndexRoute,
   ProjectIndexRoute: ProjectIndexRoute,
+  WorksIndexRoute: WorksIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

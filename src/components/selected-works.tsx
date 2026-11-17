@@ -1,5 +1,4 @@
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import { TidalTrace } from "./tidal-trace";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import "./selected-works.css";
 
 const works = {
@@ -93,29 +92,23 @@ function WorkFigure({ slug }: { slug: WorkSlug }) {
 export function WorksHome() {
   return (
     <main className="folio">
-      <div className="folio-cover">
-        <TidalTrace />
-        <a className="cover-next" href="#works" aria-label="作品一覧へ">
-          <ArrowDown size={19} />
-        </a>
-      </div>
       <section
         className="folio-wrap"
         id="works"
         aria-labelledby="works-heading"
       >
-        <h2 className="section-title" id="works-heading">
+        <h1 className="section-title" id="works-heading">
           Works
-        </h2>
+        </h1>
         {order.map((slug) => (
           <article key={slug} className="work-row">
             <div className="work-info">
               <p className="work-type" lang="en">
                 {works[slug].field}
               </p>
-              <h3>
+              <h2>
                 <a href={"/works/" + slug}>{works[slug].name}</a>
-              </h3>
+              </h2>
               <p className="work-lead">{works[slug].intro}</p>
               <a
                 className="folio-link"
@@ -172,7 +165,7 @@ export function WorkDetail({ slug }: { slug: WorkSlug }) {
   return (
     <main className="folio detail-page">
       <article className="folio-wrap">
-        <a className="folio-link detail-back" href="/#works">
+        <a className="folio-link detail-back" href="/works">
           <ArrowLeft size={16} /> 作品一覧へ
         </a>
         <header className="detail-head">
@@ -196,7 +189,7 @@ export function WorkDetail({ slug }: { slug: WorkSlug }) {
           <ArrowUpRight size={17} />
         </a>
         <nav className="detail-nav" aria-label="作品ナビゲーション">
-          <a href="/#works">作品一覧へ</a>
+          <a href="/works">作品一覧へ</a>
           <a href={"/works/" + next}>
             {works[next].name} <ArrowRight size={16} />
           </a>

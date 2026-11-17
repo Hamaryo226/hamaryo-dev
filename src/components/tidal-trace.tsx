@@ -80,7 +80,7 @@ export function TidalTrace() {
     renderer.current?.setPaused(value);
   }
   return (
-    <section className="tidal-home" aria-label="hamaryo.dev">
+    <main className="tidal-home">
       <div className="tidal-surface" aria-hidden="true">
         <StaticTide />
         <canvas
@@ -114,6 +114,6 @@ export function TidalTrace() {
       <p id="tidal-instructions" className="sr-only">
         背景作品「潮汐の軌跡」。背景のクリックやタップでは停止しません。Tabで専用の停止・再開ボタンを表示し、SpaceまたはEnterで操作できます。表示中のボタンはクリックでも操作できます。動きを減らす設定では静止画を表示し、ポインターには反応しません。
       </p>
-    </section>
+    </main>
   );
 }
