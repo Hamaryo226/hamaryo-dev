@@ -4,9 +4,7 @@ import "./selected-works.css";
 const works = {
   taikodive: {
     name: "TaikoDive",
-    field: "Rhythm game",
     intro: "譜面を読み、曲に合わせて太鼓を打つリズムゲーム。",
-    caption: "タイトル画面の楽曲紹介例 · TaikoDive Launcher",
     chapters: [
       [
         "一曲を遊ぶ",
@@ -14,7 +12,7 @@ const works = {
       ],
       [
         "本体とランチャー",
-        "演奏を担うWindows版はC#とDxLibDotNetで制作。別アプリのランチャーが本体の取得や楽曲の管理を担う。上の画像は、タイトル画面で紹介する曲を設定するときの表示例。",
+        "演奏を担うWindows版はC#とDxLibDotNetで制作。別アプリのランチャーが本体の取得や楽曲の管理を担う。",
       ],
       [
         "開発中のテーマ",
@@ -26,13 +24,11 @@ const works = {
   },
   "better-tello-gui": {
     name: "Better Tello GUI",
-    field: "Drone control",
     intro: "ブロックを組んで、複数のドローンを同時に飛ばす。",
-    caption: "指示の流れ · 2機の構成例",
     chapters: [
       [
         "動きを組む",
-        "離陸、移動、着陸。機体ごとの動きをブロックで組み合わせ、飛ばしたい手順を目で追える形にする。図は2機に同じ指示を与える場合の例。",
+        "離陸、移動、着陸。機体ごとの動きをブロックで組み合わせ、飛ばしたい手順を目で追える形にする。",
       ],
       [
         "ブロックからPythonへ",
@@ -84,7 +80,6 @@ function WorkFigure({ slug }: { slug: WorkSlug }) {
           </div>
         </div>
       )}
-      <figcaption>{works[slug].caption}</figcaption>
     </figure>
   );
 }
@@ -101,25 +96,18 @@ export function WorksHome() {
           Works
         </h1>
         {order.map((slug) => (
-          <article key={slug} className="work-row">
+          <a
+            key={slug}
+            className="work-row"
+            href={"/works/" + slug}
+            aria-labelledby={"title-" + slug}
+          >
             <div className="work-info">
-              <p className="work-type" lang="en">
-                {works[slug].field}
-              </p>
-              <h2>
-                <a href={"/works/" + slug}>{works[slug].name}</a>
-              </h2>
+              <h2 id={"title-" + slug}>{works[slug].name}</h2>
               <p className="work-lead">{works[slug].intro}</p>
-              <a
-                className="folio-link"
-                href={"/works/" + slug}
-                aria-label={works[slug].name + "の詳細を見る"}
-              >
-                作品を見る <ArrowRight size={17} />
-              </a>
             </div>
             <WorkFigure slug={slug} />
-          </article>
+          </a>
         ))}
       </section>
       <section
@@ -169,9 +157,6 @@ export function WorkDetail({ slug }: { slug: WorkSlug }) {
           <ArrowLeft size={16} /> 作品一覧へ
         </a>
         <header className="detail-head">
-          <p className="work-type" lang="en">
-            {work.field}
-          </p>
           <h1>{work.name}</h1>
           <p className="work-lead">{work.intro}</p>
         </header>

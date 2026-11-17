@@ -1,7 +1,6 @@
 .folio {
   color-scheme: dark;
   --ink: #f2efea;
-  --muted: #aaa9a5;
   --rule: #343435;
   --ember: #ff9b69;
   background: #090a0b;
@@ -39,16 +38,6 @@
   border-top: 1px solid var(--rule);
   padding-block: clamp(32px, 5vw, 74px);
 }
-.work-type,
-.work-figure figcaption {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.65;
-}
-.work-type {
-  margin-bottom: 14px;
-  letter-spacing: 0.07em;
-}
 .work-info h2 {
   font-size: clamp(34px, 4.8vw, 70px);
   margin-bottom: 16px;
@@ -71,7 +60,6 @@
   text-underline-offset: 6px;
   text-decoration-color: #777;
 }
-.work-info .folio-link,
 .about-text .folio-link {
   margin-top: 18px;
 }
@@ -101,9 +89,6 @@
   width: 82%;
   height: auto;
   box-shadow: 0 12px 32px #0006;
-}
-.work-figure figcaption {
-  margin-top: 10px;
 }
 .tello-print {
   background-color: #151c1e;
@@ -238,9 +223,6 @@
   }
   .work-row .work-figure {
     grid-row: 1;
-  }
-  .work-type {
-    margin-bottom: 8px;
   }
   .work-row {
     gap: 20px;
