@@ -7,6 +7,7 @@ import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
+import { archivedWorks } from "./src/lib/archived-works";
 import { SITE_URL } from "./src/config/site";
 import { getAllSlugs } from "./src/lib/articles";
 import { getAllBlogSlugs } from "./src/lib/blogs";
@@ -32,7 +33,12 @@ const pages = [
     path: "/About",
     sitemap: { priority: 0.8, changefreq: "monthly" as const },
   },
-  ...["/works", "/works/taikodive", "/works/better-tello-gui"].map((path) => ({
+  ...[
+    "/works",
+    "/works/taikodive",
+    "/works/better-tello-gui",
+    ...Object.keys(archivedWorks).map((slug) => "/works/" + slug),
+  ].map((path) => ({
     path,
     sitemap: { priority: 0.7, changefreq: "monthly" as const },
   })),

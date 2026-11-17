@@ -1,4 +1,6 @@
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { archivedWorks } from "@/lib/archived-works";
+import type { PortfolioWork } from "@/lib/archived-works";
 import "./selected-works.css";
 
 const works = {
@@ -42,11 +44,26 @@ const works = {
     source: "https://github.com/sakurai-lab-07/Better-Tello-GUI",
     sourceLabel: "プロジェクトのソースコード",
   },
-} as const;
+  ...archivedWorks,
+} as const satisfies Record<string, PortfolioWork>;
 export type WorkSlug = keyof typeof works;
-const order: WorkSlug[] = ["taikodive", "better-tello-gui"];
+const order = Object.keys(works) as WorkSlug[];
 
 function WorkFigure({ slug }: { slug: WorkSlug }) {
+  if (slug in archivedWorks) {
+    const work: PortfolioWork = works[slug];
+    return (
+      <figure className="work-figure archive-print">
+        <img
+          src={work.image}
+          alt={work.name + "のプロジェクト画像"}
+          loading="lazy"
+          width="1920"
+          height="1080"
+        />
+      </figure>
+    );
+  }
   return (
     <figure className="work-figure">
       {slug === "taikodive" ? (
@@ -148,8 +165,8 @@ export function WorksHome() {
 }
 
 export function WorkDetail({ slug }: { slug: WorkSlug }) {
-  const work = works[slug];
-  const next = slug === "taikodive" ? "better-tello-gui" : "taikodive";
+  const work: PortfolioWork = works[slug];
+  const next = order[(order.indexOf(slug) + 1) % order.length];
   return (
     <main className="folio detail-page">
       <article className="folio-wrap">
@@ -169,10 +186,12 @@ export function WorkDetail({ slug }: { slug: WorkSlug }) {
             </section>
           ))}
         </div>
-        <a className="folio-link" href={work.source}>
-          {work.sourceLabel}
-          <ArrowUpRight size={17} />
-        </a>
+        {work.source && (
+          <a className="folio-link" href={work.source}>
+            {work.sourceLabel}
+            <ArrowUpRight size={17} />
+          </a>
+        )}
         <nav className="detail-nav" aria-label="作品ナビゲーション">
           <a href="/works">作品一覧へ</a>
           <a href={"/works/" + next}>

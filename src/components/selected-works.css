@@ -35,6 +35,7 @@
   line-height: 1.06;
   letter-spacing: -0.045em;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 .work-row {
   display: grid;
@@ -119,6 +120,11 @@
 .work-figure {
   margin: 0;
   min-width: 0;
+}
+.archive-print img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 .work-print {
   aspect-ratio: 1.73;

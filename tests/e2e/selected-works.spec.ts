@@ -4,13 +4,22 @@ for (const width of [390, 1280]) {
   test(`works and profile at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 844 });
     await page.goto("/works");
-    await expect(page.locator("#works a")).toHaveCount(2);
-    for (const title of ["TaikoDive", "Better Tello GUI"]) {
+    await expect(page.locator("#works a")).toHaveCount(6);
+    for (const title of [
+      "TaikoDive",
+      "Better Tello GUI",
+      "Strolly",
+      "Drop-Watermark",
+      "Frailty-Check-System",
+      "Supplemental-Documentation-System",
+    ]) {
       const card = page.getByRole("link", { name: title, exact: true });
       await expect(card.locator(".work-lead")).toBeVisible();
       await card.locator(".work-figure").click();
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(title);
-      await expect(page.locator(".work-chapters section")).toHaveCount(3);
+      await expect(
+        page.locator(".work-chapters section").first(),
+      ).toBeVisible();
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,
