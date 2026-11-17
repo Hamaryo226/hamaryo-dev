@@ -18,17 +18,23 @@
 #works {
   padding-block-start: clamp(64px, 9vw, 136px);
 }
-.section-title,
+.folio .section-title {
+  margin: 0 0 clamp(18px, 2.5vw, 32px);
+  color: #b8b7b3;
+  font-family: var(--font-geist-mono);
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
 .work-info h2,
 .detail-head h1 {
-  line-height: 1.04;
-  font-weight: 450;
-  letter-spacing: -0.055em;
+  font-family: var(--font-geist-sans);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.045em;
   text-wrap: balance;
-}
-.section-title {
-  font-size: clamp(44px, 7vw, 92px);
-  margin: 0 0 clamp(30px, 4vw, 62px);
 }
 .work-row {
   display: grid;
