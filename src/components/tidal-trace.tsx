@@ -60,30 +60,9 @@ export function TidalTrace() {
   });
   useEffect(() => {
     if (!canvas.current) return;
-    const scene = canvas.current.closest<HTMLElement>(".tidal-home");
-    let frame = 0;
-    // Run after layout and on history restoration. Snapping keeps the same
-    // composition when Safari resizes its toolbar after the initial scroll.
-    function revealTopEdge() {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        if (!scene || window.scrollY !== 0 || location.hash) return;
-        if (!getComputedStyle(scene).getPropertyValue("--top-bleed")) return;
-        if (document.activeElement && document.activeElement !== document.body)
-          return;
-        window.scrollTo({
-          top: scene.offsetTop + scene.offsetHeight,
-          behavior: "instant",
-        });
-      });
-    }
-    revealTopEdge();
-    window.addEventListener("pageshow", revealTopEdge);
     const instance = createTidalRenderer(canvas.current, setStatus);
     renderer.current = instance;
     return () => {
-      window.removeEventListener("pageshow", revealTopEdge);
-      cancelAnimationFrame(frame);
       instance.destroy();
       renderer.current = null;
     };

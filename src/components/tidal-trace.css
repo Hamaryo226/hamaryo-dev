@@ -1,12 +1,15 @@
 html:has(.tidal-home),
 body:has(.tidal-home) {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
   background: #030507;
 }
 .tidal-home {
-  position: fixed;
-  inset: 0 0 auto;
+  position: relative;
   height: 100vh;
   height: 100dvh;
+  touch-action: pinch-zoom;
   isolation: isolate;
   overflow: hidden;
   background: #030507;
@@ -117,36 +120,4 @@ body:has(.tidal-home) {
 .tidal-works:focus-visible {
   outline: 1px solid currentColor;
   outline-offset: 2px;
-}
-
-@supports (-webkit-touch-callout: none) {
-  @media (pointer: coarse) {
-    /* Safari can composite scrolling artwork behind its translucent bars. */
-    .tidal-home {
-      position: relative;
-      inset: auto;
-      overflow: clip;
-    }
-  }
-
-  @media (pointer: coarse) and (display-mode: browser) {
-    html:has(.tidal-home) {
-      scroll-snap-type: y mandatory;
-    }
-
-    .tidal-home {
-      --top-bleed: max(
-        7rem,
-        calc(100lvh - 100svh + env(safe-area-inset-top, 0px))
-      );
-      height: calc(100dvh + var(--top-bleed));
-    }
-
-    .tidal-safe-area {
-      inset-block: var(--top-bleed) 0;
-      padding-block: env(safe-area-inset-top, 0px)
-        env(safe-area-inset-bottom, 0px);
-      scroll-snap-align: end;
-    }
-  }
 }
