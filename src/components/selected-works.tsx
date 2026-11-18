@@ -5,14 +5,19 @@ import "./selected-works.css";
 
 const order = Array.from(works.keys());
 function WorkFigure({ slug }: { slug: string }) {
-  if (slug !== "taikodive" && slug !== "better-tello-gui") {
+  if (slug !== "better-tello-gui") {
     const work: PortfolioWork = works.get(slug)!;
-    if (!work.image) return null;
+    const image = slug === "taikodive" ? "/thum/taikodive.webp" : work.image;
+    if (!image) return null;
     return (
       <figure className="work-figure archive-print">
         <img
-          src={work.image}
-          alt={work.name + "のプロジェクト画像"}
+          src={image}
+          alt={
+            slug === "taikodive"
+              ? "TaikoDiveのロゴと、C#やDxLibなどの技術アイコン"
+              : work.name + "のプロジェクト画像"
+          }
           loading="lazy"
           width="1920"
           height="1080"
@@ -22,37 +27,25 @@ function WorkFigure({ slug }: { slug: string }) {
   }
   return (
     <figure className="work-figure">
-      {slug === "taikodive" ? (
-        <div className="work-print taiko-print">
-          <img
-            src="/img/works/taiko-demo.webp"
-            alt="TaikoDiveの楽曲紹介例。中央にメイン曲、その下に4曲が並ぶ"
-            width="1280"
-            height="720"
-            loading="lazy"
-          />
-        </div>
-      ) : (
-        <div
-          className="work-print tello-print"
-          role="img"
-          aria-label="ブロックで組んだ離陸・移動・着陸の指示をPythonに変換し、Tello AとTello Bに送る例"
-        >
-          <div className="flow-graphic" aria-hidden="true">
-            <div className="flow-stack">
-              <span>離陸する</span>
-              <span>前に進む</span>
-              <span>着陸する</span>
-            </div>
-            <i className="flow-wire" />
-            <b>Python</b>
-            <div className="flow-pair">
-              <span>Tello A</span>
-              <span>Tello B</span>
-            </div>
+      <div
+        className="work-print tello-print"
+        role="img"
+        aria-label="ブロックで組んだ離陸・移動・着陸の指示をPythonに変換し、Tello AとTello Bに送る例"
+      >
+        <div className="flow-graphic" aria-hidden="true">
+          <div className="flow-stack">
+            <span>離陸する</span>
+            <span>前に進む</span>
+            <span>着陸する</span>
+          </div>
+          <i className="flow-wire" />
+          <b>Python</b>
+          <div className="flow-pair">
+            <span>Tello A</span>
+            <span>Tello B</span>
           </div>
         </div>
-      )}
+      </div>
     </figure>
   );
 }

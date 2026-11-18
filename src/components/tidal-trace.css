@@ -118,22 +118,35 @@ body:has(.tidal-home) {
   outline: 1px solid currentColor;
   outline-offset: 2px;
 }
-@media (pointer: coarse) {
-  .tidal-surface::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      linear-gradient(
-        to bottom,
-        #030507,
-        transparent calc(env(safe-area-inset-top, 0px) + 16px)
-      ),
-      linear-gradient(
-        to top,
-        #030507,
-        transparent calc(env(safe-area-inset-bottom, 0px) + 16px)
+
+@supports (-webkit-touch-callout: none) {
+  @media (pointer: coarse) {
+    /* Safari can composite scrolling artwork behind its translucent bars. */
+    .tidal-home {
+      position: relative;
+      inset: auto;
+      overflow: clip;
+    }
+  }
+
+  @media (pointer: coarse) and (display-mode: browser) {
+    html:has(.tidal-home) {
+      scroll-snap-type: y mandatory;
+    }
+
+    .tidal-home {
+      --top-bleed: max(
+        7rem,
+        calc(100lvh - 100svh + env(safe-area-inset-top, 0px))
       );
+      height: calc(100dvh + var(--top-bleed));
+    }
+
+    .tidal-safe-area {
+      inset-block: var(--top-bleed) 0;
+      padding-block: env(safe-area-inset-top, 0px)
+        env(safe-area-inset-bottom, 0px);
+      scroll-snap-align: end;
+    }
   }
 }
