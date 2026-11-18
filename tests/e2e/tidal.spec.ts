@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 for (const width of [390, 1280]) {
-  test(`tidal home contains only the centered title at ${width}`, async ({
+  test(`tidal home centers the title above the Works link at ${width}`, async ({
     page,
   }, info) => {
     await page.setViewportSize({ width, height: 900 });
@@ -15,8 +15,12 @@ for (const width of [390, 1280]) {
       exact: true,
     });
     await expect(title).toBeVisible();
-    await expect(page.locator("nav, footer, a")).toHaveCount(0);
+    const works = page.getByRole("link", { name: "Works（作品一覧）" });
+    await expect(works).toHaveAttribute("href", "/works");
+    const linkBox = (await works.boundingBox())!;
     const box = (await title.boundingBox())!;
+    expect(linkBox.y).toBeGreaterThanOrEqual(box.y + box.height);
+    expect(linkBox.height).toBeGreaterThanOrEqual(44);
     expect(Math.abs(box.x + box.width / 2 - width / 2)).toBeLessThan(2);
     expect(Math.abs(box.y + box.height / 2 - 450)).toBeLessThan(2);
     expect(
@@ -50,6 +54,10 @@ for (const width of [390, 1280]) {
     await page.keyboard.press("Space");
     await page.keyboard.press("Tab");
     await page.screenshot({ path: info.outputPath(`tidal-${width}.png`) });
+    await works.click();
+    await expect(
+      page.getByRole("heading", { name: "Works", exact: true }),
+    ).toBeVisible();
     expect(errors).toEqual([]);
   });
 }

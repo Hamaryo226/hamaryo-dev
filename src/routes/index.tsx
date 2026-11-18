@@ -4,11 +4,18 @@ import { seo } from "@/config/site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: seo({
-      title: "hamaryo.dev",
-      description: "hamaryo.dev — Tidal Trace",
-      path: "/",
-    }),
+    meta: [
+      {
+        name: "viewport",
+        content: "width=device-width, initial-scale=1, viewport-fit=cover",
+      },
+      { name: "theme-color", content: "#030507" },
+      ...seo({
+        title: "hamaryo.dev",
+        description: "hamaryo.dev — Tidal Trace",
+        path: "/",
+      }),
+    ],
   }),
   component: TidalTrace,
 });

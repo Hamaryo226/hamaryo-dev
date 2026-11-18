@@ -110,7 +110,18 @@ export function TidalTrace() {
           {motionLabel}
         </span>
       </button>
-      <h1 className="tidal-title">hamaryo.dev</h1>
+      <div className="tidal-safe-area">
+        <div className="tidal-wordmark">
+          <h1 className="tidal-title">hamaryo.dev</h1>
+          <a
+            className="tidal-works"
+            href="/works"
+            aria-label="Works（作品一覧）"
+          >
+            Works <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
       <p id="tidal-instructions" className="sr-only">
         背景作品「潮汐の軌跡」。背景のクリックやタップでは停止しません。Tabで専用の停止・再開ボタンを表示し、SpaceまたはEnterで操作できます。表示中のボタンはクリックでも操作できます。動きを減らす設定では静止画を表示し、ポインターには反応しません。
       </p>
