@@ -1,10 +1,4 @@
-// ブログデータを統合管理
-import b01 from "../content/blog/b01.json";
-import b02 from "../content/blog/b02.json";
-import b03 from "../content/blog/b03.json";
-import b04 from "../content/blog/b04.json";
-import b05 from "../content/blog/b05.json";
-import b06 from "../content/blog/b06.json";
+import { catalog } from "./catalog";
 
 export type BlogContent =
   | { type: "paragraph"; text: string }
@@ -25,15 +19,7 @@ export type Blog = {
   content: BlogContent[];
 };
 
-// ブログデータにslugを追加
-export const blogs: Blog[] = [
-  { ...b06, slug: "06" } as Blog,
-  { ...b05, slug: "05" } as Blog,
-  { ...b04, slug: "04" } as Blog,
-  { ...b03, slug: "03" } as Blog,
-  { ...b02, slug: "02" } as Blog,
-  { ...b01, slug: "01" } as Blog,
-];
+export const blogs = catalog.blogs;
 
 // slugからブログを取得
 export function getBlogBySlug(slug: string): Blog | undefined {

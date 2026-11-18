@@ -7,10 +7,24 @@ import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
-import { archivedWorks } from "./src/lib/archived-works";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { readSeedCatalog } from "./scripts/seed-catalog.mjs";
+import { validateArticleCollection } from "./src/lib/article-schema";
+import type { SiteCatalog } from "./src/lib/catalog";
 import { SITE_URL } from "./src/config/site";
-import { getAllSlugs } from "./src/lib/articles";
-import { getAllBlogSlugs } from "./src/lib/blogs";
+
+const snapshot = process.env.HAMARYO_CONTENT_SNAPSHOT;
+const catalog: SiteCatalog = snapshot
+  ? JSON.parse(readFileSync(join(snapshot, "catalog.json"), "utf8"))
+  : readSeedCatalog();
+validateArticleCollection(
+  catalog.articles.map((data) => ({
+    data,
+    slug: data.slug,
+    file: data.slug,
+  })),
+);
 
 /**
  * ビルド時に静的 HTML へ焼くページの一覧。
@@ -33,27 +47,26 @@ const pages = [
     path: "/About",
     sitemap: { priority: 0.8, changefreq: "monthly" as const },
   },
-  ...[
-    "/works",
-    "/works/taikodive",
-    "/works/better-tello-gui",
-    ...Object.keys(archivedWorks).map((slug) => "/works/" + slug),
-  ].map((path) => ({
-    path,
-    sitemap: { priority: 0.7, changefreq: "monthly" as const },
-  })),
-  ...getAllSlugs().map((slug) => ({
+  ...["/works", ...catalog.works.map(({ slug }) => "/works/" + slug)].map(
+    (path) => ({
+      path,
+      sitemap: { priority: 0.7, changefreq: "monthly" as const },
+    }),
+  ),
+  ...catalog.articles.map(({ slug }) => ({
     path: `/Project/${slug}`,
     sitemap: { priority: 0.6, changefreq: "monthly" as const },
   })),
-  ...getAllBlogSlugs().map((slug) => ({
+  ...catalog.blogs.map(({ slug }) => ({
     path: `/Blog/${slug}`,
     sitemap: { priority: 0.5, changefreq: "weekly" as const },
   })),
 ];
 
 const config = defineConfig(({ command }) => ({
+  publicDir: snapshot ? join(snapshot, "public") : "public",
   define: {
+    __SITE_CATALOG__: JSON.stringify(catalog),
     // 静的HTMLとブラウザで同じ更新日を使う。Workerの初期化時の時計は参照しない。
     "import.meta.env.VITE_BUILD_DATE": JSON.stringify(
       new Date().toISOString().slice(0, 10).replaceAll("-", "/"),

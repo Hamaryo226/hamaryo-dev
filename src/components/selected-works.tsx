@@ -1,57 +1,13 @@
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import { archivedWorks } from "@/lib/archived-works";
-import type { PortfolioWork } from "@/lib/archived-works";
+import { works } from "@/lib/works";
+import type { PortfolioWork } from "@/lib/works";
 import "./selected-works.css";
 
-const works = {
-  taikodive: {
-    name: "TaikoDive",
-    intro: "譜面を読み、曲に合わせて太鼓を打つリズムゲーム。",
-    chapters: [
-      [
-        "一曲を遊ぶ",
-        "TJA形式の譜面を読み込み、曲を選んで演奏する。連打や分岐で表情が変わる譜面に挑み、リザルトで一曲を振り返る。リプレイを残せば、自分の演奏をもう一度見返せる。",
-      ],
-      [
-        "本体とランチャー",
-        "演奏を担うWindows版はC#とDxLibDotNetで制作。別アプリのランチャーが本体の取得や楽曲の管理を担う。",
-      ],
-      [
-        "開発中のテーマ",
-        "Raylibを使うC++版への移行では、長い曲の後半まで描画と音声が揃うかが検証テーマの一つ。選曲・演奏・リザルトの流れを、C#版と照らし合わせている。",
-      ],
-    ],
-    source: "https://github.com/Hamaryo226/TaikoDive-Launcher",
-    sourceLabel: "ランチャーのソースコード",
-  },
-  "better-tello-gui": {
-    name: "Better Tello GUI",
-    intro: "ブロックを組んで、複数のドローンを同時に飛ばす。",
-    chapters: [
-      [
-        "動きを組む",
-        "離陸、移動、着陸。機体ごとの動きをブロックで組み合わせ、飛ばしたい手順を目で追える形にする。",
-      ],
-      [
-        "ブロックからPythonへ",
-        "Scratch形式のプロジェクトからブロックを読み取り、Pythonで扱える飛行命令に変換する。画面上で組んだ動きと、実行される指示がここでつながる。",
-      ],
-      [
-        "複数機を動かす",
-        "Windows PCに複数のWi-Fiアダプターをつなぎ、それぞれを1機のTelloに対応させる。機体ごとの通信経路を分け、ひとつのプログラムから動きを指示する。",
-      ],
-    ],
-    source: "https://github.com/sakurai-lab-07/Better-Tello-GUI",
-    sourceLabel: "プロジェクトのソースコード",
-  },
-  ...archivedWorks,
-} as const satisfies Record<string, PortfolioWork>;
-export type WorkSlug = keyof typeof works;
-const order = Object.keys(works) as WorkSlug[];
-
-function WorkFigure({ slug }: { slug: WorkSlug }) {
-  if (slug in archivedWorks) {
-    const work: PortfolioWork = works[slug];
+const order = Array.from(works.keys());
+function WorkFigure({ slug }: { slug: string }) {
+  if (slug !== "taikodive" && slug !== "better-tello-gui") {
+    const work: PortfolioWork = works.get(slug)!;
+    if (!work.image) return null;
     return (
       <figure className="work-figure archive-print">
         <img
@@ -120,8 +76,8 @@ export function WorksHome() {
             aria-labelledby={"title-" + slug}
           >
             <div className="work-info">
-              <h2 id={"title-" + slug}>{works[slug].name}</h2>
-              <p className="work-lead">{works[slug].intro}</p>
+              <h2 id={"title-" + slug}>{works.get(slug)!.name}</h2>
+              <p className="work-lead">{works.get(slug)!.intro}</p>
             </div>
             <WorkFigure slug={slug} />
           </a>
@@ -164,8 +120,8 @@ export function WorksHome() {
   );
 }
 
-export function WorkDetail({ slug }: { slug: WorkSlug }) {
-  const work: PortfolioWork = works[slug];
+export function WorkDetail({ slug }: { slug: string }) {
+  const work: PortfolioWork = works.get(slug)!;
   const next = order[(order.indexOf(slug) + 1) % order.length];
   return (
     <main className="folio detail-page">
@@ -195,7 +151,7 @@ export function WorkDetail({ slug }: { slug: WorkSlug }) {
         <nav className="detail-nav" aria-label="作品ナビゲーション">
           <a href="/works">作品一覧へ</a>
           <a href={"/works/" + next}>
-            {works[next].name} <ArrowRight size={16} />
+            {works.get(next)!.name} <ArrowRight size={16} />
           </a>
         </nav>
       </article>

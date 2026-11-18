@@ -18,8 +18,6 @@ import { Route as ProjectIndexRouteImport } from './routes/Project/index'
 import { Route as ProjectSlugRouteImport } from './routes/Project/$slug'
 import { Route as WorksIndexRouteImport } from './routes/works/index'
 import { Route as WorksSlugRouteImport } from './routes/works/$slug'
-import { Route as WorksBetterTelloGuiRouteImport } from './routes/works/better-tello-gui'
-import { Route as WorksTaikodiveRouteImport } from './routes/works/taikodive'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -66,24 +64,12 @@ const WorksSlugRoute = WorksSlugRouteImport.update({
   path: '/works/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorksBetterTelloGuiRoute = WorksBetterTelloGuiRouteImport.update({
-  id: '/works/better-tello-gui',
-  path: '/works/better-tello-gui',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WorksTaikodiveRoute = WorksTaikodiveRouteImport.update({
-  id: '/works/taikodive',
-  path: '/works/taikodive',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/Blog/$slug': typeof BlogSlugRoute
   '/Project/$slug': typeof ProjectSlugRoute
   '/works/$slug': typeof WorksSlugRoute
-  '/works/better-tello-gui': typeof WorksBetterTelloGuiRoute
-  '/works/taikodive': typeof WorksTaikodiveRoute
   '/About/': typeof AboutIndexRoute
   '/Blog/': typeof BlogIndexRoute
   '/Info/': typeof InfoIndexRoute
@@ -95,8 +81,6 @@ export interface FileRoutesByTo {
   '/Blog/$slug': typeof BlogSlugRoute
   '/Project/$slug': typeof ProjectSlugRoute
   '/works/$slug': typeof WorksSlugRoute
-  '/works/better-tello-gui': typeof WorksBetterTelloGuiRoute
-  '/works/taikodive': typeof WorksTaikodiveRoute
   '/About': typeof AboutIndexRoute
   '/Blog': typeof BlogIndexRoute
   '/Info': typeof InfoIndexRoute
@@ -109,8 +93,6 @@ export interface FileRoutesById {
   '/Blog/$slug': typeof BlogSlugRoute
   '/Project/$slug': typeof ProjectSlugRoute
   '/works/$slug': typeof WorksSlugRoute
-  '/works/better-tello-gui': typeof WorksBetterTelloGuiRoute
-  '/works/taikodive': typeof WorksTaikodiveRoute
   '/About/': typeof AboutIndexRoute
   '/Blog/': typeof BlogIndexRoute
   '/Info/': typeof InfoIndexRoute
@@ -124,8 +106,6 @@ export interface FileRouteTypes {
     | '/Blog/$slug'
     | '/Project/$slug'
     | '/works/$slug'
-    | '/works/better-tello-gui'
-    | '/works/taikodive'
     | '/About/'
     | '/Blog/'
     | '/Info/'
@@ -137,8 +117,6 @@ export interface FileRouteTypes {
     | '/Blog/$slug'
     | '/Project/$slug'
     | '/works/$slug'
-    | '/works/better-tello-gui'
-    | '/works/taikodive'
     | '/About'
     | '/Blog'
     | '/Info'
@@ -150,8 +128,6 @@ export interface FileRouteTypes {
     | '/Blog/$slug'
     | '/Project/$slug'
     | '/works/$slug'
-    | '/works/better-tello-gui'
-    | '/works/taikodive'
     | '/About/'
     | '/Blog/'
     | '/Info/'
@@ -164,8 +140,6 @@ export interface RootRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
   ProjectSlugRoute: typeof ProjectSlugRoute
   WorksSlugRoute: typeof WorksSlugRoute
-  WorksBetterTelloGuiRoute: typeof WorksBetterTelloGuiRoute
-  WorksTaikodiveRoute: typeof WorksTaikodiveRoute
   AboutIndexRoute: typeof AboutIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
   InfoIndexRoute: typeof InfoIndexRoute
@@ -238,20 +212,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorksSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/works/better-tello-gui': {
-      id: '/works/better-tello-gui'
-      path: '/works/better-tello-gui'
-      fullPath: '/works/better-tello-gui'
-      preLoaderRoute: typeof WorksBetterTelloGuiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/works/taikodive': {
-      id: '/works/taikodive'
-      path: '/works/taikodive'
-      fullPath: '/works/taikodive'
-      preLoaderRoute: typeof WorksTaikodiveRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -260,8 +220,6 @@ const rootRouteChildren: RootRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
   ProjectSlugRoute: ProjectSlugRoute,
   WorksSlugRoute: WorksSlugRoute,
-  WorksBetterTelloGuiRoute: WorksBetterTelloGuiRoute,
-  WorksTaikodiveRoute: WorksTaikodiveRoute,
   AboutIndexRoute: AboutIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
   InfoIndexRoute: InfoIndexRoute,

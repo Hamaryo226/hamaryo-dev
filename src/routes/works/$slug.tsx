@@ -1,26 +1,27 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { WorkDetail } from "@/components/selected-works";
-import { archivedWorks, isArchiveSlug } from "@/lib/archived-works";
+import { works } from "@/lib/works";
 import { seo } from "@/config/site";
 
 export const Route = createFileRoute("/works/$slug")({
   loader: ({ params }) => {
-    if (!isArchiveSlug(params.slug)) throw notFound();
-    return params.slug;
+    const work = works.get(params.slug);
+    if (!work) throw notFound();
+    return work;
   },
-  head: ({ loaderData: slug }) =>
-    slug
+  head: ({ loaderData: work }) =>
+    work
       ? {
           meta: seo({
-            title: archivedWorks[slug].name + " | hamaryo.dev",
-            description: archivedWorks[slug].intro,
-            image: archivedWorks[slug].image,
-            path: "/works/" + slug,
+            title: work.name + " | hamaryo.dev",
+            description: work.intro,
+            image: work.image,
+            path: "/works/" + work.slug,
           }),
         }
       : {},
   component: ArchivedDetail,
 });
 function ArchivedDetail() {
-  return <WorkDetail slug={Route.useLoaderData()} />;
+  return <WorkDetail slug={Route.useLoaderData().slug} />;
 }

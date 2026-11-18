@@ -49,6 +49,21 @@ npm run deploy       # ビルドして Cloudflare へデプロイ
 モバイル幅とダークテーマを確認します。
 既存の Chromium を使う場合は `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` で指定できます。
 
+## プレビューのコンテンツ管理
+
+作品紹介・プロジェクト記事・ブログは D1 の `hamaryo-content-preview`、画像は R2 Standard の非公開バケット `hamaryo-media-preview` を使います。ビルド時に取得し、HTML と画像を Workers Static Assets として配信します。既存の画像 URL と記事 URL はそのまま使えます。
+
+```bash
+npm run content:seed -- --local  # ローカルの D1 / R2 に初期データを追加
+npm run build:content -- --local # 上記のデータからプレビューを生成
+```
+
+Cloudflare 側の初期移行には対象の `CLOUDFLARE_ACCOUNT_ID` と、D1・Workers R2 Storage の編集権限を持つ `CLOUDFLARE_API_TOKEN` を環境変数で渡し、`npm run content:seed -- --remote` を実行します。初回に専用のデータベースとバケットを作成します。同じコマンドの再実行では、既存の記事と画像を保持して不足分を補います。
+
+プレビューブランチのビルド環境に `HAMARYO_CONTENT_SOURCE=cloudflare` と読み取り用の認証情報を設定すると、通常の `npm run build` が D1 と R2 を参照します。手動での確認には `npm run build:content -- --remote` も使えます。取得に失敗するとビルドは停止します。既定のローカル開発と CI ではリポジトリの初期データを使います。
+
+記事を更新するときは、D1 の `site_content` テーブルで `collection`（`works`・`articles`・`blogs`）と `slug` を選び、`body` の JSON を編集します。`position` が一覧での表示順です。画像は R2 に `img/works/cat.webp` のようなサイトルートからの相対パスでアップロードします。変更は次のクラウドビルドとプレビューのデプロイで反映されます。
+
 ## 構成
 
 ```

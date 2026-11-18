@@ -1,15 +1,4 @@
-// 記事データを統合管理
-import fcsData from "../content/articles/fcs.json";
-import sdsData from "../content/articles/sds.json";
-import dwData from "../content/articles/dw.json";
-import lyraData from "../content/articles/lyra.json";
-import museData from "../content/articles/muse.json";
-import health2bpmData from "../content/articles/health2bpm.json";
-import orderManager2Data from "../content/articles/order-manager2.json";
-import taikodiveData from "../content/articles/taikodive.json";
-import strollyData from "../content/articles/strolly.json";
-
-import { validateArticleCollection } from "./article-schema";
+import { catalog } from "./catalog";
 import type {
   ArticleState,
   ArticleSectionData,
@@ -54,28 +43,7 @@ export type Article = ArticleState & {
   >;
 };
 
-// 記事データにslugとcategoryを追加
-const articleData = [
-  { ...fcsData, slug: "fcs", category: "university" },
-  { ...sdsData, slug: "sds", category: "university" },
-  { ...orderManager2Data, slug: "order-manager2", category: "university" },
-  { ...dwData, slug: "drop-watermark", category: "personal" },
-  { ...lyraData, slug: "lyra", category: "personal" },
-  { ...museData, slug: "muse", category: "personal" },
-  { ...health2bpmData, slug: "health2bpm", category: "personal" },
-  { ...taikodiveData, slug: "taikodive", category: "personal" },
-  { ...strollyData, slug: "strolly", category: "personal" },
-];
-
-// Vite imports this module during configuration, so invalid JSON fails the build.
-validateArticleCollection(
-  articleData.map((article) => ({
-    data: article,
-    slug: article.slug,
-    file: `src/content/articles/${article.slug === "drop-watermark" ? "dw" : article.slug}.json`,
-  })),
-);
-export const articles = articleData as Article[];
+export const articles = catalog.articles;
 
 // slugから記事を取得
 export function getArticleBySlug(slug: string): Article | undefined {
