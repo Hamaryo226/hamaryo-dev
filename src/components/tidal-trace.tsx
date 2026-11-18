@@ -23,9 +23,15 @@ function StaticTide() {
         key={i}
         d={points}
         fill="none"
-        stroke={i % 19 === 0 ? "#817764" : i % 13 === 0 ? "#526d71" : "#9ba5a7"}
+        stroke={
+          layer === 2
+            ? "url(#tidal-copper)"
+            : i % 13 === 0
+              ? "#526d71"
+              : "#9ba5a7"
+        }
         strokeWidth={i % 7 === 0 ? 1.3 : 0.65}
-        opacity={0.16 + contour * 0.24}
+        opacity={layer === 2 ? 0.3 + contour * 0.34 : 0.16 + contour * 0.24}
       />
     );
   });
@@ -40,6 +46,20 @@ function StaticTide() {
       <rect width="1440" height="900" fill="#030507" />
       {paths}
       <defs>
+        <linearGradient
+          id="tidal-copper"
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          x2="1440"
+          y1="0"
+          y2="0"
+        >
+          <stop stopColor="#9ba5a7" />
+          <stop offset=".34" stopColor="#c93c10" />
+          <stop offset=".56" stopColor="#f4ad73" />
+          <stop offset=".79" stopColor="#db8751" />
+          <stop offset="1" stopColor="#9ba5a7" />
+        </linearGradient>
         <radialGradient id="tidal-quiet">
           <stop offset="0" stopColor="#030507" stopOpacity=".94" />
           <stop offset="1" stopColor="#030507" stopOpacity="0" />
@@ -112,7 +132,9 @@ export function TidalTrace() {
       </button>
       <div className="tidal-safe-area">
         <div className="tidal-wordmark">
-          <h1 className="tidal-title">hamaryo.dev</h1>
+          <h1 className="tidal-title">
+            hamaryo<span className="tidal-dot">.</span>dev
+          </h1>
           <a
             className="tidal-works"
             href="/works"

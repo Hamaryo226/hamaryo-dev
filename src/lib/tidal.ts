@@ -58,6 +58,13 @@ void main() {
     vec3 silver = vec3(.65,.73,.75);
     vec3 interference = .46+.32*cos(vec3(0.1,2.0,4.1)+across*1.6+p.x*.9+layer*1.8);
     vec3 material = mix(silver, interference, fringe*.73);
+    // A copper edge follows the ridges of the lower sheet, like the icon rim light.
+    if (i == 0) {
+      float rim = smoothstep(-.26, .66, cos(p.x * 1.25 + t * .3));
+      vec3 ember = mix(vec3(.79,.24,.063), vec3(.96,.68,.45), ridge);
+      material = mix(material, ember, rim);
+      color += ember * rim * envelope * (.085 * etching + .19 * ridge);
+    }
     // Sparse highlights lie ON the sheet, not in a starfield behind it.
     vec2 grainCell = floor(gl_FragCoord.xy/1.65);
     float mineral = pow(hash(grainCell+layer*37.0),22.0);

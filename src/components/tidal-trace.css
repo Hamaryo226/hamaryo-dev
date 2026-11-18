@@ -97,6 +97,10 @@ body:has(.tidal-home) {
   pointer-events: none;
   text-shadow: 0 2px 22px #030507;
 }
+.tidal-dot,
+.tidal-works > span {
+  color: #db8751;
+}
 .tidal-works {
   position: absolute;
   top: calc(100% + 4px);
@@ -115,7 +119,7 @@ body:has(.tidal-home) {
   pointer-events: auto;
 }
 .tidal-works:is(:hover, :focus-visible) {
-  color: #fff0dc;
+  color: #f4ad73;
 }
 .tidal-works:focus-visible {
   outline: 1px solid currentColor;
